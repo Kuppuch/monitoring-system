@@ -10,16 +10,21 @@ import (
 	"strconv"
 )
 
+func getPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "register.html", nil)
+}
+
 func getUser(c *gin.Context) {
-	uid, err := strconv.Atoi(c.Query("uid"))
+	uid, err := strconv.Atoi(c.DefaultQuery("uid", "0"))
 	if err != nil {
-		c.JSON(400, middleware.HttpStatus{
-			Code:   400,
-			Status: "error",
+		c.JSON(400, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed parse int",
 		})
 	}
 	if uid == 0 {
-		c.JSON(http.StatusOK, middleware.GetAll())
+		c.JSON(http.StatusOK, middleware.GetAllUsers())
 		return
 	}
 	user := middleware.User{}
@@ -49,15 +54,9 @@ func insertUser(c *gin.Context) {
 	user.Password = string(hash)
 	rowAffected := user.InsertUser()
 	if rowAffected > 0 {
-		c.JSON(http.StatusOK, middleware.HttpStatus{
-			Code:   http.StatusOK,
-			Status: "success",
-		})
+		c.JSON(http.StatusOK, middleware.GetSuccess())
 	} else {
-		c.JSON(http.StatusBadRequest, middleware.HttpStatus{
-			Code:   http.StatusBadRequest,
-			Status: "error",
-		})
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 	}
 
 }

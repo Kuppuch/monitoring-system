@@ -15,7 +15,7 @@ type User struct {
 	Password   string `json:"password,omitempty"`
 }
 
-func GetAll() []User {
+func GetAllUsers() []User {
 	var users []User
 	tx := DB.Find(&users)
 	if tx.Error != nil {

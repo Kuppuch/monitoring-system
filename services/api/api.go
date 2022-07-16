@@ -2,21 +2,23 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 	"monitoring-system/services/logging"
 )
 
 func Router() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	r.Use(DummyMiddleware())
+	r.LoadHTMLGlob("pages/*.html")
+	r.Use(cors.AllowAll())
+	r.GET("", getPage)
 	user := r.Group("user")
-	user.Use()
 	{
 		user.GET("", getUser)
 		user.POST("/register", insertUser)
 	}
 
-	err := r.Run(":8080")
+	err := r.Run(":25595")
 	if err != nil {
 		logging.Print.Warning(err)
 	}
