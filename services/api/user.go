@@ -25,7 +25,8 @@ func getUser(c *gin.Context) {
 		})
 	}
 	if uid == 0 {
-		c.JSON(http.StatusOK, middleware.GetAllUsers())
+		c.HTML(http.StatusOK, "users.html", gin.H{"users": middleware.GetAllUsers()})
+		//c.JSON(http.StatusOK, middleware.GetAllUsers())
 		return
 	}
 	user := middleware.User{}
@@ -36,6 +37,7 @@ func getUser(c *gin.Context) {
 	}
 	user.Password = ""
 	c.JSON(http.StatusOK, user)
+	c.HTML(http.StatusOK, "users.html", gin.H{"users": user})
 }
 
 func insertUser(c *gin.Context) {
