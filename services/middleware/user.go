@@ -32,6 +32,14 @@ func (u *User) GetUser() error {
 	return nil
 }
 
+func (u *User) GetUserByEmail() error {
+	tx := DB.Where("email = ?", u.Email).Find(u)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 func (u User) InsertUser() int64 {
 	tx := DB.Create(&u)
 	if tx.Error != nil {
