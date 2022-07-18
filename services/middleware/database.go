@@ -17,7 +17,7 @@ func Connector() error {
 	if err != nil {
 		return err
 	}
-	err = DB.AutoMigrate(&User{})
+	err = DB.AutoMigrate(&User{}, &Project{})
 	if err != nil {
 		return err
 	}
