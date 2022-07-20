@@ -13,6 +13,10 @@ func getProjectsPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "projects.html", projects)
 }
 
+func getProjectCreatePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "addProject.html", nil)
+}
+
 func insertProject(c *gin.Context) {
 	raw, err := c.GetRawData()
 	if err != nil {

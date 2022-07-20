@@ -21,3 +21,11 @@ func GetProjects() []Project {
 	}
 	return projects
 }
+
+func (p Project) InsertProject() int64 {
+	tx := DB.Create(&p)
+	if tx.Error != nil {
+		logging.Print.Warning(tx.Error)
+	}
+	return tx.RowsAffected
+}

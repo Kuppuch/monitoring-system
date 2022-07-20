@@ -14,7 +14,7 @@ func Router() {
 	r.SetFuncMap(template.FuncMap{
 		"upper": strings.ToUpper,
 	})
-	r.LoadHTMLGlob("pages/*.html")
+	r.LoadHTMLGlob("pages/**/*")
 	r.Use(cors.AllowAll())
 
 	r.GET("/", getMainPage)
@@ -30,6 +30,7 @@ func Router() {
 	project := r.Group("project")
 	{
 		project.GET("/", getProjectsPage)
+		project.GET("/create", getProjectCreatePage)
 		project.POST("/create", insertProject)
 	}
 

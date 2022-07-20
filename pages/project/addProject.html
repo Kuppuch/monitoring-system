@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать проект</title>
+    {{template "meta.html"}}
+</head>
+<body>
+{{template "header.html"}}
+  <div class="container">
+      <h2 class="mu-3">Создание проекта</h2>
+      <form id="registration" class="registration">
+          <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="nameInput" name="name" placeholder="Название" value="">
+              <label for="nameInput">Название</label>
+          </div>
+          <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="descriptionInput" name="description" placeholder="Описание" value="">
+              <label for="descriptionInput">Описание</label>
+          </div>
+          <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" name="public" value="true" id="flexCheckDefault">
+              <label class="form-check-label" for="flexCheckDefault">
+                  Публичный проект
+              </label>
+          </div>
+          <div class="col-auto">
+              <button type="submit" class="btn btn-primary mb-3" name="send" id="submitBtn">Создать проект</button>
+          </div>
+      </form>
+  </div>
+<script>
+    $('.registration').on('submit', (event) => {
+        event.preventDefault();
+        let data = $(event.target)
+            .serializeArray()
+            .reduce(function (json, {name, value}) {
+                json[name] = value;
+                return json;
+            }, {});
+        data.admin = data.admin === 'true';
+        console.log(data);
+        $.ajax({
+            type: "POST",
+            url: 'http://kuppuch.keenetic.link:25595/project/create',
+            data: JSON.stringify(data),
+            success: function (data) {
+                window.location = 'http://kuppuch.keenetic.link:25595/project'
+            },
+            error: function (data) {
+                alert(data);
+                window.location = 'http://kuppuch.keenetic.link:25595/project'
+            }
+        });
+    })
+</script>
+</body>
+</html>
