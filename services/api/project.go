@@ -38,4 +38,9 @@ func insertProject(c *gin.Context) {
 			Meta: "error by unmarshal project",
 		})
 	}
+	if rowAffected := project.InsertProject(); rowAffected == 0 {
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	c.JSON(http.StatusOK, middleware.GetSuccess())
 }

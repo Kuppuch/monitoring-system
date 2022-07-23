@@ -9,7 +9,7 @@ type Project struct {
 	gorm.Model
 	Name        string
 	Description string
-	IsPublic    bool
+	IsPublic    bool `json:"isPublic"`
 	Status      uint
 }
 
