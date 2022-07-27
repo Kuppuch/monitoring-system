@@ -15,6 +15,7 @@ func Router() {
 		"upper": strings.ToUpper,
 	})
 	r.LoadHTMLGlob("pages/**/*")
+	r.Static("/css", "pages/css")
 	r.Use(cors.AllowAll())
 
 	r.GET("/", getMainPage)

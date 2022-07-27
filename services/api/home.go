@@ -6,5 +6,5 @@ import (
 )
 
 func getMainPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "home.html", nil)
+	c.HTML(http.StatusOK, "index.html", nil)
 }

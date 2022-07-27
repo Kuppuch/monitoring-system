@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+
+        {{template "aside.html"}}
+        <main>
+            <h1>Дашборд</h1>
+            <div class="date">
+                <input type="date">
+            </div>
+
+            <div class="insights">
+                <div class="sales">
+                    <span class="material-icons-sharp">analytics</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Всего продаж</h3>
+                            <h1>5600₽</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx="38" cy="38" r="36"></circle>
+                            </svg>
+                            <div class="number">
+                                <p>81%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Последние 24 часа</small>
+                </div>
+                <!------------------ END OF SALES ------------------>
+                <div class="expenses">
+                    <span class="material-icons-sharp">bar_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Всего затрат</h3>
+                            <h1>3600₽</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx="38" cy="38" r="36"></circle>
+                            </svg>
+                            <div class="number">
+                                <p>62%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Последние 24 часа</small>
+                </div>
+                <!------------------ END OF EXPENSES ------------------>
+                <div class="income">
+                    <span class="material-icons-sharp">stacked_line_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Всего прибыль</h3>
+                            <h1>5500₽</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx="38" cy="38" r="36"></circle>
+                            </svg>
+                            <div class="number">
+                                <p>44%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Последние 24 часа</small>
+                </div>
+                <!------------------ END OF INCOME ------------------>
+            </div>
+            <!------------------ END OF INSIGTS ------------------>
+
+            <div class="recent-orders">
+                <h2>Recent Orders</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Название продукта</th>
+                            <th>Номер продукта</th>
+                            <th>Оплата</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Foldable Mini Drone</td>
+                            <td>85631</td>
+                            <td>Due</td>
+                            <td class="warning">Pending</td>
+                            <td class="primary">Details</td>
+                        </tr>
+                        <tr>
+                            <td>Foldable Mini Drone</td>
+                            <td>85631</td>
+                            <td>Due</td>
+                            <td class="warning">Pending</td>
+                            <td class="primary">Details</td>
+                        </tr>
+                        <tr>
+                            <td>Foldable Mini Drone</td>
+                            <td>85631</td>
+                            <td>Due</td>
+                            <td class="warning">Pending</td>
+                            <td class="primary">Details</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="#">Показать все</a>
+            </div>
+        </main>
+<!----------------------------- END OF MAIN ----------------------------->
+
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Привет, <b>Роман</b></p>
+                        <small class="text-muted">Admin</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="./img/Роман.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+            <!-------------------- END OF TOP -------------------->
+            <div class="recent-updates">
+                <h2>Недавние изменения</h2>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="./img/Роман.jpg" alt="">
+                        </div>
+                        <div class="message">
+                            <p><b>Куппе Роман</b> написал главную страницу</p>
+                            <small class="text-muted">2 Минуты назад</small>
+                        </div>
+                    </div>
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="./img/Роман.jpg" alt="">
+                        </div>
+                        <div class="message">
+                            <p><b>Куппе Роман</b> написал главную страницу</p>
+                            <small class="text-muted">2 Минуты назад</small>
+                        </div>
+                    </div>
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="./img/Роман.jpg" alt="">
+                        </div>
+                        <div class="message">
+                            <p><b>Куппе Роман</b> написал главную страницу</p>
+                            <small class="text-muted">2 Минуты назад</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-------------------- END OF RECENT UPDATES -------------------->
+            <div class="sales-analytics">
+                <h2>Аналитика продаж</h2>
+                <div class="item online">
+                    <div class="icon">
+                        <span class="material-icons-sharp">shopping_cart</span>
+                    </div>
+                    <div class="right">
+                        <div class="info">
+                            <h3>Онлайн заказы</h3>
+                            <small class="text-muted">Последние 24 часа</small>
+                        </div>
+                        <h5 class="success">+39%</h5>
+                        <h3>3849</h3>
+                    </div>
+                </div>
+                <div class="item offline">
+                    <div class="icon">
+                        <span class="material-icons-sharp">local_mall</span>
+                    </div>
+                    <div class="right">
+                        <div class="info">
+                            <h3>Онлайн заказы</h3>
+                            <small class="text-muted">Последние 24 часа</small>
+                        </div>
+                        <h5 class="danger">-17%</h5>
+                        <h3>1100</h3>
+                    </div>
+                </div>
+                <div class="item customers">
+                    <div class="icon">
+                        <span class="material-icons-sharp">person</span>
+                    </div>
+                    <div class="right">
+                        <div class="info">
+                            <h3>Новые покупатели</h3>
+                            <small class="text-muted">Последние 24 часа</small>
+                        </div>
+                        <h5 class="success">+25%</h5>
+                        <h3>849</h3>
+                    </div>
+                </div>
+                <div class="item add-product">
+                    <div>
+                        <span class="material-icons-sharp">add</span>
+                        <h3>Добавить Продукт</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    <script src="../js/index.js"></script>-->
+    <script>
+        const sideMenu = document.querySelector("aside");
+        const menuBtn = document.querySelector("#menu-btn");
+        const closeBtn = document.querySelector("#close-btn");
+        const themeToggler = document.querySelector(".theme-toggler");
+
+        window.onload = function () {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.classList.toggle('dark-theme-variables');
+
+                themeToggler.querySelector('span:nth-child(1)').classList.toggle('active');
+                themeToggler.querySelector('span:nth-child(2)').classList.toggle('active');
+            }
+        }
+
+
+        menuBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'block';
+        })
+
+        closeBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'none'
+        })
+
+        themeToggler.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme-variables');
+
+            themeToggler.querySelector('span:nth-child(1)').classList.toggle('active');
+            themeToggler.querySelector('span:nth-child(2)').classList.toggle('active');
+
+            if (themeToggler.querySelector('span:nth-child(1)').classList.contains('active')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        })
+    </script>
+</body>
+</html>
