@@ -35,6 +35,12 @@ func Router() {
 		project.POST("/create", insertProject)
 	}
 
+	issue := r.Group("issue")
+	{
+		issue.GET("", getIssueList)
+		issue.POST("/create", insertIssue)
+	}
+
 	err := r.Run(":25595")
 	if err != nil {
 		logging.Print.Warning(err)

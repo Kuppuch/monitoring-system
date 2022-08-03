@@ -7,10 +7,11 @@ import (
 
 type Project struct {
 	gorm.Model
-	Name        string
-	Description string
-	IsPublic    bool `json:"isPublic"`
-	Status      uint
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	IsPublic    bool    `json:"isPublic"`
+	StatusID    uint    `json:"status"`
+	Issues      []Issue `gorm:"foreignKey:ProjectID" json:"issues"`
 }
 
 func GetProjects() []Project {

@@ -6,18 +6,23 @@ import (
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
+	"strconv"
 )
 
-func getProjectsPage(c *gin.Context) {
-	projects := middleware.GetProjects()
-	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects})
+func getIssueList(c *gin.Context) {
+	projectID, err := strconv.Atoi(c.Query("project_id"))
+	if err != nil {
+		c.JSON(400, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed parse uint",
+		})
+	}
+	issues := middleware.GetIssueList(uint(projectID))
+	c.JSON(http.StatusOK, issues)
 }
 
-func getProjectCreatePage(c *gin.Context) {
-	c.HTML(http.StatusOK, "addProject.html", nil)
-}
-
-func insertProject(c *gin.Context) {
+func insertIssue(c *gin.Context) {
 	raw, err := c.GetRawData()
 	if err != nil {
 		logging.Print.Error(err)
@@ -28,20 +33,19 @@ func insertProject(c *gin.Context) {
 		})
 		return
 	}
-	project := middleware.Project{}
-	err = json.Unmarshal(raw, &project)
+	issue := middleware.Issue{}
+	err = json.Unmarshal(raw, &issue)
 	if err != nil {
 		logging.Print.Error("error unmarshal", err)
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  err,
 			Type: 0,
-			Meta: "error by unmarshal project",
+			Meta: "error by unmarshal issue",
 		})
 	}
-	project.StatusID = 1
-	if rowAffected := project.InsertProject(); rowAffected == 0 {
+	issue.InsertIssue()
+	if rowAffected := issue.InsertIssue(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
 	}
-	c.JSON(http.StatusOK, middleware.GetSuccess())
 }

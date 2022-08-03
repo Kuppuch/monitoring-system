@@ -14,6 +14,6 @@ func main() {
 	if err != nil {
 		logging.Print.Fatal(err)
 	}
-	logging.Print.Info("Hello world")
+	logging.Print.Info("Listen on port 25595")
 	api.Router()
 }
