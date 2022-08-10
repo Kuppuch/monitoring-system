@@ -10,7 +10,7 @@
 <div class="container">
     {{template "aside.html"}}
     <main>
-        <h1>Дашборд</h1>
+        <h1>Проекты</h1>
         <div class="date">
             <input type="date">
         </div>
@@ -18,6 +18,7 @@
         <div class="insights">
             {{ range $projects := .projects }}
             <div class="sales">
+                <span hidden>{{ .ID }}</span>
                 <h1>{{ .Name }}</h1>
                 <h3>{{ .Description }}</h3>
 <!--                <span class="material-icons-sharp">analytics</span>-->
@@ -26,14 +27,6 @@
                         <h3>Всего задач</h3>
                         <h1>360</h1>
                     </div>
-                    <!--                        <div class="progress">-->
-                    <!--                            <svg>-->
-                    <!--                                <circle cx="38" cy="38" r="36"></circle>-->
-                    <!--                            </svg>-->
-                    <!--                            <div class="number">-->
-                    <!--                                <p>81%</p>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
                 </div>
                 <small class="text-muted">Последние 24 часа</small>
             </div>
@@ -57,7 +50,7 @@
                 </div>
                 <div class="update">
                     <div class="profile-photo">
-                        <img src="./img/Роман.jpg" alt="">
+<!--                        <img src="./img/Роман.jpg" alt="">-->
                     </div>
                     <div class="message">
                         <p><b>Куппе Роман</b> написал главную страницу</p>
@@ -66,7 +59,7 @@
                 </div>
                 <div class="update">
                     <div class="profile-photo">
-                        <img src="./img/Роман.jpg" alt="">
+<!--                        <img src="./img/Роман.jpg" alt="">-->
                     </div>
                     <div class="message">
                         <p><b>Куппе Роман</b> написал главную страницу</p>
@@ -104,7 +97,6 @@
         }
     }
 
-
     menuBtn.addEventListener('click', () => {
         sideMenu.style.display = 'block';
     })
@@ -125,6 +117,23 @@
             localStorage.setItem('theme', 'dark');
         }
     })
+
+    const addProductBtn = document.querySelector(".add-product")
+
+    addProductBtn.addEventListener('click', () => {
+        location.replace("/project/create");
+    })
+
+    const insights = document.querySelector(".insights");
+    insights.addEventListener('click', (event) => {
+        let target = event.target;
+
+        console.log(target.tagName);
+        if (target.className === 'sales') {
+            location.replace("/project?id=2");
+        }
+    })
+
 </script>
 </body>
 </html>

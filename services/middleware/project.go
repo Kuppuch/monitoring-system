@@ -23,6 +23,15 @@ func GetProjects() []Project {
 	return projects
 }
 
+func GetProjectByID(id int) *Project {
+	var project Project
+	tx := DB.Where("id = ?", id).Find(&project)
+	if tx.Error != nil {
+		logging.Print.Warning(tx.Error)
+	}
+	return &project
+}
+
 func (p Project) InsertProject() int64 {
 	tx := DB.Create(&p)
 	if tx.Error != nil {

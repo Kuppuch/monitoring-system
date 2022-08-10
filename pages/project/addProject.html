@@ -3,56 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>Создать проект</title>
-    {{template "meta.html"}}
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-{{template "header.html"}}
-  <div class="container">
-      <h2 class="mu-3">Создание проекта</h2>
-      <form id="registration" class="registration">
-          <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="nameInput" name="name" placeholder="Название" value="">
-              <label for="nameInput">Название</label>
-          </div>
-          <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="descriptionInput" name="description" placeholder="Описание" value="">
-              <label for="descriptionInput">Описание</label>
-          </div>
-          <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" name="isPublic" value="true" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                  Публичный проект
-              </label>
-          </div>
-          <div class="col-auto">
-              <button type="submit" class="btn btn-primary mb-3" name="send" id="submitBtn">Создать проект</button>
-          </div>
-      </form>
-  </div>
-<script>
-    $('.registration').on('submit', (event) => {
-        event.preventDefault();
-        let data = $(event.target)
-            .serializeArray()
-            .reduce(function (json, {name, value}) {
-                json[name] = value;
-                return json;
-            }, {});
-        data.isPublic = data.isPublic === 'true';
-        console.log(data);
-        $.ajax({
-            type: "POST",
-            url: 'http://kuppuch.keenetic.link:25595/project/create',
-            data: JSON.stringify(data),
-            success: function (data) {
-                window.location = 'http://kuppuch.keenetic.link:25595/project'
-            },
-            error: function (data) {
-                alert(data);
-                window.location = 'http://kuppuch.keenetic.link:25595/project'
-            }
-        });
-    })
-</script>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Создание проекта</h1>
+        <div class="central-form">
+            <form id="registration" class="registration">
+                <input type="text" class="form-control" id="nameInput" name="name" placeholder="Название" value="">
+                <input type="text" class="form-control" id="descriptionInput" name="description"
+                       placeholder="Описание" value="">
+                <div>
+                    <input type="checkbox" name="isPublic" value="true" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Публичный проект
+                    </label>
+                </div>
+                <button type="submit" class="btn" name="send" id="submitBtn">Создать проект</button>
+            </form>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" }}
+        <div class="recent-updates">
+            <h2>Недавние изменения</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo">
+                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
+                    </div>
+                </div>
+                <div class="update">
+                    <div class="profile-photo">
+                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
+                    </div>
+                </div>
+                <div class="update">
+                    <div class="profile-photo">
+                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="/js/theme.js"></script>
+    <script>
+        menuBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'block';
+        })
+
+        closeBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'none'
+        })
+
+        $('.registration').on('submit', (event) => {
+            event.preventDefault();
+            let data = $(event.target)
+                .serializeArray()
+                .reduce(function (json, {name, value}) {
+                    json[name] = value;
+                    return json;
+                }, {});
+            data.isPublic = data.isPublic === 'true';
+            console.log(data);
+            $.ajax({
+                type: "POST",
+                url: 'http://kuppuch.keenetic.link:25595/project/create',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    window.location = 'http://kuppuch.keenetic.link:25595/project'
+                },
+                error: function (data) {
+                    alert(data.statusText);
+                    console.log(data.statusText)
+                    window.location = 'http://kuppuch.keenetic.link:25595/project'
+                }
+            });
+        })
+    </script>
 </body>
 </html>
