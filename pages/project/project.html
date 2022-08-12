@@ -2,9 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Проект</title>
+    <title>{{ .project.Name }}</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 </head>
 <body>
-    {{ .Name }}
+    <div class="container">
+        {{template "aside.html"}}
+        <main>
+            <h1>Проект {{ .project.Name }}</h1>
+            <div class="issues">
+                <ul class="submenu">
+                    <li class="active"><a href="#">Бюджеты</a></li>
+                    <li><a href="#">Задачи</a></li>
+                </ul>
+                <div class="issues-content">
+                    hfp ldf<br>
+                    hfp ldf<br>
+                    hfp ldf<br>
+                    hfp ldf
+                </div>
+            </div>
+        </main>
+        <div class="right">
+            {{ template "right-top.html" }}
+            <div class="recent-updates">
+                <h2>Недавние изменения</h2>
+                <div class="updates">
+                    <div class="update">
+                        <div class="profile-photo">
+                            <img src="./img/Роман.jpg" alt="">
+                        </div>
+                        <div class="message">
+                            <p><b>Куппе Роман</b> написал главную страницу</p>
+                            <small class="text-muted">2 Минуты назад</small>
+                        </div>
+                    </div>
+                    <div class="update">
+                        <div class="profile-photo">
+                            <!--                        <img src="./img/Роман.jpg" alt="">-->
+                        </div>
+                        <div class="message">
+                            <p><b>Куппе Роман</b> написал главную страницу</p>
+                            <small class="text-muted">2 Минуты назад</small>
+                        </div>
+                    </div>
+                    <div class="update">
+                        <div class="profile-photo">
+                            <!--                        <img src="./img/Роман.jpg" alt="">-->
+                        </div>
+                        <div class="message">
+                            <p><b>Куппе Роман</b> написал главную страницу</p>
+                            <small class="text-muted">2 Минуты назад</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-------------------- END OF RECENT UPDATES -------------------->
+            <div class="sales-analytics">
+                <div class="item add-product">
+                    <div>
+                        <span class="material-icons-sharp">add</span>
+                        <h3>Добавить проект</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+//      переключение между вкладками
+        const insights = document.querySelector(".submenu");
+        insights.addEventListener('click', (event) => {
+            let target = event.target;
+
+            if (target.tagName === 'LI' || target.tagName === 'A') {
+                for (let index = 0; index < insights.children.length; index++) {
+                    insights.children[index].classList.remove('active');
+                }
+                if (target.tagName === 'A') {
+                    target = target.parentNode;
+                }
+                target.classList.add('active');
+            }
+        })
+    </script>
 </body>
 </html>

@@ -121,16 +121,15 @@
     const addProductBtn = document.querySelector(".add-product")
 
     addProductBtn.addEventListener('click', () => {
-        location.replace("/project/create");
+        location.assign("/project/create");
     })
 
     const insights = document.querySelector(".insights");
     insights.addEventListener('click', (event) => {
-        let target = event.target;
+        let sales = event.target.closest('.sales');
 
-        console.log(target.tagName);
-        if (target.className === 'sales') {
-            location.replace("/project?id=2");
+        if (sales.className === 'sales') {
+            location.assign("/project?id="+sales.childNodes[1].innerHTML);
         }
     })
 
