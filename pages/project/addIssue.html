@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать проект</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Создание задачи</h1>
+        <div class="central-form">
+            <form id="registration" class="registration">
+                <input type="text" class="form-control" id="nameInput" name="name" placeholder="Название" value="">
+                <input type="text" class="form-control" id="descriptionInput" name="description"
+                       placeholder="Описание" value="">
+                <button type="submit" class="btn" name="send" id="submitBtn">Создать задачу</button>
+            </form>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" }}
+        <div class="recent-updates">
+            <h2>Недавние изменения</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo">
+                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
+                    </div>
+                </div>
+                <div class="update">
+                    <div class="profile-photo">
+                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
+                    </div>
+                </div>
+                <div class="update">
+                    <div class="profile-photo">
+                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="/js/theme.js"></script>
+    <script>
+        menuBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'block';
+        })
+
+        closeBtn.addEventListener('click', () => {
+            sideMenu.style.display = 'none'
+        })
+
+        let queryDist = {};
+        location.search.substring(1).split('&').forEach((item) => {
+            let param = item.split('=');
+            queryDist[param[0]] = param[1];
+        })
+
+        $('.registration').on('submit', (event) => {
+            event.preventDefault();
+            let data = $(event.target)
+                .serializeArray()
+                .reduce(function (json, {name, value}) {
+                    json[name] = value;
+                    return json;
+                }, {});
+            data.isPublic = data.isPublic === 'true';
+            data.project_id = parseInt(queryDist.project_id);
+            $.ajax({
+                type: "POST",
+                url: 'http://kuppuch.keenetic.link:25595/issue/create',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    window.location = 'http://kuppuch.keenetic.link:25595/project'
+                },
+                error: function (data) {
+                    alert(data.statusText);
+                    console.log(data.statusText)
+                    window.location = 'http://kuppuch.keenetic.link:25595/project'
+                }
+            });
+        })
+    </script>
+</body>
+</html>

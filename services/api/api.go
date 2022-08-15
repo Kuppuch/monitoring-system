@@ -39,6 +39,7 @@ func Router() {
 	issue := r.Group("issue")
 	{
 		issue.GET("", getIssueList)
+		issue.GET("/create", getIssueCreatePage)
 		issue.POST("/create", insertIssue)
 	}
 

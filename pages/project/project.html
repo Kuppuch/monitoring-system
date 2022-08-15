@@ -5,6 +5,7 @@
     <title>{{ .project.Name }}</title>
     <link rel="stylesheet" href="../css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -13,14 +14,56 @@
             <h1>Проект {{ .project.Name }}</h1>
             <div class="issues">
                 <ul class="submenu">
-                    <li class="active"><a href="#">Бюджеты</a></li>
-                    <li><a href="#">Задачи</a></li>
+                    <li class="active">Бюджеты</li>
+                    <li>Задачи</li>
                 </ul>
                 <div class="issues-content">
-                    hfp ldf<br>
-                    hfp ldf<br>
-                    hfp ldf<br>
-                    hfp ldf
+<!--                    <table>-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>Трекер</th>-->
+<!--                            <th>Статус</th>-->
+<!--                            <th>Название задачи</th>-->
+<!--                            <th>Назначена</th>-->
+<!--                            <th>Обновлено</th>-->
+<!--                            <th>Оценка трудозатрат</th>-->
+<!--                            <th>Трудозатраты</th>-->
+<!--                            <th></th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr>-->
+<!--                            <td>Фича</td>-->
+<!--                            <td>Новая</td>-->
+<!--                            <td>Сделать страницу задач</td>-->
+<!--                            <td>Куппе Роман</td>-->
+<!--                            <td>15.08.2022 18:00</td>-->
+<!--                            <td>4.00</td>-->
+<!--                            <td>4.00</td>-->
+<!--                            <td></td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td>Фича</td>-->
+<!--                            <td>Новая</td>-->
+<!--                            <td>Сделать страницу задач</td>-->
+<!--                            <td>Куппе Роман</td>-->
+<!--                            <td>15.08.2022 18:00</td>-->
+<!--                            <td>4.00</td>-->
+<!--                            <td>4.00</td>-->
+<!--                            <td></td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td>Фича</td>-->
+<!--                            <td>Новая</td>-->
+<!--                            <td>Сделать страницу задач</td>-->
+<!--                            <td>Куппе Роман</td>-->
+<!--                            <td>15.08.2022 18:00</td>-->
+<!--                            <td>4.00</td>-->
+<!--                            <td>4.00</td>-->
+<!--                            <td></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
                 </div>
             </div>
         </main>
@@ -63,13 +106,25 @@
                 <div class="item add-product">
                     <div>
                         <span class="material-icons-sharp">add</span>
-                        <h3>Добавить проект</h3>
+                        <h3>Добавить задачу</h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
+
+        const addProductBtn = document.querySelector(".add-product")
+
+        let queryDist = {};
+        location.search.substring(1).split('&').forEach((item) => {
+          let param = item.split('=');
+          queryDist[param[0]] = param[1];
+        })
+        addProductBtn.addEventListener('click', () => {
+            location.assign("/issue/create?project_id="+queryDist.id);
+        })
+
 //      переключение между вкладками
         const insights = document.querySelector(".submenu");
         insights.addEventListener('click', (event) => {
@@ -83,6 +138,59 @@
                     target = target.parentNode;
                 }
                 target.classList.add('active');
+
+                if (target.innerHTML === 'Задачи') {
+                    console.log(target.innerHTML);
+                    $.ajax({
+                        type: "GET",
+                        url: 'http://kuppuch.keenetic.link:25595/issue?project_id='+queryDist.id,
+                        success: function (data) {
+                            $(".issues-content").empty();
+                            $(".issues-content").prepend(
+                                "<table>\n" +
+                                "                        <thead>\n" +
+                                "                            <tr>\n" +
+                                "                                <th>Трекер</th>\n" +
+                                "                                <th>Статус</th>\n" +
+                                "                                <th>Название задачи</th>\n" +
+                                "                                <th>Назначена</th>\n" +
+                                "                                <th>Обновлено</th>\n" +
+                                "                                <th>Оценка трудозатрат</th>\n" +
+                                "                                <th>Трудозатраты</th>\n" +
+                                "                                <th></th>\n" +
+                                "                            </tr>\n" +
+                                "                        </thead>\n" +
+                                "                        <tbody>\n"
+                                )
+
+                                $(data).each(function (i, elem) {
+                                    console.log(elem['Name']);
+                                    $("tbody").append(
+                                        "<tr>\n" +
+                                            "<td>Трекер Заглушка</td>\n" +
+                                            "<td>Статус Заглушка</td>\n" +
+                                            "<td>" + elem['Name'] + "</td>\n" +
+                                            "<td>Назначена Заглушка</td>\n" +
+                                            "<td>Обновлено Заглушка</td>\n" +
+                                            "<td>Оценка Заглушка</td>\n" +
+                                            "<td>Трудозатраты Заглушка</td>\n" +
+                                            "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
+                                        "</tr>\n"
+                                    );
+                                })
+
+                            $(".issues-content").append(
+                                "                        </tbody>" +
+                                "</table>");
+                            console.log(data)
+                        },
+                        error: function (data) {
+                            alert(data.statusText);
+                            console.log(data.statusText)
+                            // window.location = 'http://kuppuch.keenetic.link:25595/project'
+                        }
+                    });
+                }
             }
         })
     </script>

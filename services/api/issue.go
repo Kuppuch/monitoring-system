@@ -22,6 +22,10 @@ func getIssueList(c *gin.Context) {
 	c.JSON(http.StatusOK, issues)
 }
 
+func getIssueCreatePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "addIssue.html", nil)
+}
+
 func insertIssue(c *gin.Context) {
 	raw, err := c.GetRawData()
 	if err != nil {
@@ -43,7 +47,9 @@ func insertIssue(c *gin.Context) {
 			Meta: "error by unmarshal issue",
 		})
 	}
-	issue.InsertIssue()
+	issue.StatusID = 1
+	issue.CreatorID = 1
+	issue.AssignedToID = 1
 	if rowAffected := issue.InsertIssue(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
