@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Задача #{{ .issue.ID }}</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Задача {{ .issue.Name }}</h1>
+    </main>
+</div>
+{{template "index.js"}}
+</body>
+</html>

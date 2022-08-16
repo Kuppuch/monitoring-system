@@ -22,6 +22,19 @@ func getIssueList(c *gin.Context) {
 	c.JSON(http.StatusOK, issues)
 }
 
+func getIssueByID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed parse uint",
+		})
+	}
+	issue := middleware.GetIssue(uint(id))
+	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue})
+}
+
 func getIssueCreatePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "addIssue.html", nil)
 }

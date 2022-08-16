@@ -366,7 +366,7 @@ main .issues:hover {
 .submenu {
     display: flex;
     border-bottom: 3px solid var(--color-primary);
-    background: var(--color-info-light);
+    /*background: var(--color-info-dark);*/
     border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
 }
 
@@ -382,7 +382,7 @@ main .issues:hover {
 }
 
 .submenu .active {
-    background: var(--color-white);
+    background: var(--color-light);
 }
 
 .issues-content {
@@ -395,6 +395,10 @@ main .issues:hover {
 
 .issues-content table {
     width: 100%;
+}
+
+.issues-content table tbody tr {
+    cursor: pointer;
 }
 
 /* =========================== RECENT ORDERS ============================ */

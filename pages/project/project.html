@@ -18,52 +18,6 @@
                     <li>Задачи</li>
                 </ul>
                 <div class="issues-content">
-<!--                    <table>-->
-<!--                        <thead>-->
-<!--                        <tr>-->
-<!--                            <th>Трекер</th>-->
-<!--                            <th>Статус</th>-->
-<!--                            <th>Название задачи</th>-->
-<!--                            <th>Назначена</th>-->
-<!--                            <th>Обновлено</th>-->
-<!--                            <th>Оценка трудозатрат</th>-->
-<!--                            <th>Трудозатраты</th>-->
-<!--                            <th></th>-->
-<!--                        </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                        <tr>-->
-<!--                            <td>Фича</td>-->
-<!--                            <td>Новая</td>-->
-<!--                            <td>Сделать страницу задач</td>-->
-<!--                            <td>Куппе Роман</td>-->
-<!--                            <td>15.08.2022 18:00</td>-->
-<!--                            <td>4.00</td>-->
-<!--                            <td>4.00</td>-->
-<!--                            <td></td>-->
-<!--                        </tr>-->
-<!--                        <tr>-->
-<!--                            <td>Фича</td>-->
-<!--                            <td>Новая</td>-->
-<!--                            <td>Сделать страницу задач</td>-->
-<!--                            <td>Куппе Роман</td>-->
-<!--                            <td>15.08.2022 18:00</td>-->
-<!--                            <td>4.00</td>-->
-<!--                            <td>4.00</td>-->
-<!--                            <td></td>-->
-<!--                        </tr>-->
-<!--                        <tr>-->
-<!--                            <td>Фича</td>-->
-<!--                            <td>Новая</td>-->
-<!--                            <td>Сделать страницу задач</td>-->
-<!--                            <td>Куппе Роман</td>-->
-<!--                            <td>15.08.2022 18:00</td>-->
-<!--                            <td>4.00</td>-->
-<!--                            <td>4.00</td>-->
-<!--                            <td></td>-->
-<!--                        </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
                 </div>
             </div>
         </main>
@@ -112,8 +66,8 @@
             </div>
         </div>
     </div>
+    {{template "index.js"}}
     <script>
-
         const addProductBtn = document.querySelector(".add-product")
 
         let queryDist = {};
@@ -140,14 +94,13 @@
                 target.classList.add('active');
 
                 if (target.innerHTML === 'Задачи') {
-                    console.log(target.innerHTML);
                     $.ajax({
                         type: "GET",
                         url: 'http://kuppuch.keenetic.link:25595/issue?project_id='+queryDist.id,
                         success: function (data) {
                             $(".issues-content").empty();
                             $(".issues-content").prepend(
-                                "<table>\n" +
+                                "<table id='issues'>\n" +
                                 "                        <thead>\n" +
                                 "                            <tr>\n" +
                                 "                                <th>Трекер</th>\n" +
@@ -164,9 +117,9 @@
                                 )
 
                                 $(data).each(function (i, elem) {
-                                    console.log(elem['Name']);
                                     $("tbody").append(
                                         "<tr>\n" +
+                                            "<td hidden>" + elem['ID'] + "</td>\n" +
                                             "<td>Трекер Заглушка</td>\n" +
                                             "<td>Статус Заглушка</td>\n" +
                                             "<td>" + elem['Name'] + "</td>\n" +
@@ -182,7 +135,17 @@
                             $(".issues-content").append(
                                 "                        </tbody>" +
                                 "</table>");
-                            console.log(data)
+
+                            $('#issues').click(function (event) {
+                                let row = event.target.closest('tr');
+                                if (row != null) {
+                                    console.log(row.tagName);
+                                    if (row.tagName === 'TR') {
+                                        console.log(row);
+                                        location.assign("/issue/"+row.children[0].innerHTML);
+                                    }
+                                }
+                            })
                         },
                         error: function (data) {
                             alert(data.statusText);
@@ -190,6 +153,9 @@
                             // window.location = 'http://kuppuch.keenetic.link:25595/project'
                         }
                     });
+                }
+                if (target.innerHTML === 'Бюджеты') {
+                    $(".issues-content").empty();
                 }
             }
         })
