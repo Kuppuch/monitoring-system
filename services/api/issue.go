@@ -32,7 +32,8 @@ func getIssueByID(c *gin.Context) {
 		})
 	}
 	issue := middleware.GetIssue(uint(id))
-	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue})
+	statuses := middleware.GetStatusList()
+	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue, "statuses": statuses})
 }
 
 func getIssueCreatePage(c *gin.Context) {

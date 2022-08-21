@@ -9,11 +9,19 @@ type Issue struct {
 	gorm.Model
 	Name         string
 	Description  string
-	StatusName   string `gorm:"-:all"`
-	ProjectID    uint   `json:"project_id"`
-	CreatorID    uint   `json:"creator_id"`
-	AssignedToID uint   `json:"assigned_to_id"`
-	StatusID     uint   `json:"status"`
+	ProjectID    uint `json:"project_id"`
+	CreatorID    uint `json:"creator_id"`
+	AssignedToID uint `json:"assigned_to_id"`
+	StatusID     uint `json:"status_id"`
+	TrackerID    uint `json:"tracker_id"`
+}
+
+type IssueWeb struct {
+	Issue
+	StatusName  string
+	TrackerName string
+	Creator     string
+	AssignedTo  string
 }
 
 func GetIssueList(projectID uint) []Issue {
@@ -22,9 +30,18 @@ func GetIssueList(projectID uint) []Issue {
 	return issues
 }
 
-func GetIssue(id uint) Issue {
-	issue := Issue{}
-	DB.Where("id = ?", id).Find(&issue)
+func GetIssue(id uint) IssueWeb {
+	issue := IssueWeb{}
+	DB.Table("issues").
+		Select("issues.id, issues.name, issues.description, statuses.name as status_name, trackers.name as tracker_name, projects.id, "+
+			"issues.project_id, issues.creator_id, issues.assigned_to_id, issues.status_id, issues.tracker_id, "+
+			"u.last_name || ' ' || u.name || ' ' || u.middle_name as creator, uu.last_name || ' ' || uu.name || ' ' || uu.middle_name as assigned_to").
+		Joins("inner join statuses on statuses.id = issues.status_id").
+		Joins("inner join trackers on trackers.id = issues.tracker_id").
+		Joins("inner join projects on projects.id = issues.project_id").
+		Joins("inner join users as u on u.id = issues.creator_id").
+		Joins("inner join users as uu on uu.id = issues.assigned_to_id").
+		Where("issues.id = ?", id).Find(&issue)
 	return issue
 }
 

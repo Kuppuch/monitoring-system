@@ -12,7 +12,47 @@
     {{template "aside.html"}}
     <main>
         <h1>Задача {{ .issue.Name }}</h1>
+        <div class="issues-content">
+            <div class="content-block-v">
+                <span>Описание</span>
+                {{ .issue.Description }}
+            </div>
+            <div class="row">
+                <div class="content-block-h">
+                    <div class="title">Статус</div>
+                    <div class="cont">
+                        <select name="" id="Status">
+                            <option value="{{ .issue.StatusID }}">{{ .issue.StatusName }}</option>
+                            {{ range $statuses := .statuses }}
+                            <option value="{{ .ID }}">{{ .Name }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+                </div>
+                <div class="content-block-h">
+                    <div class="title">Трекер</div>
+                    <div class="cont">
+                        {{ .issue.TrackerName }}
+                    </div>
+                </div>
+                <div class="content-block-h">
+                    <div class="title">Создал:</div>
+                    <div class="cont">
+                        {{ .issue.Creator }}
+                    </div>
+                </div>
+                <div class="content-block-h">
+                    <div class="title">Назначена на:</div>
+                    <div class="cont">
+                        {{ .issue.AssignedTo }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+    <div class="right">
+        {{ template "right-top.html" }}
+    </div>
 </div>
 {{template "index.js"}}
 </body>

@@ -101,6 +101,11 @@ h4{
     font-size: 0.77rem;
 }
 
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 small{
     font-size: 0.75rem;
 }
@@ -267,6 +272,7 @@ main .insights > div {
 
 main .insights > div:hover {
     box-shadow: none;
+    cursor: pointer;
 }
 
 main .insights > div span {
@@ -399,6 +405,42 @@ main .issues:hover {
 
 .issues-content table tbody tr {
     cursor: pointer;
+}
+
+/* =============== ISSUES =================== */
+
+.content-block-v {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-block-h {
+    padding: 1rem 0;
+    width: 25%;
+    display: flex;
+}
+
+.content-block-v span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.content-block-h .title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 1rem;
+    align-self: center;
+}
+
+.content-block-h .cont {
+    align-self: center;
+}
+
+.content-block-h select {
+    width: 10rem;
+    border: 1px solid var(--color-light);
+    border-radius: var(--border-radius-2);
 }
 
 /* =========================== RECENT ORDERS ============================ */
