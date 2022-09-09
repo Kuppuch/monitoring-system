@@ -21,5 +21,28 @@ func Connector() error {
 	if err != nil {
 		return err
 	}
+	InsertStatuses()
 	return nil
+}
+
+func InsertStatuses() {
+	var cas []Status
+	DB.Find(&cas)
+	if len(cas) == 0 {
+		data := []string{
+			"Новая",
+			"В очереди исполнения",
+			"В работе",
+			"В тестировании",
+			"Возвращено в работу",
+			"Готова",
+			"Переоткрыта",
+			"Закрыта",
+		}
+		for _, v := range data {
+			DB.Create(&Status{
+				Name: v,
+			})
+		}
+	}
 }

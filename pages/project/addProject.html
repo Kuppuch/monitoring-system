@@ -85,15 +85,15 @@
             console.log(data);
             $.ajax({
                 type: "POST",
-                url: 'http://kuppuch.keenetic.link:25595/project/create',
+                url: 'http://127.0.0.1:25595/project/create',
                 data: JSON.stringify(data),
                 success: function (data) {
-                    window.location = 'http://kuppuch.keenetic.link:25595/project'
+                    window.location = 'http://127.0.0.1:25595/project'
                 },
                 error: function (data) {
                     alert(data.statusText);
                     console.log(data.statusText)
-                    window.location = 'http://kuppuch.keenetic.link:25595/project'
+                    window.location = 'http://127.0.0.1:25595/project'
                 }
             });
         })

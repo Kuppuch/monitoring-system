@@ -96,7 +96,7 @@
                 if (target.innerHTML === 'Задачи') {
                     $.ajax({
                         type: "GET",
-                        url: 'http://kuppuch.keenetic.link:25595/issue?project_id='+queryDist.id,
+                        url: 'http://127.0.0.1:25595/issue?project_id='+queryDist.id,
                         success: function (data) {
                             $(".issues-content").empty();
                             $(".issues-content").prepend(
@@ -150,7 +150,7 @@
                         error: function (data) {
                             alert(data.statusText);
                             console.log(data.statusText)
-                            // window.location = 'http://kuppuch.keenetic.link:25595/project'
+                            // window.location = 'http://127.0.0.1:25595/project'
                         }
                     });
                 }

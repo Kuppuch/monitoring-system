@@ -61,14 +61,14 @@
         console.log(data);
         $.ajax({
             type: "POST",
-            url: 'http://kuppuch.keenetic.link:25595/user/register',
+            url: 'http://127.0.0.1:25595/user/register',
             data: JSON.stringify(data),
             success: function (data) {
-                window.location = 'http://kuppuch.keenetic.link:25595/user'
+                window.location = 'http://127.0.0.1:25595/user'
             },
             error: function (data) {
                 alert(data);
-                window.location = 'http://kuppuch.keenetic.link:25595/user'
+                window.location = 'http://127.0.0.1:25595/user'
             }
         });
     })
