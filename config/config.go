@@ -24,7 +24,11 @@ func Init() {
 	viper.SetConfigFile(*configFile)
 
 	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Sprintf("Unable to read config file: %s", err))
+		*configFile = "../config/config.json"
+		viper.SetConfigFile(*configFile)
+		if err := viper.ReadInConfig(); err != nil {
+			panic(fmt.Sprintf("Unable to read config file: %s", err))
+		}
 	}
 
 	DbUser = viper.GetString("db.user")
