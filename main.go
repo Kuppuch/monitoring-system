@@ -1,7 +1,7 @@
 package main
 
 import (
-	"monitoring-system/config"
+	_ "monitoring-system/config"
 	"monitoring-system/services/api"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
@@ -9,7 +9,6 @@ import (
 
 func main() {
 	logging.Init()
-	config.Init()
 	err := middleware.Connector()
 	if err != nil {
 		logging.Print.Fatal(err)

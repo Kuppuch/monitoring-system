@@ -11,10 +11,12 @@ import (
 func Router() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+	//html := template.Must(template.ParseFiles("./pages/img/logo.png"))
+	//r.SetHTMLTemplate(html)
 	r.SetFuncMap(template.FuncMap{
 		"upper": strings.ToUpper,
 	})
-	r.LoadHTMLGlob("pages/**/*")
+	r.LoadHTMLGlob("pages/**/*.html")
 	r.Static("/css", "./pages/css")
 	r.Static("/js", "./pages/js")
 	r.Use(cors.AllowAll())

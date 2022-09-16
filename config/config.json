@@ -1,11 +1,11 @@
 {
   "db" : {
     "dbtype"  : "postgres",
-    "dbname"  : "postgres",
+    "dbname"  : "monitoring",
     "host"    : "localhost",
     "user"    : "postgres",
-    "password": "postgrespw",
+    "password": "postgres",
     "sslmode" : "disable",
-    "port"    : "55000"
+    "port"    : "5432"
   }
 }

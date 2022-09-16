@@ -16,7 +16,7 @@ var (
 	DbPassword string
 )
 
-func Init() {
+func init() {
 	configFile := flag.String("config", "config/config.json", "config which should be used")
 	flag.Parse()
 
