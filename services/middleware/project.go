@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"monitoring-system/services/logging"
 )
@@ -14,6 +15,11 @@ type Project struct {
 	Issues      []Issue `gorm:"foreignKey:ProjectID" json:"issues"`
 }
 
+type ProjectWeb struct {
+	Project
+	IssuesCnt int64
+}
+
 func GetProjects() []Project {
 	var projects []Project
 	tx := DB.Find(&projects)
@@ -21,6 +27,12 @@ func GetProjects() []Project {
 		logging.Print.Warning(tx.Error)
 	}
 	return projects
+}
+
+func (p ProjectWeb) GetIssueCount() {
+	//var issues []Issue
+	DB.Where("project_id = ?", p.ID).Find([]Issue{}).Count(&p.IssuesCnt)
+	fmt.Println(p.IssuesCnt)
 }
 
 func GetProjectByID(id int) *Project {

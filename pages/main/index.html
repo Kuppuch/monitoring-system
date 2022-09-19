@@ -12,7 +12,6 @@
     <div class="container">
 
         {{template "aside.html"}}
-        {{.image}}
         <main>
             <h1>Дашборд</h1>
             <div class="date">
@@ -230,7 +229,6 @@
         const menuBtn = document.querySelector("#menu-btn");
         const closeBtn = document.querySelector("#close-btn");
         const themeToggler = document.querySelector(".theme-toggler");
-        console.log(sideMenu.children[0].children[0])
         const logo = sideMenu.children[0].children[0]
         var img = new  Image();
         img.src = {{ .image }}

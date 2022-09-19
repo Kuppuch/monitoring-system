@@ -21,11 +21,12 @@ func Connector() error {
 	if err != nil {
 		return err
 	}
-	InsertStatuses()
+	insertStatuses()
+	insertTrackers()
 	return nil
 }
 
-func InsertStatuses() {
+func insertStatuses() {
 	var cas []Status
 	DB.Find(&cas)
 	if len(cas) == 0 {
@@ -41,6 +42,23 @@ func InsertStatuses() {
 		}
 		for _, v := range data {
 			DB.Create(&Status{
+				Name: v,
+			})
+		}
+	}
+}
+
+func insertTrackers() {
+	var trackers []Tracker
+	DB.Find(&trackers)
+	if len(trackers) == 0 {
+		data := []string{
+			"Фича",
+			"Анализ",
+			"Баг",
+		}
+		for _, v := range data {
+			DB.Create(&Tracker{
 				Name: v,
 			})
 		}

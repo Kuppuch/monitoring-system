@@ -63,6 +63,7 @@ func insertIssue(c *gin.Context) {
 	}
 	issue.StatusID = 1
 	issue.CreatorID = 1
+	issue.TrackerID = 1
 	issue.AssignedToID = 1
 	if rowAffected := issue.InsertIssue(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
