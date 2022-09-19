@@ -230,6 +230,11 @@
         const menuBtn = document.querySelector("#menu-btn");
         const closeBtn = document.querySelector("#close-btn");
         const themeToggler = document.querySelector(".theme-toggler");
+        console.log(sideMenu.children[0].children[0])
+        const logo = sideMenu.children[0].children[0]
+        var img = new  Image();
+        img.src = {{ .image }}
+        logo.insertBefore(img, logo.children[0])
 
         window.onload = function () {
             const theme = localStorage.getItem('theme');
