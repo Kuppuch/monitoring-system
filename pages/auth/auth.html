@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        // $('.registration').on('submit', (event) => {
+        //     event.preventDefault();
+        //     let data = $(event.target);
+        let data = {login:'2@2.2', password:'2'};
+        //         .serializeArray()
+        //         .reduce(function (json, {name, value}) {
+        //             json[name] = value;
+        //             return json;
+        //         }, {});
+
+        $.ajax({
+            type: "POST",
+            url: 'http://127.0.0.1:25595/login',
+            data: JSON.stringify(data),
+            success: function (data, text, xhr) {
+                debugger;
+                console.log(xhr.getAllResponseHeaders())
+                console.log(xhr.getResponseHeader("auth"))
+                console.log(xhr)
+                //window.location = 'http://127.0.0.1:25595/login'
+            },
+            error: function (data) {
+                alert(data);
+                //window.location = 'http://127.0.0.1:25595/login'
+            }
+        });
+    });
+</script>
+</body>
+</html>

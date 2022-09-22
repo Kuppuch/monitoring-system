@@ -23,8 +23,8 @@ type AuthParam struct {
 	Password string
 }
 
-func getLoginPage() {
-
+func getLoginPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "auth.html", nil)
 }
 
 func login(c *gin.Context) {
@@ -74,4 +74,5 @@ func login(c *gin.Context) {
 	})
 	token, _ := t.SignedString([]byte("123"))
 	c.Header("auth", token)
+	c.Header("time", time.Now().String())
 }
