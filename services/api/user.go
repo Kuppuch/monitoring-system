@@ -1,13 +1,15 @@
 package api
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -56,6 +58,7 @@ func insertUser(c *gin.Context) {
 		})
 		return
 	}
+	//TODO переделать на длину
 	if user.Email == "" || user.Password == "" || user.LastName == "" || user.Name == "" {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  errors.New("null field"),
@@ -64,7 +67,7 @@ func insertUser(c *gin.Context) {
 		})
 		return
 	}
-	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	user.Password = fmt.Sprintf("%x", sha256.Sum256([]byte(user.Password)))
 	if err != nil {
 		logging.Print.Warning(err)
 		c.JSON(http.StatusInternalServerError, gin.Error{
@@ -94,12 +97,24 @@ func insertUser(c *gin.Context) {
 		})
 		return
 	}
-	user.Password = string(hash)
+
 	rowAffected := user.InsertUser()
 	if rowAffected > 0 {
+		err = createUserRep(user.ID)
+		if err != nil {
+			logging.Print.Error("Unable to create user directory: ", err)
+		}
 		c.JSON(http.StatusOK, middleware.GetSuccess())
 	} else {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 	}
 
+}
+
+func createUserRep(userID uint) error {
+	err := os.Mkdir("lib/users/"+strconv.Itoa(int(userID)), 0777)
+	if err != nil {
+		return err
+	}
+	return nil
 }

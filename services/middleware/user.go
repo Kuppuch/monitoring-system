@@ -42,8 +42,8 @@ func (u *User) GetUserByEmail() error {
 	return nil
 }
 
-func (u User) InsertUser() int64 {
-	tx := DB.Create(&u)
+func (u *User) InsertUser() int64 {
+	tx := DB.Create(u)
 	if tx.Error != nil {
 		logging.Print.Warning(tx.Error)
 	}

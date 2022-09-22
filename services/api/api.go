@@ -24,6 +24,9 @@ func Router() {
 	r.GET("/", getMainPage)
 	r.GET("/admin", getAdminPage)
 
+	r.GET("/login")
+	r.POST("/login", login)
+
 	user := r.Group("user")
 	{
 		user.GET("/reg", getPage)

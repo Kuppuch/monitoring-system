@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/spf13/viper"
+	"os"
 )
 
 var (
@@ -37,4 +38,13 @@ func init() {
 	DBPort = viper.GetString("db.port")
 	DbSslMode = viper.GetString("db.sslmode")
 	DbPassword = viper.GetString("db.password")
+
+	createLibRep()
+}
+
+func createLibRep() {
+	err := os.MkdirAll("lib/users", 0777)
+	if err != nil {
+		panic(fmt.Sprintf("Unable to create lib/user directory: %s", err))
+	}
 }
