@@ -32,6 +32,7 @@ func Router() {
 		user.GET("/reg", getPage)
 		user.GET("", getUser)
 		user.POST("/register", insertUser)
+		user.PATCH("/upload_img", uploadProfileImg)
 	}
 
 	project := r.Group("project")

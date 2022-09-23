@@ -1,11 +1,15 @@
 package api
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"image/jpeg"
+	"image/png"
+	"io"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
@@ -117,4 +121,50 @@ func createUserRep(userID uint) error {
 		return err
 	}
 	return nil
+}
+
+func uploadProfileImg(c *gin.Context) {
+	src, _ := c.FormFile("image")
+	file, _ := src.Open()
+	defer file.Close()
+
+	if src.Size > 1000001 {
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  errors.New("too big file"),
+			Type: 0,
+			Meta: "file must not exceed 20 mb",
+		})
+	}
+
+	var bb bytes.Buffer
+	imageBytes := make([]byte, src.Size+128)
+	_, err := file.Read(imageBytes)
+	if err != nil && err != io.EOF {
+		fmt.Println(err)
+	}
+	bb.Write(imageBytes)
+
+	dataType := http.DetectContentType(imageBytes)
+	switch dataType {
+	case "image/jpeg":
+		img, err := jpeg.Decode(bytes.NewReader(imageBytes))
+		if err != nil {
+			fmt.Println(err, "unable to decode jpeg")
+		}
+
+		if err := png.Encode(&bb, img); err != nil {
+			fmt.Println(err, "unable to encode png")
+		}
+	case "image/png":
+		bb.Write(imageBytes)
+	default:
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  errors.New("uploading failed"),
+			Type: 0,
+			Meta: "unsupported format or file is not image",
+		})
+	}
+	profile, _ := os.Create("lib/users/" + "1" + "/photo.png")
+	defer profile.Close()
+	profile.Write(bb.Bytes())
 }
