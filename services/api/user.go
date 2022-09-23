@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,6 +11,8 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
+	"io/ioutil"
+	"log"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
@@ -42,8 +45,19 @@ func getUser(c *gin.Context) {
 		logging.Print.Warning(err)
 	}
 	user.Password = ""
-	c.JSON(http.StatusOK, user)
-	c.HTML(http.StatusOK, "users.html", gin.H{"users": user})
+	//c.JSON(http.StatusOK, user)
+
+	//Profile photo load
+	bts, err := ioutil.ReadFile("./lib/users/" + strconv.Itoa(int(user.ID)) + "/photo.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	base64Encoding := "data:image/png;base64," + base64.StdEncoding.EncodeToString(bts)
+
+	c.HTML(http.StatusOK, "users.html", gin.H{
+		"users": user,
+		"image": base64Encoding,
+	})
 }
 
 func insertUser(c *gin.Context) {
@@ -63,7 +77,7 @@ func insertUser(c *gin.Context) {
 		return
 	}
 	//TODO переделать на длину
-	if user.Email == "" || user.Password == "" || user.LastName == "" || user.Name == "" {
+	if len(user.Email) > 0 || len(user.Password) > 0 || len(user.LastName) > 0 || len(user.Name) > 0 {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  errors.New("null field"),
 			Type: 0,
