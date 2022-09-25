@@ -7,6 +7,7 @@
     <title>Дашборд</title>
     <link rel="stylesheet" href="../css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -224,6 +225,19 @@
         </div>
     </div>
 <!--    <script src="../js/index.js"></script>-->
+    <script>
+        $( document ).ready(function() {
+            // const logout = document.querySelector(".logout")
+            // logout.addEventListener('click', (event) => {
+            //     debugger;
+            //     document.cookie = "auth=;expires=Thu, 01 Jan 1970 00:00:00 GMT"
+            // })
+            $('.logout').click(function () {
+                console.log("123")
+                $.cookie("auth", null, {path: '/'})
+            })
+        });
+    </script>
     <script>
         const sideMenu = document.querySelector("aside");
         const menuBtn = document.querySelector("#menu-btn");

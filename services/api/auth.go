@@ -73,6 +73,6 @@ func login(c *gin.Context) {
 		ID: user.ID,
 	})
 	token, _ := t.SignedString([]byte("123"))
-	c.Header("auth", token)
-	c.Header("time", time.Now().String())
+	c.Header("Authorization", token)
+	c.JSON(http.StatusOK, gin.H{"Authorization": token})
 }

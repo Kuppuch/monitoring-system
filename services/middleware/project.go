@@ -39,7 +39,7 @@ func GetProjectByID(id int) *Project {
 	var project Project
 	tx := DB.Where("id = ?", id).Find(&project)
 	if tx.Error != nil {
-		logging.Print.Warning(tx.Error)
+		logging.Print.Warning(tx.Error, "id: ", id)
 	}
 	return &project
 }

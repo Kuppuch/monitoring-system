@@ -19,7 +19,9 @@ func Router() {
 	r.LoadHTMLGlob("pages/**/*.html")
 	r.Static("/css", "./pages/css")
 	r.Static("/js", "./pages/js")
+
 	r.Use(cors.AllowAll())
+	r.Use(AuthRequired)
 
 	r.GET("/", getMainPage)
 	r.GET("/admin", getAdminPage)
@@ -56,3 +58,35 @@ func Router() {
 	}
 
 }
+
+func AuthRequired(c *gin.Context) {
+	if c.Request.URL.Path == "/login" {
+		return
+	}
+	token, _ := c.Cookie("auth")
+	if len(token) < 1 {
+		//c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		c.Redirect(302, "/login")
+	}
+	c.Next()
+}
+
+//func middlewaref() gin.HandlerFunc {
+//	cors.AllowAll()
+//	return func(c *gin.Context) {
+//		fmt.Println(c.Request.URL.Path)
+//		if c.Request.URL.Path == "/login" {
+//			return
+//		}
+//		token, _ := c.Cookie("auth")
+//
+//		if token == "" {
+//			c.AbortWithStatus(300)
+//			c.Redirect(300, "/login")
+//		}
+//	}
+//}
+//
+//func respondWithError(c *gin.Context, code int, message interface{}) {
+//	c.AbortWithStatusJSON(code, gin.H{"error": message})
+//}
