@@ -39,7 +39,7 @@
             url: 'http://127.0.0.1:25595/login',
             data: JSON.stringify(data),
             success: function (data) {
-                Cookies.set('auth', data.Authorization, { expires: 1 })
+                Cookies.set('auth', data.Authorization)
                 window.location = 'http://127.0.0.1:25595'
             },
             error: function (data) {
