@@ -21,7 +21,9 @@ func Router() {
 	r.Static("/photo", "./lib/users")
 
 	r.Use(cors.AllowAll())
-	r.Use(AuthRequired)
+	//r.Use(AuthRequired)
+
+	r.POST("upload", uploadProfileImg)
 
 	r.GET("/", getMainPage)
 	r.GET("/admin", getAdminPage)
@@ -34,7 +36,7 @@ func Router() {
 		user.GET("/reg", getPage)
 		user.GET("", getUser)
 		user.POST("/register", insertUser)
-		user.PATCH("/upload_img", uploadProfileImg)
+		user.PATCH("/upload", uploadProfileImg)
 		user.GET("/:id", GetProfilePhoto)
 	}
 

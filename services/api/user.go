@@ -187,6 +187,7 @@ func GetProfilePhoto(c *gin.Context) {
 	id := c.Param("id")
 	_, err := ioutil.ReadFile("./lib/users/" + id + "/photo.png")
 	if err != nil {
-		log.Fatal(err)
+		logging.Print.Warning(err)
 	}
+	c.HTML(http.StatusOK, "profile.html", nil)
 }
