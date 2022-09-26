@@ -182,3 +182,11 @@ func uploadProfileImg(c *gin.Context) {
 	defer profile.Close()
 	profile.Write(bb.Bytes())
 }
+
+func GetProfilePhoto(c *gin.Context) {
+	id := c.Param("id")
+	_, err := ioutil.ReadFile("./lib/users/" + id + "/photo.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+}

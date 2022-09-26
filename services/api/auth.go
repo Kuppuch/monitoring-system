@@ -10,7 +10,6 @@ import (
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
-	"time"
 )
 
 type Claims struct {
@@ -65,14 +64,22 @@ func login(c *gin.Context) {
 		return
 	}
 
-	t := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 10).Unix(), //10 часов
-			IssuedAt:  time.Now().Unix(),
-		},
-		ID: user.ID,
-	})
-	token, _ := t.SignedString([]byte("123"))
+	token := middleware.GetToken(user.ID)
+
+	authInstance := middleware.Auth{
+		UserID: user.ID,
+		Token:  token,
+	}
+	err = authInstance.InsertAuth()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  errors.New("auth err"),
+			Type: 0,
+			Meta: "auth err",
+		})
+		return
+	}
+
 	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, gin.H{"Authorization": token})
 }

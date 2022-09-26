@@ -15,6 +15,7 @@ type User struct {
 	Password    string  `json:"password,omitempty"`
 	CreateIssue []Issue `gorm:"foreignKey:CreatorID" json:"create_issue,omitempty"`
 	AssignIssue []Issue `gorm:"foreignKey:AssignedToID" json:"assign_issue,omitempty"`
+	Auth        []Auth  `gorm:"foreignKey:UserID" json:"auth,omitempty"`
 }
 
 func GetAllUsers() []User {
