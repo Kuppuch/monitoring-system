@@ -23,38 +23,7 @@
     </main>
     <div class="right">
         {{ template "right-top.html" }}
-        <div class="recent-updates">
-            <h2>Недавние изменения</h2>
-            <div class="updates">
-                <div class="update">
-                    <div class="profile-photo">
-                        <img src="/photo/1/photo.png" alt="">
-                    </div>
-                    <div class="message">
-                        <p><b>Куппе Роман</b> написал главную страницу</p>
-                        <small class="text-muted">2 Минуты назад</small>
-                    </div>
-                </div>
-                <div class="update">
-                    <div class="profile-photo">
-                        <img src="/photo/1/photo.png" alt="">
-                    </div>
-                    <div class="message">
-                        <p><b>Куппе Роман</b> написал главную страницу</p>
-                        <small class="text-muted">2 Минуты назад</small>
-                    </div>
-                </div>
-                <div class="update">
-                    <div class="profile-photo">
-                        <img src="/photo/1/photo.png" alt="">
-                    </div>
-                    <div class="message">
-                        <p><b>Куппе Роман</b> написал главную страницу</p>
-                        <small class="text-muted">2 Минуты назад</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{ template "resent-updates.html" }}
         <!-------------------- END OF RECENT UPDATES -------------------->
         <div class="sales-analytics">
             <div class="item add-product">

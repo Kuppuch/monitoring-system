@@ -89,12 +89,12 @@
             url: 'http://127.0.0.1:25595/issue/create',
             data: JSON.stringify(data),
             success: function (data) {
-                window.location = 'http://127.0.0.1:25595/project'
+                window.location = 'http://127.0.0.1:25595/project?id='+parseInt(queryDist.project_id);
             },
             error: function (data) {
                 alert(data.statusText);
-                console.log(data.statusText)
-                window.location = 'http://127.0.0.1:25595/project'
+                console.log(data.statusText);
+                window.location = 'http://127.0.0.1:25595/project?id='+parseInt(queryDist.project_id);
             }
         });
     })

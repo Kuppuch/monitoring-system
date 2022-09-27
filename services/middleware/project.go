@@ -20,9 +20,13 @@ type ProjectWeb struct {
 	IssuesCnt int64
 }
 
-func GetProjects() []Project {
-	var projects []Project
-	tx := DB.Find(&projects)
+func GetProjects() []ProjectWeb {
+	var projects []ProjectWeb
+	//tx := DB.Find(&projects)
+	tx := DB.Table("projects as p").Select("p.*, COUNT(i.project_id) as issues_cnt").
+		Joins("LEFT JOIN  issues as i ON i.project_id = p.id").
+		Group("p.id").
+		Order("p.id").Find(&projects)
 	if tx.Error != nil {
 		logging.Print.Warning(tx.Error)
 	}
