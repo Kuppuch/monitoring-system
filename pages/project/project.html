@@ -8,157 +8,158 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        {{template "aside.html"}}
-        <main>
-            <h1>Проект {{ .project.Name }}</h1>
-            <div class="issues">
-                <ul class="submenu">
-                    <li class="active">Бюджеты</li>
-                    <li>Задачи</li>
-                </ul>
-                <div class="issues-content">
-                </div>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Проект {{ .project.Name }}</h1>
+        <div class="issues">
+            <ul class="submenu">
+                <li class="active">Бюджеты</li>
+                <li>Задачи</li>
+            </ul>
+            <div class="issues-content">
             </div>
-        </main>
-        <div class="right">
-            {{ template "right-top.html" }}
-            <div class="recent-updates">
-                <h2>Недавние изменения</h2>
-                <div class="updates">
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="./img/Роман.jpg" alt="">
-                        </div>
-                        <div class="message">
-                            <p><b>Куппе Роман</b> написал главную страницу</p>
-                            <small class="text-muted">2 Минуты назад</small>
-                        </div>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" }}
+        <div class="recent-updates">
+            <h2>Недавние изменения</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="profile-photo">
+                        <img src="/photo/1/photo.png" alt="">
                     </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <!--                        <img src="./img/Роман.jpg" alt="">-->
-                        </div>
-                        <div class="message">
-                            <p><b>Куппе Роман</b> написал главную страницу</p>
-                            <small class="text-muted">2 Минуты назад</small>
-                        </div>
-                    </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <!--                        <img src="./img/Роман.jpg" alt="">-->
-                        </div>
-                        <div class="message">
-                            <p><b>Куппе Роман</b> написал главную страницу</p>
-                            <small class="text-muted">2 Минуты назад</small>
-                        </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
                     </div>
                 </div>
-            </div>
-            <!-------------------- END OF RECENT UPDATES -------------------->
-            <div class="sales-analytics">
-                <div class="item add-product">
-                    <div>
-                        <span class="material-icons-sharp">add</span>
-                        <h3>Добавить задачу</h3>
+                <div class="update">
+                    <div class="profile-photo">
+                        <img src="/photo/1/photo.png" alt="">
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
+                    </div>
+                </div>
+                <div class="update">
+                    <div class="profile-photo">
+                        <img src="/photo/1/photo.png" alt="">
+                    </div>
+                    <div class="message">
+                        <p><b>Куппе Роман</b> написал главную страницу</p>
+                        <small class="text-muted">2 Минуты назад</small>
                     </div>
                 </div>
             </div>
         </div>
+        <!-------------------- END OF RECENT UPDATES -------------------->
+        <div class="sales-analytics">
+            <div class="item add-product">
+                <div>
+                    <span class="material-icons-sharp">add</span>
+                    <h3>Добавить задачу</h3>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+    const addProductBtn = document.querySelector(".add-product")
 
-    <script>
-        const addProductBtn = document.querySelector(".add-product")
+    let queryDist = {};
+    location.search.substring(1).split('&').forEach((item) => {
+        let param = item.split('=');
+        queryDist[param[0]] = param[1];
+    })
+    addProductBtn.addEventListener('click', () => {
+        location.assign("/issue/create?project_id=" + queryDist.id);
+    })
 
-        let queryDist = {};
-        location.search.substring(1).split('&').forEach((item) => {
-          let param = item.split('=');
-          queryDist[param[0]] = param[1];
-        })
-        addProductBtn.addEventListener('click', () => {
-            location.assign("/issue/create?project_id="+queryDist.id);
-        })
+    //      переключение между вкладками
+    const insights = document.querySelector(".submenu");
+    insights.addEventListener('click', (event) => {
+        let target = event.target;
 
-//      переключение между вкладками
-        const insights = document.querySelector(".submenu");
-        insights.addEventListener('click', (event) => {
-            let target = event.target;
-
-            if (target.tagName === 'LI' || target.tagName === 'A') {
-                for (let index = 0; index < insights.children.length; index++) {
-                    insights.children[index].classList.remove('active');
-                }
-                if (target.tagName === 'A') {
-                    target = target.parentNode;
-                }
-                target.classList.add('active');
-
-                if (target.innerHTML === 'Задачи') {
-                    $.ajax({
-                        type: "GET",
-                        url: 'http://127.0.0.1:25595/issue?project_id='+queryDist.id,
-                        success: function (data) {
-                            $(".issues-content").empty();
-                            $(".issues-content").prepend(
-                                "<table id='issues'>\n" +
-                                "                        <thead>\n" +
-                                "                            <tr>\n" +
-                                "                                <th>Трекер</th>\n" +
-                                "                                <th>Статус</th>\n" +
-                                "                                <th>Название задачи</th>\n" +
-                                "                                <th>Назначена</th>\n" +
-                                "                                <th>Обновлено</th>\n" +
-                                "                                <th>Оценка трудозатрат</th>\n" +
-                                "                                <th>Трудозатраты</th>\n" +
-                                "                                <th></th>\n" +
-                                "                            </tr>\n" +
-                                "                        </thead>\n" +
-                                "                        <tbody>\n"
-                                )
-
-                                $(data).each(function (i, elem) {
-                                    $("tbody").append(
-                                        "<tr>\n" +
-                                            "<td hidden>" + elem['ID'] + "</td>\n" +
-                                            "<td>Трекер Заглушка</td>\n" +
-                                            "<td>Статус Заглушка</td>\n" +
-                                            "<td>" + elem['Name'] + "</td>\n" +
-                                            "<td>Назначена Заглушка</td>\n" +
-                                            "<td>Обновлено Заглушка</td>\n" +
-                                            "<td>Оценка Заглушка</td>\n" +
-                                            "<td>Трудозатраты Заглушка</td>\n" +
-                                            "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
-                                        "</tr>\n"
-                                    );
-                                })
-
-                            $(".issues-content").append(
-                                "                        </tbody>" +
-                                "</table>");
-
-                            $('#issues').click(function (event) {
-                                let row = event.target.closest('tr');
-                                if (row != null) {
-                                    console.log(row.tagName);
-                                    if (row.tagName === 'TR') {
-                                        console.log(row);
-                                        location.assign("/issue/"+row.children[0].innerHTML);
-                                    }
-                                }
-                            })
-                        },
-                        error: function (data) {
-                            alert(data.statusText);
-                            console.log(data.statusText)
-                            // window.location = 'http://127.0.0.1:25595/project'
-                        }
-                    });
-                }
-                if (target.innerHTML === 'Бюджеты') {
-                    $(".issues-content").empty();
-                }
+        if (target.tagName === 'LI' || target.tagName === 'A') {
+            for (let index = 0; index < insights.children.length; index++) {
+                insights.children[index].classList.remove('active');
             }
-        })
-    </script>
+            if (target.tagName === 'A') {
+                target = target.parentNode;
+            }
+            target.classList.add('active');
+
+            if (target.innerHTML === 'Задачи') {
+                $.ajax({
+                    type: "GET",
+                    url: 'http://127.0.0.1:25595/issue?project_id=' + queryDist.id,
+                    success: function (data) {
+                        $(".issues-content").empty();
+                        $(".issues-content").prepend(
+                            "<table id='issues'>\n" +
+                            "                        <thead>\n" +
+                            "                            <tr>\n" +
+                            "                                <th>Трекер</th>\n" +
+                            "                                <th>Статус</th>\n" +
+                            "                                <th>Название задачи</th>\n" +
+                            "                                <th>Назначена</th>\n" +
+                            "                                <th>Обновлено</th>\n" +
+                            "                                <th>Оценка трудозатрат</th>\n" +
+                            "                                <th>Трудозатраты</th>\n" +
+                            "                                <th></th>\n" +
+                            "                            </tr>\n" +
+                            "                        </thead>\n" +
+                            "                        <tbody>\n"
+                        )
+
+                        $(data).each(function (i, elem) {
+                            $("tbody").append(
+                                "<tr>\n" +
+                                "<td hidden>" + elem['ID'] + "</td>\n" +
+                                "<td>Трекер Заглушка</td>\n" +
+                                "<td>Статус Заглушка</td>\n" +
+                                "<td>" + elem['Name'] + "</td>\n" +
+                                "<td>Назначена Заглушка</td>\n" +
+                                "<td>Обновлено Заглушка</td>\n" +
+                                "<td>Оценка Заглушка</td>\n" +
+                                "<td>Трудозатраты Заглушка</td>\n" +
+                                "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
+                                "</tr>\n"
+                            );
+                        })
+
+                        $(".issues-content").append(
+                            "                        </tbody>" +
+                            "</table>");
+
+                        $('#issues').click(function (event) {
+                            let row = event.target.closest('tr');
+                            if (row != null) {
+                                console.log(row.tagName);
+                                if (row.tagName === 'TR') {
+                                    console.log(row);
+                                    location.assign("/issue/" + row.children[0].innerHTML);
+                                }
+                            }
+                        })
+                    },
+                    error: function (data) {
+                        alert(data.statusText);
+                        console.log(data.statusText)
+                        // window.location = 'http://127.0.0.1:25595/project'
+                    }
+                });
+            }
+            if (target.innerHTML === 'Бюджеты') {
+                $(".issues-content").empty();
+            }
+        }
+    })
+</script>
 </body>
 </html>

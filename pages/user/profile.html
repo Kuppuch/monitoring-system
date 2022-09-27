@@ -2,13 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profile</title>
+    <title>Профиль</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-<form action="" method="POST" enctype="multipart/form-data">
-    <input type="file" name="image" id="image">
-    <button type="button" onclick="myFunction()" id="send">Отправить</button>
-</form>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" id="image">
+            <button type="button" onclick="myFunction()" id="send">Отправить</button>
+        </form>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" }}
+    </div>
+</div>
+
 <script>
     function myFunction() {
         let photo = document.getElementById("image").files[0];
@@ -18,5 +30,6 @@
         fetch('/upload', {method: "POST", body: formData});
     }
 </script>
+<script src="/js/right-top.js"></script>
 </body>
 </html>

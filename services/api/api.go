@@ -18,6 +18,7 @@ func Router() {
 	r.LoadHTMLGlob("pages/**/*.html")
 	r.Static("/css", "./pages/css")
 	r.Static("/js", "./pages/js")
+	r.Static("/img", "./pages/img")
 	r.Static("/photo", "./lib/users")
 
 	r.Use(cors.AllowAll())

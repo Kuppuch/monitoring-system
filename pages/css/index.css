@@ -568,6 +568,13 @@ main .central-form form input:checked {
     display: flex;
     gap: 2rem;
     text-align: right;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.right .top .profile:hover {
+    background: var(--color-info-light);
 }
 
 /* ==============  END RIGHT TOP ================= */

@@ -28,7 +28,7 @@
             <div class="updates">
                 <div class="update">
                     <div class="profile-photo">
-                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                        <img src="/photo/1/photo.png" alt="">
                     </div>
                     <div class="message">
                         <p><b>Куппе Роман</b> написал главную страницу</p>
@@ -37,7 +37,7 @@
                 </div>
                 <div class="update">
                     <div class="profile-photo">
-                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                        <img src="/photo/1/photo.png" alt="">
                     </div>
                     <div class="message">
                         <p><b>Куппе Роман</b> написал главную страницу</p>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="update">
                     <div class="profile-photo">
-                        <!--                          <img src="./img/Роман.jpg" alt="">-->
+                        <img src="/photo/1/photo.png" alt="">
                     </div>
                     <div class="message">
                         <p><b>Куппе Роман</b> написал главную страницу</p>
@@ -57,46 +57,47 @@
         </div>
     </div>
 </div>
-    <script src="/js/theme.js"></script>
-    <script>
-        menuBtn.addEventListener('click', () => {
-            sideMenu.style.display = 'block';
-        })
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+    menuBtn.addEventListener('click', () => {
+        sideMenu.style.display = 'block';
+    })
 
-        closeBtn.addEventListener('click', () => {
-            sideMenu.style.display = 'none'
-        })
+    closeBtn.addEventListener('click', () => {
+        sideMenu.style.display = 'none'
+    })
 
-        let queryDist = {};
-        location.search.substring(1).split('&').forEach((item) => {
-            let param = item.split('=');
-            queryDist[param[0]] = param[1];
-        })
+    let queryDist = {};
+    location.search.substring(1).split('&').forEach((item) => {
+        let param = item.split('=');
+        queryDist[param[0]] = param[1];
+    })
 
-        $('.registration').on('submit', (event) => {
-            event.preventDefault();
-            let data = $(event.target)
-                .serializeArray()
-                .reduce(function (json, {name, value}) {
-                    json[name] = value;
-                    return json;
-                }, {});
-            data.isPublic = data.isPublic === 'true';
-            data.project_id = parseInt(queryDist.project_id);
-            $.ajax({
-                type: "POST",
-                url: 'http://127.0.0.1:25595/issue/create',
-                data: JSON.stringify(data),
-                success: function (data) {
-                    window.location = 'http://127.0.0.1:25595/project'
-                },
-                error: function (data) {
-                    alert(data.statusText);
-                    console.log(data.statusText)
-                    window.location = 'http://127.0.0.1:25595/project'
-                }
-            });
-        })
-    </script>
+    $('.registration').on('submit', (event) => {
+        event.preventDefault();
+        let data = $(event.target)
+            .serializeArray()
+            .reduce(function (json, {name, value}) {
+                json[name] = value;
+                return json;
+            }, {});
+        data.isPublic = data.isPublic === 'true';
+        data.project_id = parseInt(queryDist.project_id);
+        $.ajax({
+            type: "POST",
+            url: 'http://127.0.0.1:25595/issue/create',
+            data: JSON.stringify(data),
+            success: function (data) {
+                window.location = 'http://127.0.0.1:25595/project'
+            },
+            error: function (data) {
+                alert(data.statusText);
+                console.log(data.statusText)
+                window.location = 'http://127.0.0.1:25595/project'
+            }
+        });
+    })
+</script>
 </body>
 </html>
