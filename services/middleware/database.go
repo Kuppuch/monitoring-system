@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -17,12 +18,14 @@ func Connector() error {
 	if err != nil {
 		return err
 	}
-	err = DB.AutoMigrate(&User{}, &Status{}, &Tracker{}, &Issue{}, &Project{}, &Auth{})
+	err = DB.AutoMigrate(&User{}, &Status{}, &Tracker{}, &Issue{}, &Project{}, &Auth{}, &Member{}, &Role{}, &ProjectRole{})
 	if err != nil {
 		return err
 	}
 	insertStatuses()
 	insertTrackers()
+	insertAdmin()
+
 	return nil
 }
 
@@ -62,5 +65,20 @@ func insertTrackers() {
 				Name: v,
 			})
 		}
+	}
+}
+
+func insertAdmin() {
+	var user []User
+	DB.Where("email = ?", "admin@admin.ru").Find(&user)
+	if len(user) < 1 {
+		DB.Create(&User{
+			Admin:      true,
+			Name:       "admin",
+			LastName:   "admin",
+			MiddleName: "admin",
+			Email:      "admin@admin.ru",
+			Password:   fmt.Sprintf("%x", sha256.Sum256([]byte("admin"))),
+		})
 	}
 }

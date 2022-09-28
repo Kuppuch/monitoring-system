@@ -8,11 +8,12 @@ import (
 
 type Project struct {
 	gorm.Model
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	IsPublic    bool    `json:"isPublic"`
-	StatusID    uint    `json:"status"`
-	Issues      []Issue `gorm:"foreignKey:ProjectID" json:"issues"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	IsPublic    bool     `json:"isPublic"`
+	StatusID    uint     `json:"status"`
+	Issues      []Issue  `gorm:"foreignKey:ProjectID" json:"issues"`
+	Members     []Member `gorm:"foreignKey:ProjectID" json:"members"`
 }
 
 type ProjectWeb struct {

@@ -77,7 +77,7 @@ func insertUser(c *gin.Context) {
 		return
 	}
 	//TODO переделать на длину
-	if len(user.Email) > 0 || len(user.Password) > 0 || len(user.LastName) > 0 || len(user.Name) > 0 {
+	if len(user.Email) < 1 || len(user.Password) < 1 || len(user.LastName) < 1 || len(user.Name) < 1 {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  errors.New("null field"),
 			Type: 0,

@@ -22,7 +22,7 @@ func Router() {
 	r.Static("/photo", "./lib/users")
 
 	r.Use(cors.AllowAll())
-	//r.Use(AuthRequired)
+	r.Use(AuthRequired)
 
 	r.POST("upload", uploadProfileImg)
 

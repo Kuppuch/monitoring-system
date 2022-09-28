@@ -5,7 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"log"
+	"monitoring-system/services/middleware"
 	"net/http"
+	"strconv"
 )
 
 func getMainPage(c *gin.Context) {
@@ -24,7 +26,30 @@ func getMainPage(c *gin.Context) {
 	}
 	base64Encoding += base64.StdEncoding.EncodeToString(bts)
 
+	token, _ := c.Cookie("auth")
+	userID, err := middleware.CheckToken(token)
+	if err != nil || userID == 0 {
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "incorrect token for user with id = " + strconv.Itoa(int(userID)),
+		})
+		return
+	}
+	user := middleware.User{}
+	user.ID = userID
+	err = user.GetUser()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: err.Error(),
+		})
+		return
+	}
+
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"image": base64Encoding,
+		"user":  user.Name,
 	})
 }

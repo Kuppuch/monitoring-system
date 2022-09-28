@@ -1,3 +1,4 @@
+{{ define "right-top.html" }}
 <div class="top">
     <button id="menu-btn">
         <span class="material-icons-sharp">menu</span>
@@ -8,7 +9,7 @@
     </div>
     <div class="profile">
         <div class="info">
-            <p>Привет, <b>Роман</b></p>
+            <p>Привет, <b>{{ .user }}</b></p>
             <small class="text-muted">Admin</small>
         </div>
         <div class="profile-photo">
@@ -16,3 +17,4 @@
         </div>
     </div>
 </div>
+{{ end }}
