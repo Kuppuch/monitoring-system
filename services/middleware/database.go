@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"monitoring-system/config"
+	"monitoring-system/services/logging"
 )
 
 var DB *gorm.DB
@@ -72,7 +73,7 @@ func insertAdmin() {
 	var user []User
 	DB.Where("email = ?", "admin@admin.ru").Find(&user)
 	if len(user) < 1 {
-		DB.Create(&User{
+		tx := DB.Create(&User{
 			Admin:      true,
 			Name:       "admin",
 			LastName:   "admin",
@@ -80,5 +81,12 @@ func insertAdmin() {
 			Email:      "admin@admin.ru",
 			Password:   fmt.Sprintf("%x", sha256.Sum256([]byte("admin"))),
 		})
+		if tx.Error != nil {
+			logging.Print.Error(tx.Error)
+			return
+		}
 	}
+	logging.Print.Infof("Available user admin")
+	fmt.Println("                       login: admin@admin.ru")
+	fmt.Println("                       password: admin")
 }

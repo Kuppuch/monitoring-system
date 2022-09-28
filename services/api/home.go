@@ -49,7 +49,6 @@ func getMainPage(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"image": base64Encoding,
-		"user":  user.Name,
+		"user": user,
 	})
 }

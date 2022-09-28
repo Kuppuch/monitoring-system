@@ -9,11 +9,11 @@
     </div>
     <div class="profile">
         <div class="info">
-            <p>Привет, <b>{{ .user }}</b></p>
+            <p>Привет, <b>{{ .user.Name }}</b></p>
             <small class="text-muted">Admin</small>
         </div>
         <div class="profile-photo">
-            <img src="/photo/1/photo.png" alt="">
+            <img src="/photo/{{ .user.ID }}/photo.png" alt="">
         </div>
     </div>
 </div>

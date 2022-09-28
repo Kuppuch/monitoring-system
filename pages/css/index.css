@@ -574,7 +574,7 @@ main .central-form form input:checked {
 }
 
 .right .top .profile:hover {
-    background: var(--color-info-light);
+    background: var(--color-light);
 }
 
 /* ==============  END RIGHT TOP ================= */

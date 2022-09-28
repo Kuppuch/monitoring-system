@@ -83,3 +83,12 @@ func login(c *gin.Context) {
 	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, gin.H{"Authorization": token})
 }
+
+func GetUserByToken(c *gin.Context) middleware.User {
+	token, _ := c.Cookie("auth")
+	uid, _ := middleware.CheckToken(token)
+	user := middleware.User{}
+	user.ID = uid
+	_ = user.GetUser()
+	return user
+}

@@ -55,7 +55,7 @@ func getUser(c *gin.Context) {
 	base64Encoding := "data:image/png;base64," + base64.StdEncoding.EncodeToString(bts)
 
 	c.HTML(http.StatusOK, "users.html", gin.H{
-		"users": user,
+		"user":  user,
 		"image": base64Encoding,
 	})
 }
@@ -178,7 +178,8 @@ func uploadProfileImg(c *gin.Context) {
 			Meta: "unsupported format or file is not image",
 		})
 	}
-	profile, _ := os.Create("lib/users/" + "1" + "/photo.png")
+	user := GetUserByToken(c)
+	profile, _ := os.Create("lib/users/" + strconv.Itoa(int(user.ID)) + "/photo.png")
 	defer profile.Close()
 	profile.Write(bb.Bytes())
 }
@@ -189,5 +190,9 @@ func GetProfilePhoto(c *gin.Context) {
 	if err != nil {
 		logging.Print.Warning(err)
 	}
-	c.HTML(http.StatusOK, "profile.html", nil)
+	user := GetUserByToken(c)
+
+	c.HTML(http.StatusOK, "profile.html", gin.H{
+		"user": user,
+	})
 }
