@@ -9,9 +9,10 @@ type Tracker struct {
 	Issues      []Issue `gorm:"foreignKey:TrackerID" json:"issues"`
 }
 
-func GetTrackerList() {
+func GetTrackerList() []Tracker {
 	var trackers []Tracker
 	DB.Find(&trackers)
+	return trackers
 }
 
 func (t *Tracker) GetTracker(id int) error {

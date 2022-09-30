@@ -15,8 +15,40 @@
         <div class="central-form">
             <form id="registration" class="registration">
                 <input type="text" class="form-control" id="nameInput" name="name" placeholder="Название" value="">
-                <input type="text" class="form-control" id="descriptionInput" name="description"
-                       placeholder="Описание" value="">
+                <!--                <input type="text" class="form-control" id="descriptionInput" name="description" placeholder="Описание" value="">-->
+                <textarea rows="10" cols="45" name="description" placeholder="Описание"></textarea>
+                <div class="row">
+                    <div class="content-block-h">
+                        <div class="title">Статус</div>
+                        <div class="cont">
+                            <select name="status_id" id="status_id" class="status_id">
+                                {{ range $projects := .statuses }}
+                                <option value="{{ .ID }}">{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content-block-h">
+                        <div class="title">Трекер</div>
+                        <div class="cont">
+                            <select name="tracker_id" id="tracker_id" class="tracker_id">
+                                {{ range $projects := .trackers }}
+                                <option value="{{ .ID }}">{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content-block-h">
+                        <div class="title">Назначена на:</div>
+                        <div class="cont">
+                            <select name="assigned_to_id" id="assigned_to_id" class="assigned_to_id">
+                                {{ range $projects := .assigned }}
+                                <option value="{{ .ID }}">{{ .Name }} {{ .LastName }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <button type="submit" class="btn" name="send" id="submitBtn">Создать задачу</button>
             </form>
         </div>
@@ -84,17 +116,21 @@
             }, {});
         data.isPublic = data.isPublic === 'true';
         data.project_id = parseInt(queryDist.project_id);
+        data.status_id = parseInt($('.status_id option:selected').val());
+        data.tracker_id = parseInt($('.tracker_id option:selected').val());
+        data.assigned_to_id = parseInt($('.assigned_to_id option:selected').val());
+
         $.ajax({
             type: "POST",
             url: 'http://127.0.0.1:25595/issue/create',
             data: JSON.stringify(data),
             success: function (data) {
-                window.location = 'http://127.0.0.1:25595/project?id='+parseInt(queryDist.project_id);
+                window.location = 'http://127.0.0.1:25595/project?id=' + parseInt(queryDist.project_id);
             },
             error: function (data) {
                 alert(data.statusText);
                 console.log(data.statusText);
-                window.location = 'http://127.0.0.1:25595/project?id='+parseInt(queryDist.project_id);
+                window.location = 'http://127.0.0.1:25595/project?id=' + parseInt(queryDist.project_id);
             }
         });
     })

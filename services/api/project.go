@@ -21,18 +21,20 @@ func getProjectsPage(c *gin.Context) {
 		return
 	}
 
+	user := GetUserByToken(c)
 	if projectID > 0 {
 		project := middleware.GetProjectByID(projectID)
-		c.HTML(http.StatusOK, "project.html", gin.H{"project": project})
+		c.HTML(http.StatusOK, "project.html", gin.H{"project": project, "user": user})
 		return
 	}
 
 	projects := middleware.GetProjects()
-	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects})
+	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects, "user": user})
 }
 
 func getProjectCreatePage(c *gin.Context) {
-	c.HTML(http.StatusOK, "addProject.html", nil)
+	user := GetUserByToken(c)
+	c.HTML(http.StatusOK, "addProject.html", gin.H{"user": user})
 }
 
 func insertProject(c *gin.Context) {

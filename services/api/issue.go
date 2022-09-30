@@ -33,11 +33,16 @@ func getIssueByID(c *gin.Context) {
 	}
 	issue := middleware.GetIssue(uint(id))
 	statuses := middleware.GetStatusList()
-	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue, "statuses": statuses})
+	user := GetUserByToken(c)
+	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue, "statuses": statuses, "user": user})
 }
 
 func getIssueCreatePage(c *gin.Context) {
-	c.HTML(http.StatusOK, "addIssue.html", nil)
+	user := GetUserByToken(c)
+	statuses := middleware.GetStatusList()
+	trackers := middleware.GetTrackerList()
+	assigned := middleware.GetAllUsers()
+	c.HTML(http.StatusOK, "addIssue.html", gin.H{"user": user, "statuses": statuses, "trackers": trackers, "assigned": assigned})
 }
 
 func insertIssue(c *gin.Context) {
@@ -61,10 +66,9 @@ func insertIssue(c *gin.Context) {
 			Meta: "error by unmarshal issue",
 		})
 	}
-	issue.StatusID = 1
-	issue.CreatorID = 1
-	issue.TrackerID = 1
-	issue.AssignedToID = 1
+
+	issue.CreatorID = GetUserByToken(c).ID
+
 	if rowAffected := issue.InsertIssue(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return

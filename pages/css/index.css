@@ -498,13 +498,22 @@ main .central-form form {
     flex-direction: column;
 }
 
-main .central-form form input {
+main .central-form form input, textarea {
     margin-top: 30px;
     padding: 1rem;
     border: 1px solid var(--color-info-light);
     border-radius: var(--border-radius-3);
     color: var(--color-dark);
     font-size: 14px;
+}
+
+main .central-form form select {
+    padding: 1rem;
+    border: 1px solid var(--color-info-light);
+    border-radius: var(--border-radius-3);
+    color: var(--color-dark);
+    font-size: 14px;
+    max-width: 1224.44px;
 }
 
 main .central-form form button {
