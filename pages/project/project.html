@@ -16,6 +16,7 @@
             <ul class="submenu">
                 <li class="active">Бюджеты</li>
                 <li>Задачи</li>
+                <li>Настройки</li>
             </ul>
             <div class="issues-content">
             </div>
@@ -127,8 +128,44 @@
             if (target.innerHTML === 'Бюджеты') {
                 $(".issues-content").empty();
             }
+            if (target.innerHTML === 'Настройки') {
+                $(".issues-content").empty();
+                $(".issues-content").prepend(
+                    "<table id='issues'>\n" +
+                    "                        <thead>\n" +
+                    "                            <tr>\n" +
+                    "                                <th>Участник</th>\n" +
+                    "                                <th>Роль</th>\n" +
+                    "                                <th>Удалить</th>\n" +
+                    "                            </tr>\n" +
+                    "                        </thead>\n" +
+                    "                        <tbody>\n"
+                )
+                $("tbody").append(
+                    "<tr>\n" +
+                    "<td hidden>Pfukeirf</td>\n" +
+                    "<td>Трекер Заглушка</td>\n" +
+                    "<td>Статус Заглушка</td>\n" +
+                    "</tr>\n"
+                );
+                $(".issues-content").prepend(
+                    "<button onclick=\"location.href='/project/members'\";><span class=\"material-icons-sharp\">add</span>Добавить участника</button>"
+                )
+                renew();
+            }
         }
     })
+</script>
+<script>
+    function renew() {
+        // if (target.innerHTML === 'Настройки') {
+            const addProductBtn = document.querySelector(".add-product")
+
+            addProductBtn.addEventListener('click', () => {
+                location.assign("");
+            })
+        // }
+    }
 </script>
 </body>
 </html>

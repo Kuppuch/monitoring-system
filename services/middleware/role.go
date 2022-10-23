@@ -13,3 +13,9 @@ type ProjectRole struct {
 	MemberID uint
 	RoleID   uint
 }
+
+func GetRoles() []Role {
+	var roles []Role
+	DB.Find(&roles)
+	return roles
+}

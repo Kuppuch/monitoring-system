@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить пользователей</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Добавить участников в проект {{ .project.Name }}</h1>
+        <div class="issues">
+            <div class="issues-content">
+                <div class="row">
+                    <div class="content-block-h">
+                        <div class="title">Статус</div>
+                        <div class="cont">
+                            <select name="users" id="users" class="users">
+                                {{ range $u := .users }}
+                                <option value="{{ .ID }}">{{ .Name }} {{ .LastName }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content-block-h">
+                        <div class="title">Роли</div>
+                        <div class="cont">
+                            <select name="roles" id="roles" class="roles">
+                                {{ range $r := .roles }}
+                                <option value="{{ .ID }}">{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="insertMember()">Добавить</button>
+            </div>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" .}}
+        {{ template "resent-updates.html" }}
+        <!-------------------- END OF RECENT UPDATES -------------------->
+        <div class="sales-analytics">
+            <div class="item add-product">
+                <div>
+                    <span class="material-icons-sharp">add</span>
+                    <h3>Добавить задачу</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+    function insertMember() {
+        console.log("тут будет добавление участников проекта");
+    }
+</script>
+</body>
+</html>

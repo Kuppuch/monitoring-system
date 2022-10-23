@@ -26,6 +26,7 @@ func Connector() error {
 	insertStatuses()
 	insertTrackers()
 	insertAdmin()
+	insertRoles()
 
 	return nil
 }
@@ -89,4 +90,27 @@ func insertAdmin() {
 	logging.Print.Infof("Available user admin")
 	fmt.Println("                       login: admin@admin.ru")
 	fmt.Println("                       password: admin")
+}
+
+func insertRoles() {
+	var roles []Role
+	DB.Find(&roles)
+	if len(roles) == 0 {
+		data := []string{
+			"Android разработчик",
+			"iOS разработчик",
+			"Frontend разработчик",
+			"Backend разработчик",
+			"Аналитик",
+			"Тестировщик",
+			"Администратор",
+			"Менеджер",
+			"Дизайнер",
+		}
+		for _, v := range data {
+			DB.Create(&Role{
+				Name: v,
+			})
+		}
+	}
 }

@@ -1,3 +1,4 @@
 .idea
 lib
 run.exe
+/config/docker_config.json

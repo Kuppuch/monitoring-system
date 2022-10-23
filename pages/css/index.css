@@ -532,6 +532,23 @@ main .central-form form input:checked {
     font-size: 14px;
 }
 
+main .issues .issues-content button {
+    background: var(--color-light);
+    color: var(--color-dark);
+    padding: 10px;
+    border-radius: var(--border-radius-2);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: all 300ms ease;
+}
+
+main .issues .issues-content button:hover {
+    background: var(--color-info-light);
+    color: var(--color-white);
+}
+
 /* ==================== RIGHT ========================== */
 .right{
     margin-top: 1.4rem;

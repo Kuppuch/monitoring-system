@@ -37,6 +37,13 @@ func getProjectCreatePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "addProject.html", gin.H{"user": user})
 }
 
+func getMemberPage(c *gin.Context) {
+	users := middleware.GetAllUsers()
+	roles := middleware.GetRoles()
+	user := GetUserByToken(c)
+	c.HTML(http.StatusOK, "addMember.html", gin.H{"user": user, "users": users, "roles": roles})
+}
+
 func insertProject(c *gin.Context) {
 	raw, err := c.GetRawData()
 	if err != nil {
