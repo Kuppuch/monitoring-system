@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Добавить пользователей</title>
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../../css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="insertMember()">Добавить</button>
+                <button id="addMember"> <!--onclick="insertMember()>"-->Добавить</button>
             </div>
         </div>
     </main>
@@ -60,6 +60,31 @@
     function insertMember() {
         console.log("тут будет добавление участников проекта");
     }
+    $('button').click(function(event) {
+        event.preventDefault();
+        let data = $(event.target)
+            .serializeArray()
+            .reduce(function (json, {name, value}) {
+                json[name] = value;
+                return json;
+            }, {});
+        data.user = parseInt($('.users option:selected').val());
+        data.role = parseInt($('.roles option:selected').val());
+
+        $.ajax({
+            type: "POST",
+            url: location.href,
+            data: JSON.stringify(data),
+            success: function (data) {
+                window.location = 'http://127.0.0.1:25595/project?id=' + parseInt(queryDist.project_id);
+            },
+            error: function (data) {
+                alert(data.statusText);
+                console.log(data.statusText);
+                window.location = 'http://127.0.0.1:25595/project?id=' + parseInt(queryDist.project_id);
+            }
+        });
+    })
 </script>
 </body>
 </html>

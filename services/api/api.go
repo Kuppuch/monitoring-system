@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"html/template"
+	"monitoring-system/services/api/public"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"strings"
@@ -22,7 +23,8 @@ func Router() {
 	r.Static("/photo", "./lib/users")
 
 	r.Use(cors.AllowAll())
-	r.Use(AuthRequired)
+	//TODO раскоментить
+	//r.Use(AuthRequired)
 
 	r.POST("upload", uploadProfileImg)
 
@@ -46,7 +48,8 @@ func Router() {
 		project.GET("/", getProjectsPage)
 		project.GET("/create", getProjectCreatePage)
 		project.POST("/create", insertProject)
-		project.GET("/members", getMemberPage)
+		project.GET("/:id/members", getMemberPage)
+		project.POST("/:id/members", insertProjectMember)
 
 	}
 
@@ -56,6 +59,24 @@ func Router() {
 		issue.GET("/:id", getIssueByID)
 		issue.GET("/create", getIssueCreatePage)
 		issue.POST("/create", insertIssue)
+	}
+
+	api := r.Group("api")
+	{
+		projectapi := api.Group("project")
+		{
+			projectapi.GET("/", public.GetProjects)
+			//projectapi.GET("/create", getProjectCreatePage)
+			//projectapi.POST("/create", insertProject)
+			//projectapi.GET("/:id/members", getMemberPage)
+			//projectapi.POST("/:id/members", insertProjectMember)
+
+		}
+
+		userapi := api.Group("user")
+		{
+			userapi.GET("/", public.GetUsers)
+		}
 	}
 
 	err := r.Run(":25595")
