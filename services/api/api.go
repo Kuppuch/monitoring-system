@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"html/template"
@@ -24,7 +25,7 @@ func Router() {
 
 	r.Use(cors.AllowAll())
 	//TODO раскоментить
-	//r.Use(AuthRequired)
+	r.Use(AuthRequired)
 
 	r.POST("upload", uploadProfileImg)
 
@@ -62,22 +63,7 @@ func Router() {
 	}
 
 	api := r.Group("api")
-	{
-		projectapi := api.Group("project")
-		{
-			projectapi.GET("/", public.GetProjects)
-			//projectapi.GET("/create", getProjectCreatePage)
-			//projectapi.POST("/create", insertProject)
-			//projectapi.GET("/:id/members", getMemberPage)
-			//projectapi.POST("/:id/members", insertProjectMember)
-
-		}
-
-		userapi := api.Group("user")
-		{
-			userapi.GET("/", public.GetUsers)
-		}
-	}
+	public.Router(api)
 
 	err := r.Run(":25595")
 	if err != nil {
@@ -94,7 +80,10 @@ func AuthRequired(c *gin.Context) {
 	if len(token) < 1 {
 		c.Redirect(302, "/login")
 	} else {
-		middleware.CheckToken(token)
+		_, err := middleware.CheckToken(token)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	c.Next()
 }

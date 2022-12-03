@@ -10,7 +10,7 @@ import (
 
 type Claims struct {
 	jwt.StandardClaims
-	ID uint
+	ID int
 }
 
 type Auth struct {
@@ -39,9 +39,12 @@ func GetToken(id uint) string {
 			ExpiresAt: time.Now().Add(time.Hour * 10).Unix(), //10 часов
 			IssuedAt:  time.Now().Unix(),
 		},
-		ID: id,
+		ID: int(id),
 	})
-	token, _ := t.SignedString([]byte("123"))
+	token, err := t.SignedString([]byte("123"))
+	if err != nil {
+		fmt.Println(err)
+	}
 	return token
 }
 
@@ -58,11 +61,11 @@ func CheckToken(accesstoken string) (uint, error) {
 
 	claims, ok := token.Claims.(*Claims)
 	user := User{
-		Model: gorm.Model{ID: claims.ID},
+		Model: gorm.Model{ID: uint(claims.ID)},
 	}
 	err = user.GetUser()
 	if ok && token.Valid && user.ID > 0 {
-		return claims.ID, nil
+		return uint(claims.ID), nil
 	}
 	return 0, errors.New("invalid access token")
 }
