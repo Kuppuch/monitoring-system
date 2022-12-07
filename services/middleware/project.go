@@ -55,3 +55,11 @@ func (p Project) InsertProject() int64 {
 	}
 	return tx.RowsAffected
 }
+
+func (p Project) Delete() int64 {
+	tx := DB.Delete(&p)
+	if tx.Error != nil {
+		logging.Print.Warning(tx.Error)
+	}
+	return tx.RowsAffected
+}

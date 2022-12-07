@@ -24,7 +24,6 @@ func Router() {
 	r.Static("/photo", "./lib/users")
 
 	r.Use(cors.AllowAll())
-	//TODO раскоментить
 	r.Use(AuthRequired)
 
 	r.POST("upload", uploadProfileImg)
@@ -34,6 +33,9 @@ func Router() {
 
 	r.GET("/login", getLoginPage)
 	r.POST("/login", login)
+
+	r.GET("/submit", getSubmitPage)
+	r.POST("/submit", submit)
 
 	user := r.Group("user")
 	{

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Подтвердите действие</title>
+  <link rel="stylesheet" href="../css/index.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+  <div></div>
+  <main>
+    <h1>Подтвердите действие</h1>
+<!--    <form>-->
+      <div class="column">
+        <input type="password" placeholder="Пароль" id="password" name="password">
+        <button onclick="getParams()" class="btn-success" style="width: 25em; height: 2em;">Подтвердить</button>
+      </div>
+<!--    </form>-->
+  </main>
+</div>
+<script>
+  function getParams() {
+    const pass = document.getElementById("password").value;
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    params.password = pass;
+    $.ajax({
+      type: "POST",
+      url: 'http://127.0.0.1:25595/submit',
+      data: JSON.stringify(params),
+      success: function () {
+        location.href = '/project'
+      },
+      error: function (data) {
+        alert(data);
+        //window.location = 'http://127.0.0.1:25595/login'
+      }
+    });
+  }
+
+</script>
+</body>
+</html>

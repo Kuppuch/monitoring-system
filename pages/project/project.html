@@ -149,8 +149,13 @@
                     "</tr>\n"
                 );
                 $(".issues-content").prepend(
-                    "<button onclick=\"location.href='/project/members'\";><span class=\"material-icons-sharp\">add</span>Добавить участника</button>"
-                )
+                    "<button onclick=\"location.href='/project/' + queryDist.id + '/members'\";><span class=\"material-icons-sharp\">add</span>Добавить участника</button>"
+                );
+                $(".issues-content").append(
+                    "<button class=\"danger\" onclick=\"location.href='/submit?action=delete&entity=project&id=' + queryDist.id\">" +
+                        "<span class=\"material-icons-sharp\">delete</span>Удалить проект" +
+                    "</button>"
+                );
                 renew();
             }
         }

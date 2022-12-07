@@ -106,6 +106,12 @@ h4{
     flex-wrap: wrap;
 }
 
+.column {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
 small{
     font-size: 0.75rem;
 }
@@ -140,6 +146,22 @@ b{
 }
 .warning{
     color: var(--color-warning);
+}
+
+input{
+    border: 1px solid black;
+    border-radius: var(--border-radius-1);
+    height: 2em;
+    width: 25em;
+}
+
+.btn-success {
+    background: var(--color-success);
+    margin-top: 30px;
+    border: 1px solid var(--color-success);
+    border-radius: var(--border-radius-3);
+    font-size: 14px;
+    cursor: pointer;
 }
 
 aside{
