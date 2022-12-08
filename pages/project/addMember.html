@@ -71,17 +71,20 @@
         data.user = parseInt($('.users option:selected').val());
         data.role = parseInt($('.roles option:selected').val());
 
+        const url = new URL(location.href);
+        const params = url.pathname.split("/");
+
         $.ajax({
             type: "POST",
             url: location.href,
             data: JSON.stringify(data),
-            success: function (data) {
-                window.location = 'http://127.0.0.1:25595/project?id=' + parseInt(queryDist.project_id);
+            success: function () {
+                console.log(params[2]);
+                window.location = 'http://127.0.0.1:25595/project/' + parseInt(params[2]);
             },
             error: function (data) {
-                alert(data.statusText);
-                console.log(data.statusText);
-                window.location = 'http://127.0.0.1:25595/project?id=' + parseInt(queryDist.project_id);
+                const body = JSON.parse(data.responseText);
+                alert(body.Meta);
             }
         });
     })

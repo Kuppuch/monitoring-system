@@ -48,11 +48,12 @@ func Router() {
 
 	project := r.Group("project")
 	{
-		project.GET("/", getProjectsPage)
+		project.GET("/:id", getProjectsPage)
 		project.GET("/create", getProjectCreatePage)
 		project.POST("/create", insertProject)
 		project.GET("/:id/members", getMemberPage)
 		project.POST("/:id/members", insertProjectMember)
+		project.GET("/:id/members/list", getMembers)
 
 	}
 

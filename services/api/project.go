@@ -10,7 +10,7 @@ import (
 )
 
 func getProjectsPage(c *gin.Context) {
-	projectID, err := strconv.Atoi(c.DefaultQuery("id", "0"))
+	projectID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		logging.Print.Error(err)
 		c.JSON(http.StatusBadRequest, gin.Error{
@@ -138,11 +138,11 @@ func insertProjectMember(c *gin.Context) {
 	}
 	projectRole.GetProjectRole()
 	if projectRole.ID > 0 {
-		logging.Print.Error("failed insert project role", err)
+		logging.Print.Error("failed insert project role: member-role already exist")
 		c.JSON(http.StatusInternalServerError, gin.Error{
 			Err:  err,
 			Type: 0,
-			Meta: "database error",
+			Meta: "user already on project with this role",
 		})
 		return
 	}
@@ -157,4 +157,19 @@ func insertProjectMember(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, middleware.GetSuccess())
+}
+
+func getMembers(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error by get project id",
+		})
+		return
+	}
+	memberView := middleware.GetMembers(id)
+	c.JSON(http.StatusOK, memberView)
 }

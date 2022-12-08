@@ -46,8 +46,12 @@
         let param = item.split('=');
         queryDist[param[0]] = param[1];
     })
+
+    const url = new URL(location.href);
+    const params = url.pathname.split("/");
+
     addProductBtn.addEventListener('click', () => {
-        location.assign("/issue/create?project_id=" + queryDist.id);
+        location.assign("/issue/create?project_id=" + params[2]);
     })
 
     //      переключение между вкладками
@@ -67,7 +71,7 @@
             if (target.innerHTML === 'Задачи') {
                 $.ajax({
                     type: "GET",
-                    url: 'http://127.0.0.1:25595/issue?project_id=' + queryDist.id,
+                    url: 'http://127.0.0.1:25595/issue?project_id=' + params[2],
                     success: function (data) {
                         $(".issues-content").empty();
                         $(".issues-content").prepend(
@@ -110,9 +114,7 @@
                         $('#issues').click(function (event) {
                             let row = event.target.closest('tr');
                             if (row != null) {
-                                console.log(row.tagName);
                                 if (row.tagName === 'TR') {
-                                    console.log(row);
                                     location.assign("/issue/" + row.children[0].innerHTML);
                                 }
                             }
@@ -129,34 +131,53 @@
                 $(".issues-content").empty();
             }
             if (target.innerHTML === 'Настройки') {
-                $(".issues-content").empty();
-                $(".issues-content").prepend(
-                    "<table id='issues'>\n" +
-                    "                        <thead>\n" +
-                    "                            <tr>\n" +
-                    "                                <th>Участник</th>\n" +
-                    "                                <th>Роль</th>\n" +
-                    "                                <th>Удалить</th>\n" +
-                    "                            </tr>\n" +
-                    "                        </thead>\n" +
-                    "                        <tbody>\n"
-                )
-                $("tbody").append(
-                    "<tr>\n" +
-                    "<td hidden>Pfukeirf</td>\n" +
-                    "<td>Трекер Заглушка</td>\n" +
-                    "<td>Статус Заглушка</td>\n" +
-                    "</tr>\n"
-                );
-                $(".issues-content").prepend(
-                    "<button onclick=\"location.href='/project/' + queryDist.id + '/members'\";><span class=\"material-icons-sharp\">add</span>Добавить участника</button>"
-                );
-                $(".issues-content").append(
-                    "<button class=\"danger\" onclick=\"location.href='/submit?action=delete&entity=project&id=' + queryDist.id\">" +
-                        "<span class=\"material-icons-sharp\">delete</span>Удалить проект" +
-                    "</button>"
-                );
-                renew();
+                $.ajax({
+                    type: "GET",
+                    url: 'http://127.0.0.1:25595/project/' + params[2] + '/members/list',
+                    success: function (data) {
+                        $(".issues-content").empty();
+                        $(".issues-content").prepend(
+                            "<table id='issues'>\n" +
+                            "                        <thead>\n" +
+                            "                            <tr>\n" +
+                            "                                <th>Участник</th>\n" +
+                            "                                <th>Роль</th>\n" +
+                            "                                <th>Удалить</th>\n" +
+                            "                            </tr>\n" +
+                            "                        </thead>\n" +
+                            "                        <tbody>\n"
+                        )
+
+                        $(data).each(function (i, elem) {
+                            $("tbody").append(
+                                "<tr>\n" +
+                                "<td hidden>" + elem['ID'] + "</td>\n" +
+                                "<td>" + elem['Name'] + " " + elem['LastName'] + "</td>\n" +
+                                "<td>" + elem['Role'] + "</td>\n" +
+                                "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
+                                "</tr>\n"
+                            );
+                        })
+
+                        $(".issues-content").append(
+                            "                        </tbody>" +
+                            "</table>");
+
+                        $(".issues-content").prepend(
+                            "<button onclick=\"location.href='/project/' + params[2] + '/members'\";><span class=\"material-icons-sharp\">add</span>Добавить участника</button>"
+                        );
+
+                        $(".issues-content").append(
+                            "<button class=\"danger\" onclick=\"location.href='/submit?action=delete&entity=project&id=' + params[2]\">" +
+                            "<span class=\"material-icons-sharp\">delete</span>Удалить проект" +
+                            "</button>"
+                        );
+                    },
+                });
+
+
+
+                //renew();
             }
         }
     })
@@ -164,11 +185,11 @@
 <script>
     function renew() {
         // if (target.innerHTML === 'Настройки') {
-            const addProductBtn = document.querySelector(".add-product")
+        const addProductBtn = document.querySelector(".add-product")
 
-            addProductBtn.addEventListener('click', () => {
-                location.assign("");
-            })
+        addProductBtn.addEventListener('click', () => {
+            location.assign("");
+        })
         // }
     }
 </script>
