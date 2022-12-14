@@ -9,11 +9,13 @@ type Issue struct {
 	gorm.Model
 	Name         string
 	Description  string
-	ProjectID    uint `json:"project_id"`
-	CreatorID    uint `json:"creator_id"`
-	AssignedToID uint `json:"assigned_to_id"`
-	StatusID     uint `json:"status_id"`
-	TrackerID    uint `json:"tracker_id"`
+	ProjectID    uint        `json:"project_id"`
+	CreatorID    uint        `json:"creator_id"`
+	AssignedToID uint        `json:"assigned_to_id"`
+	StatusID     uint        `json:"status_id"`
+	TrackerID    uint        `json:"tracker_id"`
+	BudgetID     uint        `json:"budget_id"`
+	Timespent    []Timespent `gorm:"foreignKey:UserID" json:"timespent,omitempty"`
 }
 
 type IssueWeb struct {
@@ -58,4 +60,10 @@ func StatusUpdate(statusID uint) {
 	if tx.Error != nil {
 
 	}
+}
+
+func GetBudgetIssue(id int) []Issue {
+	var i []Issue
+	DB.Where("budget_id = ?", id).Find(&i)
+	return i
 }
