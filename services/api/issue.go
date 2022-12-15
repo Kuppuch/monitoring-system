@@ -11,7 +11,7 @@ import (
 
 func getIssueList(c *gin.Context) {
 	projectID, err := strconv.Atoi(c.Query("project_id"))
-	budgetID, err := strconv.Atoi(c.Query("budget_id"))
+	budgetID, err := strconv.Atoi(c.DefaultQuery("budget_id", "0"))
 	if err != nil {
 		c.JSON(400, gin.Error{
 			Err:  err,

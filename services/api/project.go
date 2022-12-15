@@ -10,6 +10,12 @@ import (
 )
 
 func getProjectsPage(c *gin.Context) {
+	user := GetUserByToken(c)
+	projects := middleware.GetProjects()
+	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects, "user": user})
+}
+
+func getProjectPage(c *gin.Context) {
 	projectID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		logging.Print.Error(err)
@@ -27,9 +33,11 @@ func getProjectsPage(c *gin.Context) {
 		c.HTML(http.StatusOK, "project.html", gin.H{"project": project, "user": user})
 		return
 	}
-
-	projects := middleware.GetProjects()
-	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects, "user": user})
+	c.JSON(http.StatusBadRequest, gin.Error{
+		Err:  err,
+		Type: 0,
+		Meta: "error id format",
+	})
 }
 
 func getProjectCreatePage(c *gin.Context) {

@@ -63,7 +63,7 @@
         let sales = event.target.closest('.sales');
 
         if (sales.className === 'sales') {
-            location.assign("/project?id="+sales.childNodes[1].innerHTML);
+            location.assign("/project/"+sales.childNodes[1].innerHTML);
         }
     })
 
