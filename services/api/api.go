@@ -67,8 +67,10 @@ func Router() {
 		issue.POST("/:id/timespent", insertIssueUserTimespent)
 	}
 
-	budget := r.Group("budget")
+	budget := r.Group("budgets")
 	{
+		budget.GET("", getBudgets)
+		budget.POST("", insertBudget)
 		budget.GET("/:id/timespent", getBudgetTimespent)
 	}
 

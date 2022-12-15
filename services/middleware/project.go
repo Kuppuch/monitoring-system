@@ -14,6 +14,7 @@ type Project struct {
 	StatusID    uint     `json:"status"`
 	Issues      []Issue  `gorm:"foreignKey:ProjectID" json:"issues"`
 	Members     []Member `gorm:"foreignKey:ProjectID" json:"members"`
+	Budgets     []Budget `gorm:"foreignKey:ProjectID" json:"budgets"`
 }
 
 type ProjectWeb struct {

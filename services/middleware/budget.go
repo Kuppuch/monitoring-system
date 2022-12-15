@@ -8,11 +8,12 @@ import (
 
 type Budget struct {
 	gorm.Model
-	Name    string
-	ExtID   int
-	StartAt time.Time
-	EndAd   time.Time
-	Issues  []Issue `gorm:"foreignKey:BudgetID" json:"timespent,omitempty"`
+	Name      string    `json:"name"`
+	ExtID     int       `json:"ext_id"`
+	ProjectID int       `json:"project_id"`
+	StartAt   time.Time `json:"start_at"`
+	EndAd     time.Time `json:"end_ad"`
+	Issues    []Issue   `gorm:"foreignKey:BudgetID" json:"timespent,omitempty"`
 }
 
 func (b Budget) Insert() (int64, error) {
@@ -33,5 +34,11 @@ func GetBudget(id int) Budget {
 func GetBudgets() []Budget {
 	var b []Budget
 	DB.Find(&b)
+	return b
+}
+
+func GetProjectBudgets(projectID int) []Budget {
+	var b []Budget
+	DB.Where("project_id = ?", projectID).Find(&b)
 	return b
 }
