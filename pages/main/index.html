@@ -122,40 +122,8 @@
 
         <div class="right">
             {{ template "right-top.html" .}}
-            <!-------------------- END OF TOP -------------------->
-            <div class="recent-updates">
-                <h2>Недавние изменения</h2>
-                <div class="updates">
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="/photo/1/photo.png" alt="">
-                        </div>
-                        <div class="message">
-                            <p><b>Куппе Роман</b> написал главную страницу</p>
-                            <small class="text-muted">2 Минуты назад</small>
-                        </div>
-                    </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="/photo/1/photo.png" alt="">
-                        </div>
-                        <div class="message">
-                            <p><b>Куппе Роман</b> написал главную страницу</p>
-                            <small class="text-muted">2 Минуты назад</small>
-                        </div>
-                    </div>
-                    <div class="update">
-                        <div class="profile-photo">
-                            <img src="/photo/1/photo.png" alt="">
-                        </div>
-                        <div class="message">
-                            <p><b>Куппе Роман</b> написал главную страницу</p>
-                            <small class="text-muted">2 Минуты назад</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-------------------- END OF RECENT UPDATES -------------------->
+            {{ template "resent-updates.html" .}}
+
             <div class="sales-analytics">
                 <h2>Аналитика продаж</h2>
                 <div class="item online">
@@ -208,7 +176,6 @@
     </div>
     <script>
         $( document ).ready(function() {
-            console.log({{ .user }})
             $('.logout').click(function () {
                 console.log("123")
                 $.cookie("auth", null, {path: '/'})
@@ -216,6 +183,6 @@
         });
     </script>
     <script src="/js/aside.js"></script>
-    <script src="/js/right-top.js"></script>
+    <script src="/js/right-top.js" ></script>
 </body>
 </html>

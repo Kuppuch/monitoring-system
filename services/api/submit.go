@@ -16,7 +16,7 @@ func getSubmitPage(c *gin.Context) {
 }
 
 func submit(c *gin.Context) {
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	raw, err := c.GetRawData()
 	if err != nil {
 		fmt.Println(err)

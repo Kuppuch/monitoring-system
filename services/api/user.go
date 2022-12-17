@@ -178,7 +178,7 @@ func uploadProfileImg(c *gin.Context) {
 			Meta: "unsupported format or file is not image",
 		})
 	}
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	profile, _ := os.Create("lib/users/" + strconv.Itoa(int(user.ID)) + "/photo.png")
 	defer profile.Close()
 	profile.Write(bb.Bytes())
@@ -190,7 +190,7 @@ func GetProfilePhoto(c *gin.Context) {
 	if err != nil {
 		logging.Print.Warning(err)
 	}
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 
 	c.HTML(http.StatusOK, "profile.html", gin.H{
 		"user": user,

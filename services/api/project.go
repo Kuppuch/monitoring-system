@@ -10,7 +10,7 @@ import (
 )
 
 func getProjectsPage(c *gin.Context) {
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	projects := middleware.GetProjects()
 	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects, "user": user})
 }
@@ -27,7 +27,7 @@ func getProjectPage(c *gin.Context) {
 		return
 	}
 
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	if projectID > 0 {
 		project := middleware.GetProjectByID(projectID)
 		c.HTML(http.StatusOK, "project.html", gin.H{"project": project, "user": user})
@@ -41,7 +41,7 @@ func getProjectPage(c *gin.Context) {
 }
 
 func getProjectCreatePage(c *gin.Context) {
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	c.HTML(http.StatusOK, "addProject.html", gin.H{"user": user})
 }
 
@@ -81,7 +81,7 @@ func insertProject(c *gin.Context) {
 func getMemberPage(c *gin.Context) {
 	users := middleware.GetAllUsers()
 	roles := middleware.GetRoles()
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	c.HTML(http.StatusOK, "addMember.html", gin.H{"user": user, "users": users, "roles": roles})
 }
 

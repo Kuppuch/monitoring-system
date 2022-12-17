@@ -84,11 +84,14 @@ func login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"Authorization": token})
 }
 
-func GetUserByToken(c *gin.Context) middleware.User {
+func GetUserByToken(c *gin.Context) (middleware.User, error) {
 	token, _ := c.Cookie("auth")
-	uid, _ := middleware.CheckToken(token)
+	uid, err := middleware.CheckToken(token)
 	user := middleware.User{}
+	if err != nil {
+		return user, err
+	}
 	user.ID = uid
 	_ = user.GetUser()
-	return user
+	return user, nil
 }

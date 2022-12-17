@@ -9,10 +9,11 @@ type Timespent struct {
 	gorm.Model
 	IssueID uint    `json:"issue_id"`
 	UserID  uint    `json:"user_id"`
+	RoleID  uint    `json:"role_id"`
 	Spent   float32 `json:"spent"`
 }
 
-func (timespent Timespent) Insert() (int64, error) {
+func (timespent *Timespent) Insert() (int64, error) {
 	tx := DB.Create(&timespent)
 	if tx.Error != nil {
 		logging.Print.Error("database error create timespent")

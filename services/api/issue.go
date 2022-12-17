@@ -41,12 +41,12 @@ func getIssueByID(c *gin.Context) {
 	}
 	issue := middleware.GetIssue(uint(id))
 	statuses := middleware.GetStatusList()
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue, "statuses": statuses, "user": user})
 }
 
 func getIssueCreatePage(c *gin.Context) {
-	user := GetUserByToken(c)
+	user, _ := GetUserByToken(c)
 	statuses := middleware.GetStatusList()
 	trackers := middleware.GetTrackerList()
 	assigned := middleware.GetAllUsers()
@@ -76,7 +76,8 @@ func insertIssue(c *gin.Context) {
 		return
 	}
 
-	issue.CreatorID = GetUserByToken(c).ID
+	user, err := GetUserByToken(c)
+	issue.CreatorID = user.ID
 
 	if rowAffected := issue.InsertIssue(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
@@ -94,7 +95,7 @@ func getIssueUserTimespent(c *gin.Context) {
 		})
 		return
 	}
-	user := GetUserByToken(c)
+	user, err := GetUserByToken(c)
 	if user.ID < 1 {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  err,
@@ -139,7 +140,7 @@ func insertIssueUserTimespent(c *gin.Context) {
 		return
 	}
 
-	user := GetUserByToken(c)
+	user, err := GetUserByToken(c)
 	if user.ID < 1 {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  err,
