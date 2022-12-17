@@ -8,13 +8,13 @@ import (
 
 type Project struct {
 	gorm.Model
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	IsPublic    bool     `json:"isPublic"`
-	StatusID    uint     `json:"status"`
-	Issues      []Issue  `gorm:"foreignKey:ProjectID" json:"issues"`
-	Members     []Member `gorm:"foreignKey:ProjectID" json:"members"`
-	Budgets     []Budget `gorm:"foreignKey:ProjectID" json:"budgets"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	IsPublic    bool   `json:"isPublic"`
+	StatusID    uint   `json:"status"`
+	//Issues      []Issue  `gorm:"foreignKey:ProjectID" json:"issues"`
+	Members []Member `gorm:"foreignKey:ProjectID" json:"members"`
+	Budgets []Budget `gorm:"foreignKey:ProjectID" json:"budgets"`
 }
 
 type ProjectWeb struct {
@@ -24,8 +24,9 @@ type ProjectWeb struct {
 
 func GetProjects() []ProjectWeb {
 	var projects []ProjectWeb
-	tx := DB.Table("projects as p").Select("p.*, COUNT(i.project_id) as issues_cnt").
-		Joins("LEFT JOIN  issues as i ON i.project_id = p.id").
+	tx := DB.Table("projects as p").Select("p.*, COUNT(i.budget_id) as issues_cnt").
+		Joins("LEFT JOIN  budgets as b ON b.project_id = p.id").
+		Joins("LEFT JOIN  issues as i ON i.budget_id = b.id").
 		Group("p.id").
 		Order("p.id").Find(&projects)
 	if tx.Error != nil {
@@ -35,7 +36,6 @@ func GetProjects() []ProjectWeb {
 }
 
 func (p ProjectWeb) GetIssueCount() {
-	//var issues []Issue
 	DB.Where("project_id = ?", p.ID).Find([]Issue{}).Count(&p.IssuesCnt)
 	fmt.Println(p.IssuesCnt)
 }

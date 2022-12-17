@@ -53,6 +53,7 @@
     addProductBtn.addEventListener('click', () => {
         location.assign("/issue/create?project_id=" + params[2]);
     })
+    getBudgets();
 
     //      переключение между вкладками
     const insights = document.querySelector(".submenu");
@@ -67,68 +68,11 @@
                 target = target.parentNode;
             }
             target.classList.add('active');
-
-            if (target.innerHTML === 'Задачи') {
-                $.ajax({
-                    type: "GET",
-                    url: 'http://127.0.0.1:25595/issue?project_id=' + params[2],
-                    success: function (data) {
-                        $(".issues-content").empty();
-                        $(".issues-content").prepend(
-                            "<table id='issues'>\n" +
-                            "                        <thead>\n" +
-                            "                            <tr>\n" +
-                            "                                <th>Трекер</th>\n" +
-                            "                                <th>Статус</th>\n" +
-                            "                                <th>Название задачи</th>\n" +
-                            "                                <th>Назначена</th>\n" +
-                            "                                <th>Обновлено</th>\n" +
-                            "                                <th>Оценка трудозатрат</th>\n" +
-                            "                                <th>Трудозатраты</th>\n" +
-                            "                                <th></th>\n" +
-                            "                            </tr>\n" +
-                            "                        </thead>\n" +
-                            "                        <tbody>\n"
-                        )
-
-                        $(data).each(function (i, elem) {
-                            $("tbody").append(
-                                "<tr>\n" +
-                                "<td hidden>" + elem['ID'] + "</td>\n" +
-                                "<td>Трекер Заглушка</td>\n" +
-                                "<td>Статус Заглушка</td>\n" +
-                                "<td>" + elem['Name'] + "</td>\n" +
-                                "<td>Назначена Заглушка</td>\n" +
-                                "<td>Обновлено Заглушка</td>\n" +
-                                "<td>Оценка Заглушка</td>\n" +
-                                "<td>Трудозатраты Заглушка</td>\n" +
-                                "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
-                                "</tr>\n"
-                            );
-                        })
-
-                        $(".issues-content").append(
-                            "                        </tbody>" +
-                            "</table>");
-
-                        $('#issues').click(function (event) {
-                            let row = event.target.closest('tr');
-                            if (row != null) {
-                                if (row.tagName === 'TR') {
-                                    location.assign("/issue/" + row.children[0].innerHTML);
-                                }
-                            }
-                        })
-                    },
-                    error: function (data) {
-                        alert(data.statusText);
-                        console.log(data.statusText)
-                        // window.location = 'http://127.0.0.1:25595/project'
-                    }
-                });
-            }
             if (target.innerHTML === 'Бюджеты') {
-                $(".issues-content").empty();
+                getBudgets();
+            }
+            if (target.innerHTML === 'Задачи') {
+                getIssues("");
             }
             if (target.innerHTML === 'Настройки') {
                 $.ajax({
@@ -174,13 +118,124 @@
                         );
                     },
                 });
-
-
-
-                //renew();
             }
         }
     })
+
+    function getBudgets() {
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:25595/budgets?project_id=" + params[2],
+            success: function (data) {
+                $(".issues-content").empty();
+                $(".issues-content").prepend(
+                    "<table id='budgets'>\n" +
+                    "                        <thead>\n" +
+                    "                            <tr>\n" +
+                    "                                <th>Бюджет</th>\n" +
+                    "                                <th>Дата начала</th>\n" +
+                    "                                <th>Дата конца</th>\n" +
+                    "                                <th>Внешний ID</th>\n" +
+                    "                                <th></th>\n" +
+                    "                            </tr>\n" +
+                    "                        </thead>\n" +
+                    "                        <tbody>\n"
+                )
+                $(data).each(function (i, elem) {
+                    $("tbody").append(
+                        "<tr>\n" +
+                        "<td hidden>" + elem['ID'] + "</td>\n" +
+                        "<td>" + elem['name'] + "</td>\n" +
+                        "<td>Заглушка начало</td>\n" +
+                        "<td>Заглушка конец</td>\n" +
+                        "<td>" + elem['ext_id'] + "</td>\n" +
+                        "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
+                        "</tr>\n"
+                    );
+                });
+
+                $(".issues-content").append(
+                    "                        </tbody>" +
+                    "</table>");
+
+                $('#budgets').click(function (event) {
+                    let row = event.target.closest('tr');
+                    if (row != null) {
+                        if (row.tagName === 'TR') {
+                            getIssues("&budget_id="+row.children[0].innerHTML);
+                        }
+                    }
+                })
+            },
+            error: function (data) {
+                alert(data.statusText);
+                console.log(data.statusText)
+                // window.location = 'http://127.0.0.1:25595/project'
+            }
+        })
+    }
+
+    function getIssues(budgetID) {
+        $.ajax({
+            type: "GET",
+            url: 'http://127.0.0.1:25595/issue?project_id=' + params[2] + budgetID,
+            success: function (data) {
+                $(".issues-content").empty();
+                $(".issues-content").prepend(
+                    "<table id='issues'>\n" +
+                    "                        <thead>\n" +
+                    "                            <tr>\n" +
+                    "                                <th>Трекер</th>\n" +
+                    "                                <th>Статус</th>\n" +
+                    "                                <th>Название задачи</th>\n" +
+                    "                                <th>Назначена</th>\n" +
+                    "                                <th>Обновлено</th>\n" +
+                    "                                <th>Оценка трудозатрат</th>\n" +
+                    "                                <th>Трудозатраты</th>\n" +
+                    "                                <th>Бюджет</th>\n" +
+                    "                                <th></th>\n" +
+                    "                            </tr>\n" +
+                    "                        </thead>\n" +
+                    "                        <tbody>\n"
+                )
+
+                $(data).each(function (i, elem) {
+                    $("tbody").append(
+                        "<tr>\n" +
+                        "<td hidden>" + elem['ID'] + "</td>\n" +
+                        "<td>" + elem['TrackerName'] + "</td>\n" +
+                        "<td>" + elem['StatusName'] + "</td>\n" +
+                        "<td>" + elem['Name'] + "</td>\n" +
+                        "<td>" + elem['AssignedTo'] + "</td>\n" +
+                        "<td>Обновлено Заглушка</td>\n" +
+                        "<td>Оценка Заглушка</td>\n" +
+                        "<td>Трудозатраты Заглушка</td>\n" +
+                        "<td>" + elem['BudgetName'] + "</td>\n" +
+                        "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
+                        "</tr>\n"
+                    );
+                })
+
+                $(".issues-content").append(
+                    "                        </tbody>" +
+                    "</table>");
+
+                $('#issues').click(function (event) {
+                    let row = event.target.closest('tr');
+                    if (row != null) {
+                        if (row.tagName === 'TR') {
+                            location.assign("/issue/" + row.children[0].innerHTML);
+                        }
+                    }
+                })
+            },
+            error: function (data) {
+                alert(data.statusText);
+                console.log(data.statusText)
+                // window.location = 'http://127.0.0.1:25595/project'
+            }
+        });
+    }
 </script>
 <script>
     function renew() {
@@ -192,6 +247,8 @@
         })
         // }
     }
+
+
 </script>
 </body>
 </html>

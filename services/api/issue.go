@@ -21,11 +21,11 @@ func getIssueList(c *gin.Context) {
 		return
 	}
 	if budgetID > 0 {
-		issues := middleware.GetBudgetIssue(budgetID)
+		issues := middleware.GetIssueList(projectID, budgetID)
 		c.JSON(http.StatusOK, issues)
 		return
 	}
-	issues := middleware.GetIssueList(uint(projectID))
+	issues := middleware.GetIssueList(projectID, 0)
 	c.JSON(http.StatusOK, issues)
 }
 
