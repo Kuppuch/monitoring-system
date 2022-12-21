@@ -96,6 +96,7 @@ func AuthRequired(c *gin.Context) {
 		_, err := middleware.CheckToken(token)
 		if err != nil {
 			fmt.Println(err)
+			c.Redirect(302, "/login")
 		}
 	}
 	c.Next()
