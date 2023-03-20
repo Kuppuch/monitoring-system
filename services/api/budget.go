@@ -78,7 +78,7 @@ func insertBudget(c *gin.Context) {
 }
 
 func getBudgetTimespent(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	budgetId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(400, gin.Error{
 			Err:  err,
@@ -87,6 +87,6 @@ func getBudgetTimespent(c *gin.Context) {
 		})
 		return
 	}
-	_ = id
-
+	timespents := middleware.GetBudgetTimespent(budgetId)
+	c.JSON(http.StatusOK, timespents)
 }

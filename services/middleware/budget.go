@@ -13,10 +13,12 @@ type Budget struct {
 	ProjectID int       `json:"project_id"`
 	StartAt   time.Time `json:"start_at"`
 	EndAd     time.Time `json:"end_ad"`
+	StatusID  int       `json:"status_id"`
 	Issues    []Issue   `gorm:"foreignKey:BudgetID" json:"timespent,omitempty"`
 }
 
 func (b Budget) Insert() (int64, error) {
+	b.StatusID = 3 // в работе
 	tx := DB.Create(&b)
 	if tx.Error != nil {
 		logging.Print.Error("database error create budget")
@@ -41,4 +43,18 @@ func GetProjectBudgets(projectID int) []Budget {
 	var b []Budget
 	DB.Where("project_id = ?", projectID).Find(&b)
 	return b
+}
+
+func GetBudgetById(id int) Budget {
+	var b Budget
+	DB.Where("id = ?", id).Find(&b)
+	return b
+}
+
+func (b Budget) UpdateStatus(statusId int) (int64, error) {
+	tx := DB.Model(Budget{}).Where("id = ?", b.ID).Update("status_id", statusId)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return tx.RowsAffected, nil
 }

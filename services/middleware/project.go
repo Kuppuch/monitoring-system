@@ -49,7 +49,7 @@ func GetProjectByID(id int) *Project {
 	return &project
 }
 
-func (p Project) InsertProject() int64 {
+func (p *Project) InsertProject() int64 {
 	tx := DB.Create(&p)
 	if tx.Error != nil {
 		logging.Print.Warning(tx.Error)
@@ -63,4 +63,12 @@ func (p Project) Delete() int64 {
 		logging.Print.Warning(tx.Error)
 	}
 	return tx.RowsAffected
+}
+
+func (p *Project) UpdateStatus(statusID int) (int64, error) {
+	tx := DB.Model(&Project{}).Where("status_id = ?", p.ID).Update("status_id", statusID)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return tx.RowsAffected, nil
 }

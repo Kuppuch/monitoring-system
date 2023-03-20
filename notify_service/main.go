@@ -14,11 +14,10 @@ func main() {
 		logging.Print.Error(err)
 	}
 
-	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(cors.AllowAll())
 	r.POST("/email", api.SendEmail)
-	r.GET("/email", api.GetCodeByEmail)
+	r.POST("/email_code", api.GetCodeByEmail)
 	err = r.Run(":25596")
 	if err != nil {
 		logging.Print.Error(err)

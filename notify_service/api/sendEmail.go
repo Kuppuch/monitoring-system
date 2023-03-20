@@ -37,12 +37,10 @@ func SendEmail(c *gin.Context) {
 	mail := gomail.NewMessage()
 	mail.SetHeader("From", "vehicleaggregator@gmail.com")
 	mail.SetHeader("To", m.Recipient)
-	//mail.SetAddressHeader("Cc", "vehicleaggregator@gmail.com", user.Name)
 	mail.SetHeader("Subject", "Confirm action")
 	rand.Seed(time.Now().UnixNano())
 	m.Code = strconv.Itoa(rand.Intn(8999) + 1000)
-	mail.SetBody("text/html", fmt.Sprintf("Your password recovery code: %s", m.Code))
-	//d := gomail.NewDialer("smtp.gmail.com", 587, "vehicleaggregator@gmail.com", "vehicleaggregator2022")
+	mail.SetBody("text/html", fmt.Sprintf("Your verification code: %s", m.Code))
 	d := gomail.NewDialer("smtp.gmail.com", 587, "vehicleaggregator@gmail.com", "hcbwxhrlwxgovdtu")
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	if err = d.DialAndSend(mail); err != nil {

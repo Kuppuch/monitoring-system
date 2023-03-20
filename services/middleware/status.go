@@ -7,6 +7,7 @@ type Status struct {
 	Name     string    `json:"name"`
 	Issues   []Issue   `gorm:"foreignKey:StatusID" json:"issues"`
 	Projects []Project `gorm:"foreignKey:StatusID" json:"projects"`
+	Budgets  []Budget  `gorm:"foreignKey:StatusID" json:"budgets"`
 }
 
 func GetStatusList() []Status {

@@ -10,10 +10,16 @@ func Router(r *gin.RouterGroup) {
 	{
 		projectapi.GET("/", GetProjects)
 		//projectapi.GET("/create", getProjectCreatePage)
-		//projectapi.POST("/create", insertProject)
+		projectapi.POST("/", InsertProject)
 		//projectapi.GET("/:id/members", getMemberPage)
 		//projectapi.POST("/:id/members", insertProjectMember)
 
+	}
+
+	budgets := r.Group("budgets")
+	{
+		budgets.GET("/", GetBudget)
+		budgets.POST("/", UpdateStatusBudget)
 	}
 
 	userapi := r.Group("users")
