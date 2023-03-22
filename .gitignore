@@ -2,3 +2,4 @@
 lib
 run.exe
 /config/docker_config.json
+/config/config.json

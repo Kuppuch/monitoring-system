@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"monitoring-system/config"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
@@ -30,7 +31,7 @@ func getProjectPage(c *gin.Context) {
 	user, _ := GetUserByToken(c)
 	if projectID > 0 {
 		project := middleware.GetProjectByID(projectID)
-		c.HTML(http.StatusOK, "project.html", gin.H{"project": project, "user": user})
+		c.HTML(http.StatusOK, "project.html", gin.H{"project": project, "user": user, "token": config.GitToken})
 		return
 	}
 	c.JSON(http.StatusBadRequest, gin.Error{
