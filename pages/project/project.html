@@ -39,7 +39,19 @@
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
-<script>
+<script type="module">
+    import {
+        Octokit
+    } from 'https://cdn.skypack.dev/octokit'
+    import {
+        Base64
+    } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
+
+    const owner = 'vehicle-aggregator'
+    const repo = 'doc_sample'
+    const path = '1.txt'
+    const org = 'vehicle-aggregator'
+
     const addProductBtn = document.querySelector(".add-product")
 
     let queryDist = {};
@@ -75,7 +87,13 @@
             if (target.innerHTML === 'Задачи') {
                 getIssues("");
             }
-
+            if (target.innerHTML === 'Техническое задание') {
+                $(".issues-content").empty();
+                $(".issues-content").append($('<p>Проект</p>'))
+                $(".issues-content").append($('<select id="project-select" style="margin: 0 0 1rem 0">'))
+                $(".issues-content").append($('<div id="doc" style="height: 70vh; overflow-y: auto; overflow-x: hidden">'))
+                getSRS()
+            }
             if (target.innerHTML === 'Настройки') {
                 $.ajax({
                     type: "GET",
@@ -239,42 +257,6 @@
             }
         });
     }
-</script>
-<script>
-    function renew() {
-        // if (target.innerHTML === 'Настройки') {
-        const addProductBtn = document.querySelector(".add-product")
-
-        addProductBtn.addEventListener('click', () => {
-            location.assign("");
-        })
-        // }
-    }
-</script>
-<script type="module">
-    import {
-        Octokit
-    } from 'https://cdn.skypack.dev/octokit'
-    import {
-        Base64
-    } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
-
-    const owner = 'vehicle-aggregator'
-    const repo = 'doc_sample'
-    const path = '1.txt'
-    const org = 'vehicle-aggregator'
-
-    const insights = document.querySelector(".submenu");
-    insights.addEventListener('click', (event) => {
-        let target = event.target;
-        if (target.innerHTML === 'Техническое задание') {
-            $(".issues-content").empty();
-            $(".issues-content").append($('<p>Проект</p>'))
-            $(".issues-content").append($('<select id="project-select" style="margin: 0 0 1rem 0">'))
-            $(".issues-content").append($('<div id="doc" style="height: 70vh; overflow-y: auto; overflow-x: hidden">'))
-            getSRS()
-        }
-    })
 
     export const apiGetDocContent = async (rep) => {
         if (!rep) {
@@ -330,7 +312,17 @@
         })
     }
 
+</script>
+<script>
+    function renew() {
+        // if (target.innerHTML === 'Настройки') {
+        const addProductBtn = document.querySelector(".add-product")
 
+        addProductBtn.addEventListener('click', () => {
+            location.assign("");
+        })
+        // }
+    }
 </script>
 </body>
 </html>
