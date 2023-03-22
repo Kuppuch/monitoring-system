@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"monitoring-system/services/logging"
+	"time"
 )
 
 type Project struct {
@@ -20,6 +21,7 @@ type Project struct {
 type ProjectWeb struct {
 	Project
 	IssuesCnt int64
+	Updated   int64
 }
 
 func GetProjects() []ProjectWeb {
@@ -31,6 +33,9 @@ func GetProjects() []ProjectWeb {
 		Order("p.id").Find(&projects)
 	if tx.Error != nil {
 		logging.Print.Warning(tx.Error)
+	}
+	for i, v := range projects {
+		projects[i].Updated = int64(time.Now().Sub(v.UpdatedAt).Seconds())
 	}
 	return projects
 }
