@@ -3,40 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <title>Документация</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 <div id="app">
 
 </div>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Документация</h1>
+        <div id="choice">
+            <select name="project" id="project"></select>
+        </div>
+        <div id="doc" class="docs" style="
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: 80vh;
+            margin: 1rem;
+        ">
+
+        </div>
+    </main>
+</div>
+
 <script type="module">
-    import { Octokit } from 'https://cdn.skypack.dev/octokit'
-    import { Base64 } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
-    const owner = 'Kuppuch'
+    import {
+        Octokit
+    } from 'https://cdn.skypack.dev/octokit'
+    import {
+        Base64
+    } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
+
+    const owner = 'vehicle-aggregator'
     const repo = 'doc_sample'
     const path = '1.txt'
+    const org = 'vehicle-aggregator'
 
-    export const apiRequest = async () => {
+    export const apiGetDocContent = async (rep = 'doc_sample') => {
         return await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner,
-            repo,
+            repo: rep,
             path,
         })
     }
 
+    export const apiGetRepositories = async () => {
+        return await octokit.request('GET /orgs/{org}/repos', {
+            org: org,
+        })
+    }
+
     const octokit = new Octokit({
-        auth: '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'
+        auth: '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'
     })
 
     addEventListener("load", () => {
-        apiRequest().then((result) => {
-            const container = document.querySelector('#app')
+        apiGetDocContent().then((result) => {
+            const container = document.querySelector('#doc')
             const resContent = Base64.decode(result.data.content)
             let p = document.createElement("pre");
             p.append(resContent);
-            console.log(resContent)
             container.append(p)
         })
+        apiGetRepositories().then((result) => {
+            let selector = document.querySelector('#project')
+            let data = result.data
+            for (let i = 0; i < data.length; i++) {
+                let opt = document.createElement('option')
+                opt.value = data[i].node_id
+                opt.innerHTML = data[i].name
+                selector.appendChild(opt)
+            }
+        })
     });
+
+    let selector = document.querySelector('#project')
+    selector.addEventListener("change", function() {
+        const container = document.querySelector('#doc')
+        container.innerHTML = ''
+        apiGetDocContent(selector[selector.selectedIndex].text).then((result) => {
+            const container = document.querySelector('#doc')
+            const resContent = Base64.decode(result.data.content)
+            let p = document.createElement("pre");
+            p.append(resContent);
+            container.append(p)
+        })
+    })
 </script>
 </body>
 </html>

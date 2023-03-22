@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 	"monitoring-system/config"
 	"monitoring-system/services/logging"
+	"os"
+	"strconv"
 )
 
 var DB *gorm.DB
@@ -87,6 +89,12 @@ func insertAdmin() {
 			logging.Print.Error(tx.Error)
 			return
 		}
+
+		if err := os.MkdirAll(fmt.Sprintf("lib/users/%v", strconv.Itoa(int(tx.Statement.Model.(*User).Model.ID))), 0777); err != nil {
+			logging.Print.Error(err)
+			return
+		}
+
 	}
 	logging.Print.Infof("Available user admin")
 	fmt.Println("                       login: admin@admin.ru")
