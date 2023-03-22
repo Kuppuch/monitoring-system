@@ -30,14 +30,14 @@
     params.password = pass;
     $.ajax({
       type: "POST",
-      url: 'http://127.0.0.1:25595/submit',
+      url: 'http://'+window.location.host+'/submit',
       data: JSON.stringify(params),
       success: function () {
         location.href = '/project'
       },
       error: function (data) {
         alert(data);
-        //window.location = 'http://127.0.0.1:25595/login'
+        //window.location = 'http://'+window.location.host+'/login'
       }
     });
   }

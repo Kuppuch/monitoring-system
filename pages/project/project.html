@@ -97,7 +97,7 @@
             if (target.innerHTML === 'Настройки') {
                 $.ajax({
                     type: "GET",
-                    url: 'http://127.0.0.1:25595/project/' + params[2] + '/members/list',
+                    url: 'http://'+window.location.host+'/project/' + params[2] + '/members/list',
                     success: function (data) {
                         $(".issues-content").empty();
                         $(".issues-content").prepend(
@@ -145,7 +145,7 @@
     function getBudgets() {
         $.ajax({
             type: "GET",
-            url: "http://127.0.0.1:25595/budgets?project_id=" + params[2],
+            url: 'http://'+window.location.host+'/budgets?project_id=' + params[2],
             success: function (data) {
 
                 $(".issues-content").empty();
@@ -191,7 +191,7 @@
             error: function (data) {
                 alert(data.statusText);
                 console.log(data.statusText)
-                // window.location = 'http://127.0.0.1:25595/project'
+                // window.location = 'http://'+window.location.host+'/project'
             }
         })
     }
@@ -199,7 +199,7 @@
     function getIssues(budgetID) {
         $.ajax({
             type: "GET",
-            url: 'http://127.0.0.1:25595/issue?project_id=' + params[2] + budgetID,
+            url: 'http://'+window.location.host+'/issue?project_id=' + params[2] + budgetID,
             success: function (data) {
                 $(".issues-content").empty();
                 $(".issues-content").prepend(
@@ -253,7 +253,7 @@
             error: function (data) {
                 alert(data.statusText);
                 console.log(data.statusText)
-                // window.location = 'http://127.0.0.1:25595/project'
+                // window.location = 'http://'+window.location.host+'/project'
             }
         });
     }

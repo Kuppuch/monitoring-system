@@ -80,7 +80,7 @@
             data: JSON.stringify(data),
             success: function () {
                 console.log(params[2]);
-                window.location = 'http://127.0.0.1:25595/project/' + parseInt(params[2]);
+                window.location = 'http://'+window.location.host+'/project/' + parseInt(params[2]);
             },
             error: function (data) {
                 const body = JSON.parse(data.responseText);

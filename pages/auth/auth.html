@@ -24,6 +24,7 @@
 </div>
 
 <script>
+    console.log(window.location.host)
     $("form").on('submit', (event) => {
         event.preventDefault();
         let data = $(event.target)
@@ -36,15 +37,15 @@
 
         $.ajax({
             type: "POST",
-            url: 'http://127.0.0.1:25595/login',
+            url: 'http://'+window.location.host+'/login',
             data: JSON.stringify(data),
             success: function (data) {
                 Cookies.set('auth', data.Authorization)
-                window.location = 'http://127.0.0.1:25595'
+                window.location = 'http://'+window.location.host
             },
             error: function (data) {
                 alert(data);
-                //window.location = 'http://127.0.0.1:25595/login'
+                //window.location = 'http://'+window.location.host+'/login'
             }
         });
     });
