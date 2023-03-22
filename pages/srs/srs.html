@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Документация</title>
+</head>
+<body>
+<div id="app">
+
+</div>
+<script type="module">
+    import { Octokit } from 'https://cdn.skypack.dev/octokit'
+    import { Base64 } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
+    const owner = 'Kuppuch'
+    const repo = 'doc_sample'
+    const path = '1.txt'
+
+    export const apiRequest = async () => {
+        return await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner,
+            repo,
+            path,
+        })
+    }
+
+    const octokit = new Octokit({
+        auth: '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'
+    })
+
+    addEventListener("load", () => {
+        apiRequest().then((result) => {
+            const container = document.querySelector('#app')
+            const resContent = Base64.decode(result.data.content)
+            let p = document.createElement("pre");
+            p.append(resContent);
+            console.log(resContent)
+            container.append(p)
+        })
+    });
+</script>
+</body>
+</html>

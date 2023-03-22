@@ -75,6 +75,8 @@ func Router() {
 		budget.GET("/:id/timespent", getBudgetTimespent)
 	}
 
+	r.GET("/srs", srsPage)
+
 	api := r.Group("api")
 	public.Router(api)
 
