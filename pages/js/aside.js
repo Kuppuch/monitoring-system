@@ -11,11 +11,9 @@ closeBtn.addEventListener('click', () => {
 })
 
 // addEventListener("load", (event) => {
-let url = new URL(window.location)
-
 const sidebar = document.querySelector('.sidebar')
 let links = sidebar.children
-const path = url.pathname.replace(/.$/, "")
+const path = window.location.pathname.split('/')[1]
 for (let i = 0; i < links.length; i++) {
     if (links[i].href.includes(path) && path.length > 1) {
         links[i].classList.add('active')
