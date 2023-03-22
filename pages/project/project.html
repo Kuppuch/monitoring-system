@@ -16,6 +16,7 @@
             <ul class="submenu">
                 <li class="active">Бюджеты</li>
                 <li>Задачи</li>
+                <li>Техническое задание</li>
                 <li>Настройки</li>
             </ul>
             <div class="issues-content">
@@ -74,6 +75,7 @@
             if (target.innerHTML === 'Задачи') {
                 getIssues("");
             }
+
             if (target.innerHTML === 'Настройки') {
                 $.ajax({
                     type: "GET",
@@ -163,7 +165,7 @@
                     let row = event.target.closest('tr');
                     if (row != null) {
                         if (row.tagName === 'TR') {
-                            getIssues("&budget_id="+row.children[0].innerHTML);
+                            getIssues("&budget_id=" + row.children[0].innerHTML);
                         }
                     }
                 })
@@ -247,6 +249,85 @@
             location.assign("");
         })
         // }
+    }
+</script>
+<script type="module">
+    import {
+        Octokit
+    } from 'https://cdn.skypack.dev/octokit'
+    import {
+        Base64
+    } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
+
+    const owner = 'vehicle-aggregator'
+    const repo = 'doc_sample'
+    const path = '1.txt'
+    const org = 'vehicle-aggregator'
+
+    const insights = document.querySelector(".submenu");
+    insights.addEventListener('click', (event) => {
+        let target = event.target;
+        if (target.innerHTML === 'Техническое задание') {
+            $(".issues-content").empty();
+            $(".issues-content").append($('<p>Проект</p>'))
+            $(".issues-content").append($('<select id="project-select" style="margin: 0 0 1rem 0">'))
+            $(".issues-content").append($('<div id="doc" style="height: 70vh; overflow-y: auto; overflow-x: hidden">'))
+            getSRS()
+        }
+    })
+
+    export const apiGetDocContent = async (rep) => {
+        if (!rep) {
+            return
+        }
+        return await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner,
+            repo: rep,
+            path,
+        })
+    }
+
+    export const apiGetRepositories = async () => {
+        return await octokit.request('GET /orgs/{org}/repos', {
+            org: org,
+        })
+    }
+
+    const octokit = new Octokit({
+        auth: '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'
+    })
+
+    function getSRS() {
+        apiGetDocContent().then((result) => {
+            const container = document.querySelector('#doc')
+            const resContent = Base64.decode(result.data.content)
+            let p = document.createElement("pre");
+            p.append(resContent);
+            container.append(p)
+        })
+        apiGetRepositories().then((result) => {
+            let selector = document.querySelector('#project-select')
+            let data = result.data
+            for (let i = 0; i < data.length; i++) {
+                let opt = document.createElement('option')
+                opt.value = data[i].node_id
+                opt.innerHTML = data[i].name
+                selector.appendChild(opt)
+            }
+        })
+
+        let selector = document.querySelector('#project-select')
+        selector.addEventListener("change", function () {
+            const container = document.querySelector('#doc')
+            container.innerHTML = ''
+            apiGetDocContent(selector[selector.selectedIndex].text).then((result) => {
+                const container = document.querySelector('#doc')
+                const resContent = Base64.decode(result.data.content)
+                let p = document.createElement("pre");
+                p.append(resContent);
+                container.append(p)
+            })
+        })
     }
 
 
