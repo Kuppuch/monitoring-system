@@ -13,6 +13,6 @@ func main() {
 	if err != nil {
 		logging.Print.Fatal(err)
 	}
-	logging.Print.Info("Listen on port 25595")
+	logging.Print.Info("Listen on port 25595 http://localhost:25595/")
 	api.Router()
 }
