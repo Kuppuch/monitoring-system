@@ -10,6 +10,14 @@ closeBtn.addEventListener('click', () => {
     sideMenu.style.display = 'none'
 })
 
+addEventListener("load", (event) => {
+    const logoutBtn = document.querySelector('#logout')
+    logoutBtn.addEventListener('click', () => {
+        Cookies.remove('auth')
+        window.location.href = 'http://'+window.location.host+'/login'
+    })
+});
+
 // addEventListener("load", (event) => {
 const sidebar = document.querySelector('.sidebar')
 let links = sidebar.children

@@ -8,6 +8,7 @@ import (
 	"monitoring-system/services/api/public"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
+	"net/http"
 	"strings"
 )
 
@@ -73,6 +74,27 @@ func Router() {
 		budget.GET("", getBudgets)
 		budget.POST("", insertBudget)
 		budget.GET("/:id/timespent", getBudgetTimespent)
+	}
+
+	task := r.Group("tasks")
+	{
+		task.GET("/my_task", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "myTask.html", nil)
+		})
+	}
+
+	notification := r.Group("notification")
+	{
+		notification.GET("/", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "notification.html", nil)
+		})
+	}
+
+	setting := r.Group("setting")
+	{
+		setting.GET("/", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "settings.html", nil)
+		})
 	}
 
 	r.GET("/srs", srsPage)

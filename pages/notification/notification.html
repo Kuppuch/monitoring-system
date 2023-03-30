@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Уведомления</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/js.cookie.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Заглушка</h1>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" .}}
+        {{ template "resent-updates.html" }}
+        <!-------------------- END OF RECENT UPDATES -------------------->
+<!--        <div class="sales-analytics">-->
+<!--            <div class="item add-product">-->
+<!--                <div>-->
+<!--                    <span class="material-icons-sharp">add</span>-->
+<!--                    <h3>Добавить задачу</h3>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+</div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js" ></script>
+</body>
+</html>

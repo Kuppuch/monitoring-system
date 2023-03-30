@@ -572,8 +572,16 @@ main .issues .issues-content button {
     transition: all 300ms ease;
 }
 
+main .issues .issues-content button.danger {
+    background: var(--color-danger);
+}
+
 main .issues .issues-content button:hover {
     background: var(--color-info-light);
+    color: var(--color-white);
+}
+
+main .issues .issues-content button:hover > danger {
     color: var(--color-white);
 }
 

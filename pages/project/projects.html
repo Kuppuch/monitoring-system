@@ -5,6 +5,7 @@
     <title>Проекты</title>
     <link rel="stylesheet" href="../css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="/js/js.cookie.js"></script>
 </head>
 <body>
 <div class="container">
@@ -69,10 +70,8 @@
 
     addEventListener("load", () => {
         let containers = document.getElementsByClassName('updated')
-        console.log(containers)
         for (let i = 0; i < containers.length; i++) {
             let second = containers[i].innerHTML
-            console.log(second)
             let finalStr = 'Последние '
             let month = Math.floor(second/60/60/24/30)
             let day = Math.floor(second/60/60/24) - (month * 30)
@@ -81,19 +80,15 @@
             second = second - (day * 24 * 60 * 60 + hour * 60 * 60 + minute * 60)
             if (day > 0) {
                 finalStr += day + ' д. '
-                console.log(finalStr)
             }
             if (hour > 0) {
                 finalStr += hour + ' ч. '
-                console.log(finalStr)
             }
             if (minute > 0) {
                 finalStr += minute + ' мин. '
-                console.log(finalStr)
             }
             if (second > 0) {
                 finalStr += second + ' сек.'
-                console.log(finalStr)
             }
             if (month > 0) {
                 finalStr = 'Более ' + month + ' мес.'
