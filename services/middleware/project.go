@@ -14,8 +14,9 @@ type Project struct {
 	IsPublic    bool   `json:"isPublic"`
 	StatusID    uint   `json:"status"`
 	//Issues      []Issue  `gorm:"foreignKey:ProjectID" json:"issues"`
-	Members []Member `gorm:"foreignKey:ProjectID" json:"members"`
-	Budgets []Budget `gorm:"foreignKey:ProjectID" json:"budgets"`
+	Members         []Member        `gorm:"foreignKey:ProjectID" json:"members"`
+	Budgets         []Budget        `gorm:"foreignKey:ProjectID" json:"budgets"`
+	GitRepositories []GitRepository `gorm:"foreignKey:ProjectID" json:"gitRepositories"`
 }
 
 type ProjectWeb struct {

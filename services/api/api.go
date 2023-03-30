@@ -56,6 +56,8 @@ func Router() {
 		project.GET("/:id/members", getMemberPage)
 		project.POST("/:id/members", insertProjectMember)
 		project.GET("/:id/members/list", getMembers)
+		project.POST("/:id/link_rep", linkGitRepository)
+		project.GET("/:id/link_rep", GetActualGitRepository)
 
 	}
 

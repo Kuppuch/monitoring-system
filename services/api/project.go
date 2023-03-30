@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"monitoring-system/config"
 	"monitoring-system/services/logging"
@@ -31,7 +32,11 @@ func getProjectPage(c *gin.Context) {
 	user, _ := GetUserByToken(c)
 	if projectID > 0 {
 		project := middleware.GetProjectByID(projectID)
-		c.HTML(http.StatusOK, "project.html", gin.H{"project": project, "user": user, "token": config.GitToken})
+		gitRepository := middleware.GetGitRepositoryByID(projectID)
+		c.HTML(
+			http.StatusOK,
+			"project.html",
+			gin.H{"project": project, "user": user, "token": config.GitToken, "git_repository": gitRepository.Repository})
 		return
 	}
 	c.JSON(http.StatusBadRequest, gin.Error{
@@ -181,4 +186,94 @@ func getMembers(c *gin.Context) {
 	}
 	memberView := middleware.GetMembers(id)
 	c.JSON(http.StatusOK, memberView)
+}
+
+func linkGitRepository(c *gin.Context) {
+	projectIDstr := c.Param("id")
+	projectID, err := strconv.Atoi(projectIDstr)
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error by get project id",
+		})
+		return
+	}
+	raw, err := c.GetRawData()
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error by get raw data",
+		})
+		return
+	}
+
+	gr := middleware.GitRepository{}
+	err = json.Unmarshal(raw, &gr)
+	if err != nil {
+		logging.Print.Error("error unmarshal", err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error by unmarshal issue",
+		})
+	}
+	gr.ProjectID = projectID
+	grFromDB := middleware.GetGitRepositoryByID(gr.ProjectID)
+
+	if grFromDB.Repository == gr.Repository {
+		c.JSON(http.StatusOK, middleware.GetSuccess())
+		return
+	}
+	if grFromDB.Repository != gr.Repository && grFromDB.ProjectID == gr.ProjectID {
+		grFromDB.Repository = gr.Repository
+		rowAffected, err := grFromDB.Update()
+		if err != nil || rowAffected == 0 {
+			logging.Print.Error(fmt.Sprintf("error update git repository for project %v ", projectID), err)
+			c.JSON(http.StatusBadRequest, gin.Error{
+				Err:  err,
+				Type: 0,
+				Meta: "error update git repository",
+			})
+		}
+		c.JSON(http.StatusOK, middleware.GetSuccess())
+		return
+	}
+
+	rowAffected, err := gr.Insert()
+	if err != nil || rowAffected == 0 {
+		logging.Print.Error(fmt.Sprintf("error save git repository for project %v ", projectID), err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error save git repository",
+		})
+	}
+	c.JSON(http.StatusOK, middleware.GetSuccess())
+}
+
+func GetActualGitRepository(c *gin.Context) {
+	projectIDstr := c.Param("id")
+	projectID, err := strconv.Atoi(projectIDstr)
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error by get project id",
+		})
+		return
+	}
+	gr := middleware.GetGitRepositoryByID(projectID)
+	m := map[string]interface{}{
+		"Repository": gr.Repository,
+	}
+	b, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+	c.JSON(http.StatusOK, string(b))
 }
