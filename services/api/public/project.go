@@ -73,12 +73,9 @@ func InsertProject(c *gin.Context) {
 	budget.Name = pproject.Budget
 	budget.ProjectID = int(project.ID)
 	budget.ExtID = pproject.ExtID
-	rowAffected, err := budget.Insert()
+	rowAffected := budget.Insert()
 	if rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
-		return
-	}
-	if err != nil {
 		return
 	}
 	c.JSON(http.StatusOK, middleware.GetSuccess())

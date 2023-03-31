@@ -9,6 +9,7 @@ import (
 	"monitoring-system/services/middleware"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func getProjectsPage(c *gin.Context) {
@@ -78,6 +79,18 @@ func insertProject(c *gin.Context) {
 	}
 	project.StatusID = 1
 	if rowAffected := project.InsertProject(); rowAffected == 0 {
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	budget := middleware.Budget{
+		Name:      "Основной",
+		ExtID:     0,
+		ProjectID: int(project.ID),
+		StartAt:   time.Time{},
+		EndAd:     time.Time{},
+		StatusID:  3,
+	}
+	if rowAffected := budget.Insert(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
 	}

@@ -66,6 +66,8 @@ func insertIssue(c *gin.Context) {
 	}
 	issue := middleware.Issue{}
 	err = json.Unmarshal(raw, &issue)
+	m := map[string]interface{}{}
+	err = json.Unmarshal(raw, &m)
 	if err != nil {
 		logging.Print.Error("error unmarshal", err)
 		c.JSON(http.StatusBadRequest, gin.Error{
@@ -78,6 +80,13 @@ func insertIssue(c *gin.Context) {
 
 	user, err := GetUserByToken(c)
 	issue.CreatorID = user.ID
+	project := middleware.GetProjectByID(issue.ProjectID)
+	if project.ID == 0 {
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	mainBudget := middleware.GetMainProjectBudgetByProjectID(int(project.ID))
+	issue.BudgetID = mainBudget.ID
 
 	if rowAffected := issue.InsertIssue(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())

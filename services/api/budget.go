@@ -65,7 +65,7 @@ func insertBudget(c *gin.Context) {
 		return
 	}
 
-	rawAffected, err := b.Insert()
+	rawAffected := b.Insert()
 	if err != nil || rawAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.Error{
 			Err:  err,

@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"gorm.io/gorm"
-	"monitoring-system/services/logging"
 	"time"
 )
 
@@ -17,14 +16,14 @@ type Budget struct {
 	Issues    []Issue   `gorm:"foreignKey:BudgetID" json:"timespent,omitempty"`
 }
 
-func (b Budget) Insert() (int64, error) {
+func (b Budget) Insert() int64 {
 	b.StatusID = 3 // в работе
 	tx := DB.Create(&b)
-	if tx.Error != nil {
-		logging.Print.Error("database error create budget")
-		return 0, tx.Error
-	}
-	return tx.RowsAffected, nil
+	//if tx.Error != nil {
+	//	logging.Print.Error("database error create budget")
+	//	return 0, tx.Error
+	//}
+	return tx.RowsAffected
 }
 
 func GetBudget(id int) Budget {
@@ -49,6 +48,12 @@ func GetBudgetById(id int) Budget {
 	var b Budget
 	DB.Where("id = ?", id).Find(&b)
 	return b
+}
+
+func GetMainProjectBudgetByProjectID(projectID int) Budget {
+	budget := Budget{}
+	DB.Where("name = 'Основной' AND project_id = ?", projectID).Find(&budget)
+	return budget
 }
 
 func (b Budget) UpdateStatus(statusId int) (int64, error) {

@@ -8,9 +8,9 @@ import (
 
 type Issue struct {
 	gorm.Model
-	Name        string
-	Description string
-	//ProjectID    uint        `json:"project_id"`
+	Name         string
+	Description  string
+	ProjectID    int         `gorm:"-:all" json:"project_id"`
 	CreatorID    uint        `json:"creator_id"`
 	AssignedToID uint        `json:"assigned_to_id"`
 	StatusID     uint        `json:"status_id"`

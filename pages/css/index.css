@@ -46,6 +46,11 @@
     text-decoration: none;
     list-style: none;
     box-sizing: border-box;
+
+    -webkit-user-select: all !important;
+    -moz-user-select: all !important;
+    -ms-user-select: all !important;
+    user-select: text !important;
 }
 
 html{
