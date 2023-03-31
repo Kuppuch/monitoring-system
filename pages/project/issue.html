@@ -22,7 +22,7 @@
                 <div class="content-block-h">
                     <div class="title">Статус</div>
                     <div class="cont">
-                        <select name="" id="Status">
+                        <select name="Status" id="status">
                             <option value="{{ .issue.StatusID }}">{{ .issue.StatusName }}</option>
                             {{ range $statuses := .statuses }}
                             <option value="{{ .ID }}">{{ .Name }}</option>
@@ -49,6 +49,15 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="content-block-h">
+                    <div class="title">Добавить трудосписания</div>
+                    <div class="cont">
+                        <input type="text" class="form-control" id="timespentInput" name="Timespent" placeholder="#h #m" value="" required>
+                    </div>
+                </div>
+            </div>
+            <button class="bg-success" id="saveTimespent" style="cursor: pointer" onclick="save()">Сохранить</button>
         </div>
     </main>
     <div class="right">
@@ -57,5 +66,29 @@
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
+<script>
+    function save() {
+        const timespent = document.querySelector('#timespentInput').value
+        const status = document.querySelector('#status').value
+        let data = {
+            Timespent: timespent,
+            Status: status,
+        }
+        const path = window.location.pathname.split('/')[2]
+        $.ajax({
+            type: "POST",
+            url: 'http://'+window.location.host+'/issue/save/'+path,
+            data: JSON.stringify(data),
+            success: function (data) {
+                // window.location = 'http://'+window.location.host+'/project'
+            },
+            error: function (data) {
+                alert(data.statusText);
+                console.log(data.statusText)
+                // window.location = 'http://'+window.location.host+'/project'
+            }
+        });
+    }
+</script>
 </body>
 </html>

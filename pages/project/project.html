@@ -95,6 +95,7 @@
             }
             if (target.innerHTML === 'Настройки') {
                 $(".issues-content").empty();
+                console.log(params)
                 $.ajax({
                     type: "GET",
                     url: 'http://'+window.location.host+'/project/' + params[2] + '/members/list',
@@ -128,17 +129,14 @@
                             "                        </tbody>" +
                             "</table>" +
                             "</div");
-
-                        $(".issues-content").prepend(
-                            "<div class='row'>" +
-                            "<button onclick=\"location.href='/project/' + params[2] + '/members'\";><span class=\"material-icons-sharp\">add</span>Добавить участника</button>" +
-                            "</div>"
-                        );
-
-
-
                     },
                 });
+
+                $(".issues-content").prepend(
+                    "<div class='row'>" +
+                    "<button id=\"addMember\";><span class=\"material-icons-sharp\">add</span>Добавить участника</button>" +
+                    "</div>"
+                );
 
                 // Выбор проекта
                 $.ajax({
@@ -165,6 +163,11 @@
                     "</button>" +
                     "</div>"
                 );
+
+                const addMemberBtn = document.querySelector('#addMember')
+                addMemberBtn.addEventListener('click', () => {
+                    location.href='/project/' + params[2] + '/members'
+                })
             }
         }
     })

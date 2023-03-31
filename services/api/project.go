@@ -14,7 +14,13 @@ import (
 
 func getProjectsPage(c *gin.Context) {
 	user, _ := GetUserByToken(c)
-	projects := middleware.GetProjects()
+	var projects []middleware.ProjectWeb
+	if user.Admin {
+		projects = middleware.GetAllProjects()
+	} else {
+		projects = middleware.GetProjects(user.ID)
+	}
+
 	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects, "user": user})
 }
 

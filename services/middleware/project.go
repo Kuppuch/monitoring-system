@@ -25,7 +25,25 @@ type ProjectWeb struct {
 	Updated   int64
 }
 
-func GetProjects() []ProjectWeb {
+func GetProjects(userID uint) []ProjectWeb {
+	var projects []ProjectWeb
+	tx := DB.Table("projects as p").Select("p.*, COUNT(i.budget_id) as issues_cnt").
+		Joins("LEFT JOIN  budgets as b ON b.project_id = p.id").
+		Joins("LEFT JOIN  issues as i ON i.budget_id = b.id").
+		Joins("INNER JOIN members AS m ON m.project_id = p.id").
+		Where("m.user_id = ?", userID).
+		Group("p.id").
+		Order("p.id").Find(&projects)
+	if tx.Error != nil {
+		logging.Print.Warning(tx.Error)
+	}
+	for i, v := range projects {
+		projects[i].Updated = int64(time.Now().Sub(v.UpdatedAt).Seconds())
+	}
+	return projects
+}
+
+func GetAllProjects() []ProjectWeb {
 	var projects []ProjectWeb
 	tx := DB.Table("projects as p").Select("p.*, COUNT(i.budget_id) as issues_cnt").
 		Joins("LEFT JOIN  budgets as b ON b.project_id = p.id").

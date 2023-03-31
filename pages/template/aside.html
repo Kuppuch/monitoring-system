@@ -30,10 +30,12 @@
             <span class="material-icons-sharp">source</span>
             <h3>Проекты</h3>
         </a>
+        {{if .user.Admin}}
         <a href="/admin">
             <span class="material-icons-sharp">admin_panel_settings</span>
             <h3>Администрирование</h3>
         </a>
+        {{end}}
         <a href="/setting">
             <span class="material-icons-sharp">settings</span>
             <h3>Настройки</h3>

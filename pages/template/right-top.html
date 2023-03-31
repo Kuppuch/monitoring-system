@@ -10,7 +10,9 @@
     <div class="profile">
         <div class="info">
             <p>Привет, <b>{{ .user.Name }}</b></p>
+            {{if .user.Admin}}
             <small class="text-muted">Admin</small>
+            {{end}}
         </div>
         <div class="profile-photo">
             <img src="/photo/{{ .user.ID }}/photo.png" alt="">

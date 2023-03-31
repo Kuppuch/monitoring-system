@@ -117,6 +117,70 @@ func getIssueUserTimespent(c *gin.Context) {
 	c.JSON(http.StatusOK, t)
 }
 
+// saveIssue - сохраняет изменения в задаче, в том числе трудосписания (ворклоги, timespent)
+func saveIssue(c *gin.Context) {
+	user, err := GetUserByToken(c)
+	if user.ID < 1 {
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "incorrect user",
+		})
+		return
+	}
+	issueID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "issue id is not number",
+		})
+		return
+	}
+	raw, err := c.GetRawData()
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error by get raw data",
+		})
+		return
+	}
+	m := map[string]string{}
+	err = json.Unmarshal(raw, &m)
+	if err != nil {
+		logging.Print.Error("error unmarshal", err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error by unmarshal issue",
+		})
+		return
+	}
+
+	budgetID := middleware.GetBudgetIDByIssue(issueID)
+	if budgetID == 0 {
+		logging.Print.Error("error getting budget by issue id", err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error getting budget by issue id",
+		})
+		return
+	}
+	budget := middleware.GetBudget(budgetID)
+	member := middleware.Member{
+		ProjectID: uint(budget.ProjectID),
+		UserID:    user.ID,
+	}
+	//TODO давать выбор роли при треканьи из тех ролей, которые есть у чела на проекте
+	member.GetMember()
+
+	_ = issueID
+	_ = raw
+}
+
 func insertIssueUserTimespent(c *gin.Context) {
 	issueID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

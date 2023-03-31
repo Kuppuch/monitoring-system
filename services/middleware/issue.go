@@ -94,3 +94,9 @@ func GetBudgetIssue(id int) []Issue {
 	DB.Where("budget_id = ?", id).Find(&i)
 	return i
 }
+
+func GetBudgetIDByIssue(issueID int) int {
+	var id int
+	DB.Where("budget_id = ?", issueID).Select("id").Find(&id)
+	return id
+}

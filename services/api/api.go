@@ -70,6 +70,7 @@ func Router() {
 		issue.GET("/:id/timespent", getIssueUserTimespent)
 		issue.POST("/:id/timespent", insertIssueUserTimespent)
 		issue.GET("/my_issue", myIssuesPage)
+		issue.POST("/save/:id", saveIssue)
 	}
 
 	budget := r.Group("budgets")

@@ -27,7 +27,7 @@ func GetProjects(c *gin.Context) {
 		return
 	}
 
-	projects := middleware.GetProjects()
+	projects := middleware.GetAllProjects()
 	c.JSON(http.StatusOK, projects)
 }
 
