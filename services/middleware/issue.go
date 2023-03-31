@@ -60,6 +60,20 @@ func GetIssue(id uint) IssueWeb {
 	return issue
 }
 
+func GetUserIssues(id uint) []IssueWeb {
+	var issues []IssueWeb
+	DB.Table("issues").
+		Select("issues.id, issues.name, issues.description, statuses.name as status_name, trackers.name as tracker_name, "+
+			"issues.creator_id, issues.assigned_to_id, issues.status_id, issues.tracker_id, "+
+			"u.last_name || ' ' || u.name || ' ' || u.middle_name as creator, uu.last_name || ' ' || uu.name || ' ' || uu.middle_name as assigned_to").
+		Joins("inner join statuses on statuses.id = issues.status_id").
+		Joins("inner join trackers on trackers.id = issues.tracker_id").
+		Joins("inner join users as u on u.id = issues.creator_id").
+		Joins("inner join users as uu on uu.id = issues.assigned_to_id").
+		Where("issues.assigned_to_id = ?", id).Find(&issues)
+	return issues
+}
+
 func (i Issue) InsertIssue() int64 {
 	tx := DB.Create(&i)
 	if tx.Error != nil {

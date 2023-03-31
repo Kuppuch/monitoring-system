@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои задачи</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html"}}
+    <main>
+        <h1>Мои задачи</h1>
+        <div class="issues">
+            <div class="issues-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Номер</th>
+                            <th>Задача</th>
+                            <th>Создана</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{ range $issue := .issues }}
+                        <tr>
+                            <td>{{ .ID }}</td>
+                            <td>{{ .Issue.Name }}</td>
+                            <td>{{ .Issue.Model.CreatedAt }}</td>
+                        </tr>
+                    {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" .}}
+        {{ template "resent-updates.html" .}}
+        <!-------------------- END OF RECENT UPDATES -------------------->
+        <!--        <div class="sales-analytics">-->
+        <!--            <div class="item add-product">-->
+        <!--                <div>-->
+        <!--                    <span class="material-icons-sharp">add</span>-->
+        <!--                    <h3>Добавить задачу</h3>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+    </div>
+</div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+    let tbody = document.querySelector("tbody")
+    for (let i = 0; i < tbody.children.length; i++) {
+        tbody.children[i].addEventListener('click', function (evt) {
+            location.assign("/issue/" + evt.target.parentNode.children[0].innerHTML)
+        })
+    }
+</script>
+</body>
+</html>

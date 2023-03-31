@@ -69,6 +69,7 @@ func Router() {
 		issue.POST("/create", insertIssue)
 		issue.GET("/:id/timespent", getIssueUserTimespent)
 		issue.POST("/:id/timespent", insertIssueUserTimespent)
+		issue.GET("/my_issue", myIssuesPage)
 	}
 
 	budget := r.Group("budgets")
@@ -76,13 +77,6 @@ func Router() {
 		budget.GET("", getBudgets)
 		budget.POST("", insertBudget)
 		budget.GET("/:id/timespent", getBudgetTimespent)
-	}
-
-	task := r.Group("tasks")
-	{
-		task.GET("/my_task", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "myTask.html", nil)
-		})
 	}
 
 	notification := r.Group("notification")

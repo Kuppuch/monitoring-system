@@ -182,3 +182,9 @@ func insertIssueUserTimespent(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, t)
 }
+
+func myIssuesPage(c *gin.Context) {
+	user, _ := GetUserByToken(c)
+	issues := middleware.GetUserIssues(user.ID)
+	c.HTML(http.StatusOK, "myIssues.html", gin.H{"user": user, "issues": issues})
+}
