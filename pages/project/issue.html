@@ -51,10 +51,18 @@
             </div>
             <div class="row">
                 <div class="content-block-h">
+                    <div class="title">Времени затрачено</div>
+                    <span id="timespent">{{ .timespent }}</span>
+                    <p>ч.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-block-h">
                     <div class="title">Добавить трудосписания</div>
                     <div class="cont">
 
-                        <input type="text" class="form-control" id="timespentInput" name="Timespent" placeholder="#h #m" value="" required>
+                        <input type="text" class="form-control" id="timespentInput" name="Timespent" placeholder="#h #m"
+                               value="" required>
                         <p>Выберите роль</p>
                         <select name="projectRoles" id="projectRoles">
                             {{ range $projectRoles := .projectRoles }}
@@ -87,10 +95,12 @@
         const path = window.location.pathname.split('/')[2]
         $.ajax({
             type: "POST",
-            url: 'http://'+window.location.host+'/issue/save/'+path,
+            url: 'http://' + window.location.host + '/issue/save/' + path,
             data: JSON.stringify(data),
-            success: function (data) {
+            success: function (dataresp) {
                 // window.location = 'http://'+window.location.host+'/project'
+                console.log(dataresp.timespent)
+                document.querySelector('#timespent').innerHTML = dataresp.timespent
             },
             error: function (data) {
                 alert(data.statusText);

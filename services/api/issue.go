@@ -57,7 +57,23 @@ func getIssueByID(c *gin.Context) {
 	}
 	statuses := middleware.GetStatusList()
 
-	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue, "statuses": statuses, "user": user, "projectRoles": userProjectRoles})
+	timespent := middleware.GetIssueTimespent(id)
+	timespentMap := map[string]float32{
+		"timespent": 0.0,
+	}
+	for _, v := range timespent {
+		timespentMap["timespent"] += v.Spent
+	}
+
+	c.HTML(
+		http.StatusOK,
+		"issue.html",
+		gin.H{"issue": issue,
+			"statuses":     statuses,
+			"user":         user,
+			"projectRoles": userProjectRoles,
+			"timespent":    timespentMap["timespent"],
+		})
 }
 
 func getIssueCreatePage(c *gin.Context) {
@@ -177,39 +193,52 @@ func saveIssue(c *gin.Context) {
 	t, statusID := parseTimespent(m, user, issueID)
 	middleware.StatusUpdate(issueID, statusID)
 
-	rowAffected, err := t.Insert()
-	if err != nil {
-		logging.Print.Error("error insert timespent", err)
-		c.JSON(http.StatusInternalServerError, gin.Error{
-			Err:  err,
-			Type: 0,
-			Meta: "error insert timespent",
-		})
-		return
+	if t.Spent != 0 {
+		rowAffected, err := t.Insert()
+		if err != nil {
+			logging.Print.Error("error insert timespent", err)
+			c.JSON(http.StatusInternalServerError, gin.Error{
+				Err:  err,
+				Type: 0,
+				Meta: "error insert timespent",
+			})
+			return
+		}
+		if rowAffected == 0 {
+			logging.Print.Error("error insert timespent", err)
+			c.JSON(http.StatusInternalServerError, gin.Error{
+				Err:  err,
+				Type: 0,
+				Meta: "error insert timespent",
+			})
+			return
+		}
 	}
-	if rowAffected == 0 {
-		logging.Print.Error("error insert timespent", err)
-		c.JSON(http.StatusInternalServerError, gin.Error{
-			Err:  err,
-			Type: 0,
-			Meta: "error insert timespent",
-		})
-		return
+
+	timespent := middleware.GetIssueTimespent(issueID)
+	timespentMap := map[string]float32{
+		"timespent": 0.0,
 	}
-	c.JSON(http.StatusOK, middleware.GetSuccess())
+	for _, v := range timespent {
+		timespentMap["timespent"] += v.Spent
+	}
+	c.JSON(http.StatusOK, timespentMap)
 }
 
 func parseTimespent(m map[string]string, user middleware.User, issueID int) (middleware.Timespent, int) {
 	spentStr, ok := m["spent_str"]
+	if spentStr == "" {
+		spentStr = "0h 0m"
+	}
 	statusStr, ok := m["status"]
 	role_idStr, ok := m["role_id"]
 	if !ok {
-
+		//TODO обработка
 	}
 	roleID, err := strconv.Atoi(role_idStr)
 	statusID, err := strconv.Atoi(statusStr)
 	if err != nil {
-
+		//TODO обработка
 	}
 	hourStr := ""
 	minuteStr := ""
