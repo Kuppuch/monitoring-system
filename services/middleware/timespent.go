@@ -7,10 +7,11 @@ import (
 
 type Timespent struct {
 	gorm.Model
-	IssueID uint    `json:"issue_id"`
-	UserID  uint    `json:"user_id"`
-	RoleID  uint    `json:"role_id"`
-	Spent   float32 `json:"spent"`
+	IssueID  uint    `json:"issue_id"`
+	UserID   uint    `json:"user_id"`
+	RoleID   uint    `json:"role_id"`
+	Spent    float32 `json:"spent"`
+	SpentStr string  `gorm:"-:all" json:"spent_str"`
 }
 
 func (timespent *Timespent) Insert() (int64, error) {

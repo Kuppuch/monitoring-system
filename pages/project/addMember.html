@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container">
-    {{template "aside.html"}}
+    {{template "aside.html" .}}
     <main>
         <h1>Добавить участников в проект {{ .project.Name }}</h1>
         <div class="issues">

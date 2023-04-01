@@ -50,7 +50,7 @@ func GetIssue(id uint) IssueWeb {
 	issue := IssueWeb{}
 	DB.Table("issues").
 		Select("issues.id, issues.name, issues.description, statuses.name as status_name, trackers.name as tracker_name, "+
-			"issues.creator_id, issues.assigned_to_id, issues.status_id, issues.tracker_id, "+
+			"issues.creator_id, issues.assigned_to_id, issues.status_id, issues.tracker_id, issues.budget_id,"+
 			"u.last_name || ' ' || u.name || ' ' || u.middle_name as creator, uu.last_name || ' ' || uu.name || ' ' || uu.middle_name as assigned_to").
 		Joins("inner join statuses on statuses.id = issues.status_id").
 		Joins("inner join trackers on trackers.id = issues.tracker_id").
@@ -82,10 +82,10 @@ func (i Issue) InsertIssue() int64 {
 	return tx.RowsAffected
 }
 
-func StatusUpdate(statusID uint) {
-	tx := DB.Where("id = ?").Update("StatusID", statusID)
+func StatusUpdate(issueID int, statusID int) {
+	tx := DB.Table("issues").Where("id = ?", issueID).Update("status_id", statusID)
 	if tx.Error != nil {
-
+		logging.Print.Error(tx.Error)
 	}
 }
 
@@ -96,7 +96,7 @@ func GetBudgetIssue(id int) []Issue {
 }
 
 func GetBudgetIDByIssue(issueID int) int {
-	var id int
-	DB.Where("budget_id = ?", issueID).Select("id").Find(&id)
-	return id
+	var i Issue
+	DB.Where("id = ?", issueID).Find(&i)
+	return int(i.BudgetID)
 }

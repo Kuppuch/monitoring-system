@@ -24,8 +24,20 @@ func GetRoles() []Role {
 	return roles
 }
 
+func GetRole(roldeID uint) Role {
+	role := Role{}
+	DB.Where("id = ?", roldeID).Find(&role)
+	return role
+}
+
 func (r *ProjectRole) GetProjectRole() {
 	DB.Where("member_id = ? AND role_id = ?", r.MemberID, r.RoleID).Find(r)
+}
+
+func GetProjectRoles(memberID uint) []ProjectRole {
+	var projectRoles []ProjectRole
+	DB.Where("member_id = ?", memberID).Find(&projectRoles)
+	return projectRoles
 }
 
 func (r *ProjectRole) InsertRole() int64 {

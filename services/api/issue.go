@@ -2,11 +2,13 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func getIssueList(c *gin.Context) {
@@ -39,10 +41,23 @@ func getIssueByID(c *gin.Context) {
 		})
 		return
 	}
-	issue := middleware.GetIssue(uint(id))
-	statuses := middleware.GetStatusList()
 	user, _ := GetUserByToken(c)
-	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue, "statuses": statuses, "user": user})
+	issue := middleware.GetIssue(uint(id))
+	budget := middleware.GetBudget(int(issue.BudgetID))
+	project := middleware.GetProjectByID(budget.ProjectID)
+	member := middleware.Member{
+		ProjectID: project.ID,
+		UserID:    user.ID,
+	}
+	member.GetMember()
+	userProjectRolesID := middleware.GetProjectRoles(member.ID)
+	var userProjectRoles []middleware.Role
+	for _, v := range userProjectRolesID {
+		userProjectRoles = append(userProjectRoles, middleware.GetRole(v.RoleID))
+	}
+	statuses := middleware.GetStatusList()
+
+	c.HTML(http.StatusOK, "issue.html", gin.H{"issue": issue, "statuses": statuses, "user": user, "projectRoles": userProjectRoles})
 }
 
 func getIssueCreatePage(c *gin.Context) {
@@ -147,6 +162,7 @@ func saveIssue(c *gin.Context) {
 		})
 		return
 	}
+
 	m := map[string]string{}
 	err = json.Unmarshal(raw, &m)
 	if err != nil {
@@ -158,27 +174,67 @@ func saveIssue(c *gin.Context) {
 		})
 		return
 	}
+	t, statusID := parseTimespent(m, user, issueID)
+	middleware.StatusUpdate(issueID, statusID)
 
-	budgetID := middleware.GetBudgetIDByIssue(issueID)
-	if budgetID == 0 {
-		logging.Print.Error("error getting budget by issue id", err)
-		c.JSON(http.StatusBadRequest, gin.Error{
+	rowAffected, err := t.Insert()
+	if err != nil {
+		logging.Print.Error("error insert timespent", err)
+		c.JSON(http.StatusInternalServerError, gin.Error{
 			Err:  err,
 			Type: 0,
-			Meta: "error getting budget by issue id",
+			Meta: "error insert timespent",
 		})
 		return
 	}
-	budget := middleware.GetBudget(budgetID)
-	member := middleware.Member{
-		ProjectID: uint(budget.ProjectID),
-		UserID:    user.ID,
+	if rowAffected == 0 {
+		logging.Print.Error("error insert timespent", err)
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error insert timespent",
+		})
+		return
 	}
-	//TODO давать выбор роли при треканьи из тех ролей, которые есть у чела на проекте
-	member.GetMember()
+	c.JSON(http.StatusOK, middleware.GetSuccess())
+}
 
-	_ = issueID
-	_ = raw
+func parseTimespent(m map[string]string, user middleware.User, issueID int) (middleware.Timespent, int) {
+	spentStr, ok := m["spent_str"]
+	statusStr, ok := m["status"]
+	role_idStr, ok := m["role_id"]
+	if !ok {
+
+	}
+	roleID, err := strconv.Atoi(role_idStr)
+	statusID, err := strconv.Atoi(statusStr)
+	if err != nil {
+
+	}
+	hourStr := ""
+	minuteStr := ""
+	hourDelimiter := 0
+	for i := 0; i < len(spentStr); i++ {
+		if spentStr[i] == 'h' {
+			hourStr = spentStr[:i]
+			hourDelimiter = i
+		}
+		if spentStr[i] == 'm' {
+			minuteStr = strings.TrimSpace(spentStr[hourDelimiter+1 : i])
+		}
+	}
+	hour, err := strconv.Atoi(hourStr)
+	minute, err := strconv.Atoi(minuteStr)
+	minuteFloat := float32(minute) / float32(60)
+	fmt.Println(hour, minute)
+	t := middleware.Timespent{
+		IssueID:  uint(issueID),
+		UserID:   user.ID,
+		RoleID:   uint(roleID),
+		Spent:    float32(hour) + minuteFloat,
+		SpentStr: spentStr,
+	}
+	return t, statusID
 }
 
 func insertIssueUserTimespent(c *gin.Context) {

@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container">
-    {{template "aside.html"}}
+    {{template "aside.html" .}}
     <main>
         <h1>Задача {{ .issue.Name }}</h1>
         <div class="issues-content">
@@ -53,7 +53,14 @@
                 <div class="content-block-h">
                     <div class="title">Добавить трудосписания</div>
                     <div class="cont">
+
                         <input type="text" class="form-control" id="timespentInput" name="Timespent" placeholder="#h #m" value="" required>
+                        <p>Выберите роль</p>
+                        <select name="projectRoles" id="projectRoles">
+                            {{ range $projectRoles := .projectRoles }}
+                            <option value="{{ .ID }}">{{ .Name }}</option>
+                            {{ end }}
+                        </select>
                     </div>
                 </div>
             </div>
@@ -70,10 +77,13 @@
     function save() {
         const timespent = document.querySelector('#timespentInput').value
         const status = document.querySelector('#status').value
+        const projectRole = document.querySelector('#projectRoles').value
         let data = {
-            Timespent: timespent,
-            Status: status,
+            spent_str: timespent,
+            status: status,
+            role_id: projectRole,
         }
+        console.log(data)
         const path = window.location.pathname.split('/')[2]
         $.ajax({
             type: "POST",
