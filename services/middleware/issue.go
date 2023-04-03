@@ -26,6 +26,7 @@ type IssueWeb struct {
 	Creator     string
 	AssignedTo  string
 	BudgetName  string
+	ProjectName string
 }
 
 func GetIssueList(projectID, budgetID int) []IssueWeb {

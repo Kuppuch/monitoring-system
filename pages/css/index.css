@@ -467,6 +467,7 @@ main .issues:hover {
     width: 25%;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .content-block-v span {

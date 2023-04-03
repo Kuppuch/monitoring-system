@@ -51,6 +51,16 @@
             </div>
             <div class="row">
                 <div class="content-block-h">
+                    <div class="title">Проект</div>
+                    <p>{{ .issue.ProjectName }}</p>
+                </div>
+                <div class="content-block-h">
+                    <div class="title">Бюджет</div>
+                    <p>{{ .issue.BudgetName }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-block-h">
                     <div class="title">Времени затрачено</div>
                     <span id="timespent">{{ .timespent }}</span>
                     <p>ч.</p>

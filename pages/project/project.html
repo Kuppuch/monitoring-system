@@ -15,10 +15,10 @@
         <h1>Проект {{ .project.Name }}</h1>
         <div class="issues">
             <ul class="submenu">
-                <li class="active">Бюджеты</li>
-                <li>Задачи</li>
-                <li>Техническое задание</li>
-                <li>Настройки</li>
+                <li class="active my">Бюджеты</li>
+                <li class="my">Задачи</li>
+                <li class="my">Техническое задание</li>
+                <li class="my">Настройки</li>
             </ul>
             <div class="issues-content">
             </div>
@@ -40,6 +40,8 @@
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
+<script type="module" src="/js/markdown-it.min.js">
+</script>
 <script type="module">
     import {
         Octokit
@@ -50,7 +52,7 @@
 
     const owner = 'vehicle-aggregator'
     const repo = 'doc_sample'
-    const path = '1.txt'
+    const path = '1.md'
     const org = 'vehicle-aggregator'
 
     const addProductBtn = document.querySelector(".add-product")
@@ -310,6 +312,8 @@
     })
 
     function getSRS() {
+        var md = window.markdownit();
+
         let gitRepository = ""
         $.ajax({
             type: "GET",
@@ -319,9 +323,9 @@
                 apiGetDocContent(gitRepository).then((result) => {
                     const container = document.querySelector('#doc')
                     const resContent = Base64.decode(result.data.content)
-                    let p = document.createElement("pre");
-                    p.append(resContent);
-                    container.append(p)
+                    console.log(resContent)
+                    let html = md.render(resContent)
+                    container.insertAdjacentHTML( 'beforeend', html );
                 })
             }
         });

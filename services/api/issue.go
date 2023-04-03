@@ -45,6 +45,10 @@ func getIssueByID(c *gin.Context) {
 	issue := middleware.GetIssue(uint(id))
 	budget := middleware.GetBudget(int(issue.BudgetID))
 	project := middleware.GetProjectByID(budget.ProjectID)
+
+	issue.BudgetName = budget.Name
+	issue.ProjectName = project.Name
+
 	member := middleware.Member{
 		ProjectID: project.ID,
 		UserID:    user.ID,
