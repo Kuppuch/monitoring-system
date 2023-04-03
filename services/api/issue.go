@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"math"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
@@ -205,7 +206,16 @@ func saveIssue(c *gin.Context) {
 		})
 		return
 	}
-	t, statusID := parseTimespent(m, user, issueID)
+	t, statusID, err := parseTimespent(m, user, issueID)
+	if err != nil {
+		logging.Print.Error("error parse timespent", err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "error parse timespent",
+		})
+		return
+	}
 	middleware.StatusUpdate(issueID, statusID)
 
 	if t.Spent != 0 {
@@ -240,7 +250,7 @@ func saveIssue(c *gin.Context) {
 	c.JSON(http.StatusOK, timespentMap)
 }
 
-func parseTimespent(m map[string]string, user middleware.User, issueID int) (middleware.Timespent, int) {
+func parseTimespent(m map[string]string, user middleware.User, issueID int) (middleware.Timespent, int, error) {
 	spentStr, ok := m["spent_str"]
 	if spentStr == "" {
 		spentStr = "0h 0m"
@@ -248,12 +258,12 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 	statusStr, ok := m["status"]
 	role_idStr, ok := m["role_id"]
 	if !ok {
-		//TODO обработка
+		return middleware.Timespent{}, 0, errors.New("error parse timespent")
 	}
 	roleID, err := strconv.Atoi(role_idStr)
 	statusID, err := strconv.Atoi(statusStr)
 	if err != nil {
-		//TODO обработка
+		return middleware.Timespent{}, 0, err
 	}
 	hourStr := ""
 	minuteStr := ""
@@ -269,6 +279,9 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 	}
 	hour, err := strconv.Atoi(hourStr)
 	minute, err := strconv.Atoi(minuteStr)
+	if err != nil {
+		return middleware.Timespent{}, 0, err
+	}
 	minuteFloat := float32(minute) / float32(60)
 	fmt.Println(hour, minute)
 	t := middleware.Timespent{
@@ -278,7 +291,7 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 		Spent:    float32(hour) + minuteFloat,
 		SpentStr: spentStr,
 	}
-	return t, statusID
+	return t, statusID, nil
 }
 
 func insertIssueUserTimespent(c *gin.Context) {
