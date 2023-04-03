@@ -16,17 +16,18 @@ type Issue struct {
 	StatusID     uint        `json:"status_id"`
 	TrackerID    uint        `json:"tracker_id"`
 	BudgetID     uint        `json:"budget_id"`
-	Timespent    []Timespent `gorm:"foreignKey:UserID" json:"timespent,omitempty"`
+	Timespent    []Timespent `gorm:"foreignKey:IssueID" json:"timespent,omitempty"`
 }
 
 type IssueWeb struct {
 	Issue
-	StatusName  string
-	TrackerName string
-	Creator     string
-	AssignedTo  string
-	BudgetName  string
-	ProjectName string
+	StatusName    string
+	TrackerName   string
+	Creator       string
+	AssignedTo    string
+	BudgetName    string
+	ProjectName   string
+	TimespentData string
 }
 
 func GetIssueList(projectID, budgetID int) []IssueWeb {

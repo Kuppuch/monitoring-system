@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"math"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
@@ -28,6 +29,16 @@ func getIssueList(c *gin.Context) {
 		return
 	}
 	issues := middleware.GetIssueList(projectID, 0)
+	for i, v := range issues {
+		timespent := middleware.GetIssueTimespent(int(v.ID))
+		var counter float32 = 0
+		for _, t := range timespent {
+			counter += t.Spent
+		}
+		hour := math.Round(float64(counter))
+		minute := (counter - float32(hour)) * 60
+		issues[i].TimespentData = fmt.Sprintf("%vч. %vмин.", hour, minute)
+	}
 	c.JSON(http.StatusOK, issues)
 }
 
@@ -250,10 +261,10 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 	for i := 0; i < len(spentStr); i++ {
 		if spentStr[i] == 'h' {
 			hourStr = spentStr[:i]
-			hourDelimiter = i
+			hourDelimiter = i + 1
 		}
 		if spentStr[i] == 'm' {
-			minuteStr = strings.TrimSpace(spentStr[hourDelimiter+1 : i])
+			minuteStr = strings.TrimSpace(spentStr[hourDelimiter:i])
 		}
 	}
 	hour, err := strconv.Atoi(hourStr)

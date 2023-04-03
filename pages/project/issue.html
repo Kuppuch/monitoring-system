@@ -62,8 +62,8 @@
             <div class="row">
                 <div class="content-block-h">
                     <div class="title">Времени затрачено</div>
-                    <span id="timespent">{{ .timespent }}</span>
-                    <p>ч.</p>
+                    <span id="timespent"></span>
+
                 </div>
             </div>
             <div class="row">
@@ -82,7 +82,12 @@
                     </div>
                 </div>
             </div>
-            <button class="bg-success" id="saveTimespent" style="cursor: pointer" onclick="save()">Сохранить</button>
+            <div class="row">
+                <div id="button-success" class="content-block-h">
+                    <button class="bg-success" id="saveTimespent" style="cursor: pointer" onclick="save()">Сохранить
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
     <div class="right">
@@ -92,6 +97,16 @@
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
 <script>
+    addEventListener("load", (event) => {
+        const timespent = {{ .timespent }}
+        let minute = (timespent - Math.floor(timespent)) * 60
+        let timeResult = Math.floor(timespent) + 'ч. '
+        if (minute > 0) {
+            timeResult += minute + 'мин.'
+        }
+        document.querySelector('#timespent').innerHTML = timeResult
+    });
+
     function save() {
         const timespent = document.querySelector('#timespentInput').value
         const status = document.querySelector('#status').value
@@ -109,8 +124,16 @@
             data: JSON.stringify(data),
             success: function (dataresp) {
                 // window.location = 'http://'+window.location.host+'/project'
-                console.log(dataresp.timespent)
-                document.querySelector('#timespent').innerHTML = dataresp.timespent
+                let minute = (dataresp.timespent - Math.floor(dataresp.timespent)) * 60
+                let timeResult = Math.floor(dataresp.timespent) + 'ч. '
+                if (minute > 0) {
+                    timeResult += minute + 'мин.'
+                }
+                document.querySelector('#timespent').innerHTML = timeResult
+
+                const htmlStr = '<span id="success" class="material-icons-sharp success">done</span>'
+                document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
+                setTimeout(hideSuccess, 2000);
             },
             error: function (data) {
                 alert(data.statusText);
@@ -118,6 +141,10 @@
                 // window.location = 'http://'+window.location.host+'/project'
             }
         });
+    }
+
+    function hideSuccess() {
+        document.querySelector('#success').remove()
     }
 </script>
 </body>

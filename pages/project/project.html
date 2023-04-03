@@ -212,16 +212,19 @@
                     "</table>");
 
                 $('#budgets').click(function (event) {
-                    let row = event.target.closest('tr');
+                    let row = event.target.closest('tr')
                     if (row != null) {
                         if (row.tagName === 'TR') {
-                            getIssues("&budget_id=" + row.children[0].innerHTML);
+                            getIssues("&budget_id=" + row.children[0].innerHTML)
+                            insights.children[0].classList.remove('active')
+                            document.querySelector('.submenu').children[1].classList.add('active')
+                            console.log(document.querySelector('.submenu').children)
                         }
                     }
                 })
             },
             error: function (data) {
-                alert(data.statusText);
+                alert(data.statusText)
                 console.log(data.statusText)
                 // window.location = 'http://'+window.location.host+'/project'
             }
@@ -262,7 +265,7 @@
                         "<td>" + elem['AssignedTo'] + "</td>\n" +
                         "<td>Обновлено Заглушка</td>\n" +
                         "<td>Оценка Заглушка</td>\n" +
-                        "<td>Трудозатраты Заглушка</td>\n" +
+                        "<td>" + elem['TimespentData'] + "</td>\n" +
                         "<td>" + elem['BudgetName'] + "</td>\n" +
                         "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
                         "</tr>\n"
@@ -329,30 +332,6 @@
                 })
             }
         });
-
-        // apiGetRepositories().then((result) => {
-        //     let selector = document.querySelector('#project-select')
-        //     let data = result.data
-        //     for (let i = 0; i < data.length; i++) {
-        //         let opt = document.createElement('option')
-        //         opt.value = data[i].node_id
-        //         opt.innerHTML = data[i].name
-        //         selector.appendChild(opt)
-        //     }
-        // })
-        //
-        // let selector = document.querySelector('#project-select')
-        // selector.addEventListener("change", function () {
-        //     const container = document.querySelector('#doc')
-        //     container.innerHTML = ''
-        //     apiGetDocContent(selector[selector.selectedIndex].text).then((result) => {
-        //         const container = document.querySelector('#doc')
-        //         const resContent = Base64.decode(result.data.content)
-        //         let p = document.createElement("pre");
-        //         p.append(resContent);
-        //         container.append(p)
-        //     })
-        // })
     }
 
     function getGitProjectList() {
