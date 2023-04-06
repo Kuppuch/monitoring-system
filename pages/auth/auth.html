@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
+    <link rel="stylesheet" href="../css/index.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="/js/js.cookie.js"></script>
 </head>
 <body>
-<div class="container">
-    <main>
-        <div class="container-center">
-            <div class="login">
-                <h2>Авторизация</h2>
-                <form id="registration" method="post">
-                    <input type="text" class="form-control" id="nameInput" name="login" placeholder="Логин" value="">
-                    <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Пароль"
-                           value="">
-                    <button type="submit" class="btn" name="send" id="submitBtn">Войти</button>
-                </form>
+<section>
+    <div class="login">
+        <h2>Авторизация</h2>
+        <form id="registration" method="post">
+            <div class="inputBox">
+                <input type="text" class="form-control" id="nameInput" name="login" placeholder="Логин" value="">
             </div>
-        </div>
-    </main>
-</div>
+            <div class="inputBox">
+                <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Пароль"
+                       value="">
+            </div>
+            <div class="inputBox">
+                <button type="submit" class="btn" name="send" id="submitBtn">Войти</button>
+            </div>
+        </form>
+    </div>
+</section>
 
 <script>
     $("form").on('submit', (event) => {
@@ -36,11 +39,11 @@
 
         $.ajax({
             type: "POST",
-            url: 'http://'+window.location.host+'/login',
+            url: 'http://' + window.location.host + '/login',
             data: JSON.stringify(data),
             success: function (data) {
                 Cookies.set('auth', data.Authorization)
-                window.location = 'http://'+window.location.host
+                window.location = 'http://' + window.location.host
             },
             error: function (data) {
                 alert(data);
