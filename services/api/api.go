@@ -40,9 +40,14 @@ func Router() {
 
 	user := r.Group("user")
 	{
+		adm := user.Group("adm")
+		{
+			adm.GET("/:id", getUserAdm)
+			adm.POST("/register", insertUser)
+		}
+
 		user.GET("/reg", getPage)
 		user.GET("", getUser)
-		user.POST("/register", insertUser)
 		user.PATCH("/upload", uploadProfileImg)
 		user.GET("/:id", GetProfilePhoto)
 	}

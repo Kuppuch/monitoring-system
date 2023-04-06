@@ -45,10 +45,17 @@ func (u *User) GetUserByEmail() error {
 	return nil
 }
 
-func (u *User) InsertUser() int64 {
+func (u *User) Insert() int64 {
 	tx := DB.Create(u)
 	if tx.Error != nil {
 		logging.Print.Warning(tx.Error)
 	}
 	return tx.RowsAffected
+}
+
+func (u *User) Update() {
+	user := User{}
+	DB.Where("id = ?", u.ID).Find(&user)
+	u.Password = user.Password
+	DB.Model(u).Save(&u)
 }

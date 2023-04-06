@@ -20,10 +20,6 @@ import (
 	"strconv"
 )
 
-func getPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "register.html", nil)
-}
-
 func getUser(c *gin.Context) {
 	uid, err := strconv.Atoi(c.DefaultQuery("uid", "0"))
 	if err != nil {
@@ -60,6 +56,12 @@ func getUser(c *gin.Context) {
 	})
 }
 
+// начало админских функций по пользователям
+
+func getPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "register.html", nil)
+}
+
 func insertUser(c *gin.Context) {
 	raw, err := c.GetRawData()
 	if err != nil {
@@ -77,7 +79,7 @@ func insertUser(c *gin.Context) {
 		return
 	}
 	//TODO переделать на длину
-	if len(user.Email) < 1 || len(user.Password) < 1 || len(user.LastName) < 1 || len(user.Name) < 1 {
+	if len(user.Email) < 1 || (len(user.Password) < 1 && user.ID == 0) || len(user.LastName) < 1 || len(user.Name) < 1 {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  errors.New("null field"),
 			Type: 0,
@@ -85,16 +87,7 @@ func insertUser(c *gin.Context) {
 		})
 		return
 	}
-	user.Password = fmt.Sprintf("%x", sha256.Sum256([]byte(user.Password)))
-	if err != nil {
-		logging.Print.Warning(err)
-		c.JSON(http.StatusInternalServerError, gin.Error{
-			Err:  err,
-			Type: 0,
-			Meta: "failed create password hash",
-		})
-		return
-	}
+
 	dbUser := middleware.User{}
 	dbUser.Email = user.Email
 	err = dbUser.GetUserByEmail()
@@ -116,7 +109,25 @@ func insertUser(c *gin.Context) {
 		return
 	}
 
-	rowAffected := user.InsertUser()
+	if user.ID > 0 {
+
+		user.Update()
+		c.JSON(http.StatusOK, middleware.GetSuccess())
+		return
+	}
+
+	user.Password = fmt.Sprintf("%x", sha256.Sum256([]byte(user.Password)))
+	if err != nil {
+		logging.Print.Warning(err)
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed create password hash",
+		})
+		return
+	}
+
+	rowAffected := user.Insert()
 	if rowAffected > 0 {
 		err = createUserRep(user.ID)
 		if err != nil {
@@ -128,6 +139,32 @@ func insertUser(c *gin.Context) {
 	}
 
 }
+
+func getUserAdm(c *gin.Context) {
+	uid, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed parse int",
+		})
+	}
+	if uid == 0 {
+		c.HTML(http.StatusOK, "users.html", gin.H{"users": middleware.GetAllUsers()})
+		//c.JSON(http.StatusOK, middleware.GetAllUsers())
+		return
+	}
+	user := middleware.User{}
+	user.ID = uint(uid)
+	err = user.GetUser()
+	if err != nil {
+		logging.Print.Warning(err)
+	}
+	user.Password = ""
+	c.HTML(http.StatusOK, "register.html", gin.H{"user": user})
+}
+
+// конец админских функций
 
 func createUserRep(userID uint) error {
 	err := os.Mkdir("lib/users/"+strconv.Itoa(int(userID)), 0777)
