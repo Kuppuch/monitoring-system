@@ -139,6 +139,9 @@ func insertIssue(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
 	}
+	if issue.CreatorID != issue.AssignedToID {
+		Chanel <- "На вас назначена новая задача"
+	}
 }
 
 func getIssueUserTimespent(c *gin.Context) {

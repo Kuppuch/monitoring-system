@@ -14,7 +14,7 @@ addEventListener("load", (event) => {
     const logoutBtn = document.querySelector('#logout')
     logoutBtn.addEventListener('click', () => {
         Cookies.remove('auth')
-        window.location.href = 'http://'+window.location.host+'/login'
+        window.location.href = 'http://' + window.location.host + '/login'
     })
 });
 
@@ -31,7 +31,33 @@ for (let i = 0; i < links.length; i++) {
         links[0].classList.add('active')
         break
     }
-
-
 }
 // });
+
+addEventListener("load", (event) => {
+    let socket = new WebSocket("ws://localhost:25595/notification/socket");
+    debugger
+    socket.onopen = function (e) {
+        alert("[open] Соединение установлено");
+        alert("Отправляем данные на сервер");
+        socket.send("Меня зовут Джон");
+    };
+
+    socket.onmessage = function (event) {
+        alert(`[message] Данные получены с сервера: ${event.data}`);
+    };
+
+    socket.onclose = function (event) {
+        if (event.wasClean) {
+            alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+        } else {
+            // например, сервер убил процесс или сеть недоступна
+            // обычно в этом случае event.code 1006
+            alert('[close] Соединение прервано');
+        }
+    };
+
+    socket.onerror = function (error) {
+        alert(`[error]`);
+    };
+});

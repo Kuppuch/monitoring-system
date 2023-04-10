@@ -25,7 +25,7 @@ func Router() {
 	r.Static("/photo", "./lib/users")
 
 	r.Use(cors.AllowAll())
-	//r.Use(AuthRequired)
+	r.Use(AuthRequired)
 
 	r.POST("upload", uploadProfileImg)
 
@@ -91,6 +91,7 @@ func Router() {
 			c.HTML(http.StatusOK, "notification.html", nil)
 		})
 		notification.GET("/socket", socket)
+		notification.GET("/send", sendMessage)
 	}
 
 	setting := r.Group("setting")
@@ -113,7 +114,7 @@ func Router() {
 }
 
 func AuthRequired(c *gin.Context) {
-	if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/favicon.ico" {
+	if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/notification/socket" {
 		return
 	}
 	token, _ := c.Cookie("auth")
