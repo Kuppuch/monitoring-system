@@ -32,7 +32,7 @@
             <div class="item add-product">
                 <div>
                     <span class="material-icons-sharp">add</span>
-                    <h3>Добавить задачу</h3>
+                    <h3 id="add-budget-task"></h3>
                 </div>
             </div>
         </div>
@@ -56,6 +56,7 @@
     const org = 'vehicle-aggregator'
 
     const addProductBtn = document.querySelector(".add-product")
+    const addProductBtnText = document.querySelector('#add-budget-task')
 
     let queryDist = {};
     location.search.substring(1).split('&').forEach((item) => {
@@ -97,7 +98,6 @@
             }
             if (target.innerHTML === 'Настройки') {
                 $(".issues-content").empty();
-                console.log(params)
                 $.ajax({
                     type: "GET",
                     url: 'http://'+window.location.host+'/project/' + params[2] + '/members/list',
@@ -179,6 +179,7 @@
             type: "GET",
             url: 'http://'+window.location.host+'/budgets?project_id=' + params[2],
             success: function (data) {
+                addProductBtnText.innerHTML = 'Добавить бюджет'
 
                 $(".issues-content").empty();
                 $(".issues-content").prepend(
@@ -218,14 +219,12 @@
                             getIssues("&budget_id=" + row.children[0].innerHTML)
                             insights.children[0].classList.remove('active')
                             document.querySelector('.submenu').children[1].classList.add('active')
-                            console.log(document.querySelector('.submenu').children)
                         }
                     }
                 })
             },
             error: function (data) {
                 alert(data.statusText)
-                console.log(data.statusText)
                 // window.location = 'http://'+window.location.host+'/project'
             }
         })
@@ -236,6 +235,7 @@
             type: "GET",
             url: 'http://'+window.location.host+'/issue?project_id=' + params[2] + budgetID,
             success: function (data) {
+                addProductBtnText.innerHTML = 'Добавить задачу'
                 $(".issues-content").empty();
                 $(".issues-content").prepend(
                     "<table id='issues'>\n" +
@@ -287,7 +287,6 @@
             },
             error: function (data) {
                 alert(data.statusText);
-                console.log(data.statusText)
                 // window.location = 'http://'+window.location.host+'/project'
             }
         });
@@ -326,7 +325,6 @@
                 apiGetDocContent(gitRepository).then((result) => {
                     const container = document.querySelector('#doc')
                     const resContent = Base64.decode(result.data.content)
-                    console.log(resContent)
                     let html = md.render(resContent)
                     container.insertAdjacentHTML( 'beforeend', html );
                 })
@@ -358,7 +356,7 @@
                 data: data,
                 url: 'http://'+window.location.host+'/project/' + params[2] + '/link_rep',
                 success: function (data) {
-                    console.log('done')
+                    // console.log('done')
                 }
             });
         })

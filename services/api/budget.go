@@ -23,7 +23,9 @@ func getBudgets(c *gin.Context) {
 		c.JSON(http.StatusOK, middleware.GetProjectBudgets(projectID))
 		return
 	}
-	c.JSON(http.StatusOK, middleware.GetBudgets())
+	user, _ := GetUserByToken(c)
+	budgets := middleware.GetBudgets()
+	c.HTML(http.StatusOK, "budgets.html", gin.H{"budgets": budgets, "user": user})
 }
 
 func insertBudget(c *gin.Context) {

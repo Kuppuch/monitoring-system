@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Бюджеты</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/js.cookie.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html" .}}
+    <main>
+        <h1>Бюджеты</h1>
+        <div class="issues">
+            <div class="issues-content">
+                <table id='budgets'>
+                    <thead>
+                    <tr>
+                        <th>Бюджет</th>
+                        <th>Дата начала</th>
+                        <th>Дата конца</th>
+                        <th>Внешний ID</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{ range $budgets := .budgets }}
+                    <tr>
+                        <td hidden>{{.ID}}</td>
+                        <td>{{.Name}}</td>
+                        <td>Заглушка начало</td>
+                        <td>Заглушка конец</td>
+                        <td>{{.ExtID}}</td>
+                        <td><span class="material-icons-sharp">more_horiz</span></td>
+                    </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" .}}
+        {{ template "resent-updates.html" }}
+        <!-------------------- END OF RECENT UPDATES -------------------->
+        <div class="sales-analytics">
+            <div class="item add-product">
+                <div>
+                    <span class="material-icons-sharp">add</span>
+                    <h3 id="add-budget-task">Добавить бюджет</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
