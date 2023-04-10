@@ -25,7 +25,7 @@ func Router() {
 	r.Static("/photo", "./lib/users")
 
 	r.Use(cors.AllowAll())
-	r.Use(AuthRequired)
+	//r.Use(AuthRequired)
 
 	r.POST("upload", uploadProfileImg)
 
@@ -90,6 +90,7 @@ func Router() {
 		notification.GET("/", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "notification.html", nil)
 		})
+		notification.GET("/socket", socket)
 	}
 
 	setting := r.Group("setting")
