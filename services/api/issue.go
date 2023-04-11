@@ -141,7 +141,14 @@ func insertIssue(c *gin.Context) {
 		return
 	}
 	if issue.CreatorID != issue.AssignedToID {
-		socket.BigChannel <- []byte("На вас назначена новая задача")
+		notification := middleware.Notification{
+			CreatorID:    issue.CreatorID,
+			AssignedToID: issue.AssignedToID,
+			Content:      "На вас назначена новая задача",
+		}
+		notification.Insert()
+		nByte, _ := json.Marshal(&notification)
+		socket.BigChannel <- nByte
 	}
 }
 

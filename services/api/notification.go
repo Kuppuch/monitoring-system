@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
+	"monitoring-system/services/middleware"
 	"net/http"
 )
 
@@ -47,4 +48,10 @@ func sendMessage(c *gin.Context) {
 
 func socketFunc(c *gin.Context) {
 	socket.ServeWs(Pool, c.Writer, c.Request)
+}
+
+func getNotificationPage(c *gin.Context) {
+	user, _ := GetUserByToken(c)
+	notifications := middleware.GetAssignedToNotification(int(user.ID))
+	c.HTML(http.StatusOK, "notification.html", gin.H{"user": user, "notifications": notifications})
 }

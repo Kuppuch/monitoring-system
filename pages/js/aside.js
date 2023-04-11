@@ -44,6 +44,7 @@ addEventListener("load", (event) => {
 
     socket.onmessage = function (event) {
         let notificationsCount = document.querySelector('#notifications-count')
+        console.log(event)
         if (notificationsCount) {
             let cnt = parseInt(notificationsCount.innerHTML, 10)
             cnt++

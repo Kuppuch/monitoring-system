@@ -22,7 +22,7 @@ func Connector() error {
 		return err
 	}
 	err = DB.AutoMigrate(&User{}, &Status{}, &Tracker{}, &Budget{}, &Issue{}, &Project{}, &Auth{}, &Member{}, &Role{},
-		&ProjectRole{}, &Timespent{}, &GitRepository{})
+		&ProjectRole{}, &Timespent{}, &GitRepository{}, &Notification{})
 	if err != nil {
 		return err
 	}

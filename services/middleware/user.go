@@ -7,17 +7,19 @@ import (
 
 type User struct {
 	gorm.Model
-	Admin       bool        `json:"admin"`
-	Name        string      `json:"name"`
-	LastName    string      `json:"lastname"`
-	MiddleName  string      `json:"middlename"`
-	Email       string      `json:"email"`
-	Password    string      `json:"password,omitempty"`
-	CreateIssue []Issue     `gorm:"foreignKey:CreatorID" json:"create_issue,omitempty"`
-	AssignIssue []Issue     `gorm:"foreignKey:AssignedToID" json:"assign_issue,omitempty"`
-	Auth        []Auth      `gorm:"foreignKey:UserID" json:"auth,omitempty"`
-	Members     []Member    `gorm:"foreignKey:UserID" json:"members,omitempty"`
-	Timespent   []Timespent `gorm:"foreignKey:UserID" json:"timespent,omitempty"`
+	Admin               bool           `json:"admin"`
+	Name                string         `json:"name"`
+	LastName            string         `json:"lastname"`
+	MiddleName          string         `json:"middlename"`
+	Email               string         `json:"email"`
+	Password            string         `json:"password,omitempty"`
+	CreateIssue         []Issue        `gorm:"foreignKey:CreatorID" json:"create_issue,omitempty"`
+	AssignIssue         []Issue        `gorm:"foreignKey:AssignedToID" json:"assign_issue,omitempty"`
+	Auth                []Auth         `gorm:"foreignKey:UserID" json:"auth,omitempty"`
+	Members             []Member       `gorm:"foreignKey:UserID" json:"members,omitempty"`
+	Timespent           []Timespent    `gorm:"foreignKey:UserID" json:"timespent,omitempty"`
+	NotificationsCreate []Notification `gorm:"foreignKey:CreatorID" json:"notifications_create,omitempty"`
+	MyNotifications     []Notification `gorm:"foreignKey:AssignedToID" json:"my_notifications,omitempty"`
 }
 
 func GetAllUsers() []User {

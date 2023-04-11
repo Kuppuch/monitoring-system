@@ -87,9 +87,7 @@ func Router() {
 
 	notification := r.Group("notification")
 	{
-		notification.GET("/", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "notification.html", nil)
-		})
+		notification.GET("/", getNotificationPage)
 		notification.GET("/socket", socketFunc)
 		notification.GET("/send", sendMessage)
 	}
