@@ -90,7 +90,7 @@ func Router() {
 		notification.GET("/", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "notification.html", nil)
 		})
-		notification.GET("/socket", socket)
+		notification.GET("/socket", socketFunc)
 		notification.GET("/send", sendMessage)
 	}
 
@@ -114,7 +114,7 @@ func Router() {
 }
 
 func AuthRequired(c *gin.Context) {
-	if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/notification/socket" {
+	if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/notification/socketFunc" {
 		return
 	}
 	token, _ := c.Cookie("auth")

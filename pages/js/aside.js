@@ -35,25 +35,36 @@ for (let i = 0; i < links.length; i++) {
 // });
 
 addEventListener("load", (event) => {
-    let socket = new WebSocket("ws://localhost:25595/notification/socket");
-    debugger
-    socket.onopen = function (e) {
-        alert("[open] Соединение установлено");
-        alert("Отправляем данные на сервер");
-        socket.send("Меня зовут Джон");
-    };
+    let socket = new WebSocket("ws://localhost:25595/notification/socket")
+    // socket.onopen = function (e) {
+    //     alert("[open] Соединение установлено")
+    //     alert("Отправляем данные на сервер")
+    //     //socket.send("Меня зовут Джон")
+    // };
 
     socket.onmessage = function (event) {
-        alert(`[message] Данные получены с сервера: ${event.data}`);
+        let notificationsCount = document.querySelector('#notifications-count')
+        if (notificationsCount) {
+            let cnt = parseInt(notificationsCount.innerHTML, 10)
+            cnt++
+            notificationsCount.innerHTML = cnt.toString()
+        } else {
+            let span = document.createElement('span')
+            span.setAttribute("id", "notifications-count")
+            span.classList.add('notifications-count')
+            span.innerHTML = '1'
+            let notificationBlock = document.querySelector('#notification-block')
+            notificationBlock.append(span)
+        }
     };
 
     socket.onclose = function (event) {
         if (event.wasClean) {
-            alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+            alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`)
         } else {
             // например, сервер убил процесс или сеть недоступна
             // обычно в этом случае event.code 1006
-            alert('[close] Соединение прервано');
+            alert('[close] Соединение прервано')
         }
     };
 

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"math"
+	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
@@ -140,7 +141,7 @@ func insertIssue(c *gin.Context) {
 		return
 	}
 	if issue.CreatorID != issue.AssignedToID {
-		Chanel <- "На вас назначена новая задача"
+		socket.BigChannel <- []byte("На вас назначена новая задача")
 	}
 }
 
