@@ -35,7 +35,40 @@ for (let i = 0; i < links.length; i++) {
 // });
 
 addEventListener("load", (event) => {
-    let socket = new WebSocket("ws://localhost:25595/notification/socket")
+    getUnreadNotifications()
+    socketFunc()
+});
+
+function getUnreadNotifications() {
+    // $.ajax({
+    //     type: "GET",
+    //     url: 'http://' + window.location.host + '/notification/json',
+    //     success: function (dataJSON) {
+    //         let data = JSON.parse(dataJSON)
+    //         console.log(data)
+    //     },
+    //     error: function (data) {
+    //         alert(data.statusText);
+    //         console.log(data.statusText)
+    //     }
+    // });
+    $.getJSON('http://' + window.location.host + '/notification/json', function(data){
+        let counter = 0
+        for (var i = 0, len = data.length; i < len; i++) {
+            console.log(data[i])
+            counter++
+        }
+        let span = document.createElement('span')
+        span.setAttribute("id", "notifications-count")
+        span.classList.add('notifications-count')
+        span.innerHTML = counter.toString()
+        let notificationBlock = document.querySelector('#notification-block')
+        notificationBlock.append(span)
+    });
+}
+
+function socketFunc() {
+    let socket = new WebSocket('ws://' + window.location.host + '/notification/socket')
     // socket.onopen = function (e) {
     //     alert("[open] Соединение установлено")
     //     alert("Отправляем данные на сервер")
@@ -59,17 +92,17 @@ addEventListener("load", (event) => {
         }
     };
 
-    socket.onclose = function (event) {
-        if (event.wasClean) {
-            alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`)
-        } else {
-            // например, сервер убил процесс или сеть недоступна
-            // обычно в этом случае event.code 1006
-            alert('[close] Соединение прервано')
-        }
-    };
+    // socket.onclose = function (event) {
+    //     if (event.wasClean) {
+    //         alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`)
+    //     } else {
+    //         // например, сервер убил процесс или сеть недоступна
+    //         // обычно в этом случае event.code 1006
+    //         alert('[close] Соединение прервано')
+    //     }
+    // };
 
     socket.onerror = function (error) {
         alert(`[error]`);
     };
-});
+}

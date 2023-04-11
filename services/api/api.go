@@ -88,6 +88,7 @@ func Router() {
 	notification := r.Group("notification")
 	{
 		notification.GET("/", getNotificationPage)
+		notification.GET("/json", getNotifications)
 		notification.GET("/socket", socketFunc)
 		notification.GET("/send", sendMessage)
 	}

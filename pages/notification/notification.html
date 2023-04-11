@@ -13,6 +13,35 @@
     {{template "aside.html" .}}
     <main>
         <h1>Заглушка</h1>
+        <div class="issues">
+            <div class="issues-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Сообщение</th>
+                        <th>Ссылка</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{ range $notifications := .notifications }}
+                    <tr>
+                        {{ if .View}}
+                        <td>{{ .ID }}</td>
+                        <td>{{ .Content }}</td>
+                        {{ else }}
+                        <td><b>{{ .ID }}</b></td>
+                        <td><b>{{ .Content }}</b></td>
+                        {{ end }}
+                        <td id="source">
+                            <a href='../'+ {{ .Source }}>ссылка{{ .Source }}</a>
+                        </td>
+                    </tr>
+                    {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </main>
     <div class="right">
         {{ template "right-top.html" .}}
@@ -30,5 +59,18 @@
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js" ></script>
+<script>
+    // addEventListener("load", (event) => {
+    //     let source = document.querySelector('#source')
+    //     // document.querySelector('#source').innerHTML = ''
+    //     console.log(source)
+    //     let a = document.createElement('a')
+    //     a.setAttribute('href', 'http://'+ window.location.host + source.innerHTML)
+    //     a.innerHTML = 'ссылка'
+    //     document.querySelector('#source').innerHTML = ''
+    //     source.append(a)
+    // });
+
+</script>
 </body>
 </html>

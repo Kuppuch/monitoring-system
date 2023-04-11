@@ -52,6 +52,12 @@ func socketFunc(c *gin.Context) {
 
 func getNotificationPage(c *gin.Context) {
 	user, _ := GetUserByToken(c)
-	notifications := middleware.GetAssignedToNotification(int(user.ID))
+	notifications := middleware.GetAssignedToNotification(user.ID)
 	c.HTML(http.StatusOK, "notification.html", gin.H{"user": user, "notifications": notifications})
+}
+
+func getNotifications(c *gin.Context) {
+	user, _ := GetUserByToken(c)
+	notifications := middleware.GetUnreadNotification(user.ID)
+	c.JSON(http.StatusOK, notifications)
 }

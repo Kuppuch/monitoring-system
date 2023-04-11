@@ -145,8 +145,11 @@ func insertIssue(c *gin.Context) {
 			CreatorID:    issue.CreatorID,
 			AssignedToID: issue.AssignedToID,
 			Content:      "На вас назначена новая задача",
+			View:         false,
+			Source:       "<a href='http://'+ window.location.host +'issue/" + strconv.Itoa(int(issue.ID)) + "'>ссылка</a>",
 		}
 		notification.Insert()
+		// Отправляем уведомление в канал уведомлений
 		nByte, _ := json.Marshal(&notification)
 		socket.BigChannel <- nByte
 	}
