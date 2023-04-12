@@ -94,11 +94,34 @@ func getIssueByID(c *gin.Context) {
 }
 
 func getIssueCreatePage(c *gin.Context) {
+	projectID, err := strconv.Atoi(c.DefaultQuery("project_id", "0"))
+	if err != nil {
+		logging.Print.Error("error ", err)
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	var budgets []middleware.Budget
+	if projectID > 0 {
+		project := middleware.GetProjectByID(projectID)
+		if project.ID == 0 {
+			c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+			return
+		}
+		budgets = middleware.GetProjectBudgets(int(project.ID))
+	}
+
 	user, _ := GetUserByToken(c)
 	statuses := middleware.GetStatusList()
 	trackers := middleware.GetTrackerList()
 	assigned := middleware.GetAllUsers()
-	c.HTML(http.StatusOK, "addIssue.html", gin.H{"user": user, "statuses": statuses, "trackers": trackers, "assigned": assigned})
+
+	c.HTML(http.StatusOK, "addIssue.html", gin.H{
+		"user":     user,
+		"statuses": statuses,
+		"trackers": trackers,
+		"assigned": assigned,
+		"budgets":  budgets,
+	})
 }
 
 func insertIssue(c *gin.Context) {
@@ -133,8 +156,6 @@ func insertIssue(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
 	}
-	mainBudget := middleware.GetMainProjectBudgetByProjectID(int(project.ID))
-	issue.BudgetID = mainBudget.ID
 
 	if rowAffected := issue.InsertIssue(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
