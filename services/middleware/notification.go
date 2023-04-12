@@ -20,7 +20,7 @@ func (n *Notification) Insert() {
 
 func GetAssignedToNotification(assignedToID uint) []Notification {
 	var notifications []Notification
-	DB.Where("assigned_to_id = ?", assignedToID).Find(&notifications)
+	DB.Where("assigned_to_id = ?", assignedToID).Order("id desc").Find(&notifications)
 	return notifications
 }
 

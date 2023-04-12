@@ -76,7 +76,7 @@ func GetUserIssues(id uint) []IssueWeb {
 	return issues
 }
 
-func (i Issue) InsertIssue() int64 {
+func (i *Issue) InsertIssue() int64 {
 	tx := DB.Create(&i)
 	if tx.Error != nil {
 		logging.Print.Warning(tx.Error)

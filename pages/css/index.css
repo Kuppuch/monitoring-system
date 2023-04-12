@@ -456,7 +456,7 @@ main .issues:hover {
 }
 
 .issues-content table tbody tr:hover {
-    background: var(--color-info-light);
+    background: var(--color-background);
 }
 
 /* ================ DOCS ==================== */

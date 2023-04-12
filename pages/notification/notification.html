@@ -12,13 +12,12 @@
 <div class="container">
     {{template "aside.html" .}}
     <main>
-        <h1>Заглушка</h1>
+        <h1>Уведомления</h1>
         <div class="issues">
             <div class="issues-content">
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Сообщение</th>
                         <th>Ссылка</th>
                     </tr>
@@ -26,11 +25,10 @@
                     <tbody>
                     {{ range $notifications := .notifications }}
                     <tr>
+                        <td hidden="hidden">{{ .ID }}</td>
                         {{ if .View}}
-                        <td>{{ .ID }}</td>
                         <td>{{ .Content }}</td>
                         {{ else }}
-                        <td><b>{{ .ID }}</b></td>
                         <td><b>{{ .Content }}</b></td>
                         {{ end }}
                         <td id="source">
@@ -62,16 +60,14 @@
 <script>
     let tbody = document.querySelector('tbody')
     for (let i = 0; i < tbody.children.length; i++) {
-        tbody.children[i].addEventListener('click', (evt) => {
+        tbody.children[i].children[1].addEventListener('click', (evt) => {
             evt.preventDefault()
             $.ajax({
                 type: "GET",
-                url: 'http://' + window.location.host + '/notification/read?nid=' + tbody.children[i].children[0].children[0].innerHTML,
+                url: 'http://' + window.location.host + '/notification/read?nid=' + tbody.children[i].children[0].innerHTML,
                 success: () => {
-                    $(tbody.children[i].children).each(function (index) {
-                        let content = tbody.children[i].children[index].children[0].innerHTML
-                        tbody.children[i].children[index].innerHTML = content
-                    })
+                    let content = tbody.children[i].children[1].children[0].innerHTML
+                    tbody.children[i].children[1].innerHTML = content
 
                     let notificationsCount = document.querySelector('#notifications-count')
                     if (notificationsCount) {
@@ -82,7 +78,6 @@
                         } else {
                             notificationsCount.remove()
                         }
-
                     }
                 },
                 error: function (data) {
