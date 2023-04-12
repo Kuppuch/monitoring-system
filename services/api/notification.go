@@ -8,6 +8,7 @@ import (
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
+	"strconv"
 )
 
 var WS *websocket.Conn
@@ -60,4 +61,25 @@ func getNotifications(c *gin.Context) {
 	user, _ := GetUserByToken(c)
 	notifications := middleware.GetUnreadNotification(user.ID)
 	c.JSON(http.StatusOK, notifications)
+}
+
+func setReadNotification(c *gin.Context) {
+	nID, err := strconv.Atoi(c.DefaultQuery("nid", "0"))
+	if err != nil {
+		logging.Print.Error("failed parse notification ID on setRead method", err)
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	rowAffected, err := middleware.SetReadNotification(nID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	if rowAffected == 0 {
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	} else {
+		c.JSON(http.StatusOK, middleware.GetSuccess())
+		return
+	}
 }

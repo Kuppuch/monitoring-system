@@ -55,15 +55,16 @@ function getUnreadNotifications() {
     $.getJSON('http://' + window.location.host + '/notification/json', function(data){
         let counter = 0
         for (var i = 0, len = data.length; i < len; i++) {
-            console.log(data[i])
             counter++
         }
-        let span = document.createElement('span')
-        span.setAttribute("id", "notifications-count")
-        span.classList.add('notifications-count')
-        span.innerHTML = counter.toString()
-        let notificationBlock = document.querySelector('#notification-block')
-        notificationBlock.append(span)
+        if (counter > 0) {
+            let span = document.createElement('span')
+            span.setAttribute("id", "notifications-count")
+            span.classList.add('notifications-count')
+            span.innerHTML = counter.toString()
+            let notificationBlock = document.querySelector('#notification-block')
+            notificationBlock.append(span)
+        }
     });
 }
 

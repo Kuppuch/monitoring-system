@@ -34,7 +34,7 @@
                         <td><b>{{ .Content }}</b></td>
                         {{ end }}
                         <td id="source">
-                            <a href='../'+ {{ .Source }}>ссылка{{ .Source }}</a>
+                            <a href='../{{ .Source }}'>ссылка</a>
                         </td>
                     </tr>
                     {{ end }}
@@ -60,16 +60,39 @@
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js" ></script>
 <script>
-    // addEventListener("load", (event) => {
-    //     let source = document.querySelector('#source')
-    //     // document.querySelector('#source').innerHTML = ''
-    //     console.log(source)
-    //     let a = document.createElement('a')
-    //     a.setAttribute('href', 'http://'+ window.location.host + source.innerHTML)
-    //     a.innerHTML = 'ссылка'
-    //     document.querySelector('#source').innerHTML = ''
-    //     source.append(a)
-    // });
+    let tbody = document.querySelector('tbody')
+    for (let i = 0; i < tbody.children.length; i++) {
+        tbody.children[i].addEventListener('click', (evt) => {
+            evt.preventDefault()
+            $.ajax({
+                type: "GET",
+                url: 'http://' + window.location.host + '/notification/read?nid=' + tbody.children[i].children[0].children[0].innerHTML,
+                success: () => {
+                    $(tbody.children[i].children).each(function (index) {
+                        let content = tbody.children[i].children[index].children[0].innerHTML
+                        tbody.children[i].children[index].innerHTML = content
+                    })
+
+                    let notificationsCount = document.querySelector('#notifications-count')
+                    if (notificationsCount) {
+                        let cnt = parseInt(notificationsCount.innerHTML, 10)
+                        cnt--
+                        if (cnt > 0) {
+                            notificationsCount.innerHTML = cnt.toString()
+                        } else {
+                            notificationsCount.remove()
+                        }
+
+                    }
+                },
+                error: function (data) {
+                    alert(data.statusText)
+                    console.log(data.statusText)
+                }
+            });
+        })
+    }
+
 
 </script>
 </body>

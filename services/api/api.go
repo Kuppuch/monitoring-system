@@ -91,6 +91,7 @@ func Router() {
 		notification.GET("/json", getNotifications)
 		notification.GET("/socket", socketFunc)
 		notification.GET("/send", sendMessage)
+		notification.GET("/read", setReadNotification)
 	}
 
 	setting := r.Group("setting")

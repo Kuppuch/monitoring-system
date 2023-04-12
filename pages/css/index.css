@@ -448,10 +448,15 @@ main .issues:hover {
 
 .issues-content table {
     width: 100%;
+    border-collapse:collapse;
 }
 
 .issues-content table tbody tr {
     cursor: pointer;
+}
+
+.issues-content table tbody tr:hover {
+    background: var(--color-info-light);
 }
 
 /* ================ DOCS ==================== */
