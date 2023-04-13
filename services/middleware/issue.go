@@ -8,15 +8,16 @@ import (
 
 type Issue struct {
 	gorm.Model
-	Name         string
-	Description  string
-	ProjectID    int         `gorm:"-:all" json:"project_id"`
-	CreatorID    uint        `json:"creator_id"`
-	AssignedToID uint        `json:"assigned_to_id"`
-	StatusID     uint        `json:"status_id"`
-	TrackerID    uint        `json:"tracker_id"`
-	BudgetID     uint        `json:"budget_id"`
-	Timespent    []Timespent `gorm:"foreignKey:IssueID" json:"timespent,omitempty"`
+	Name           string
+	Description    string
+	ProjectID      int         `gorm:"-:all" json:"project_id"`
+	CreatorID      uint        `json:"creator_id"`
+	AssignedToID   uint        `json:"assigned_to_id"`
+	StatusID       uint        `json:"status_id"`
+	TrackerID      uint        `json:"tracker_id"`
+	BudgetID       uint        `json:"budget_id"`
+	EstimatedHours float32     `json:"estimated_hours"`
+	Timespent      []Timespent `gorm:"foreignKey:IssueID" json:"timespent,omitempty"`
 }
 
 type IssueWeb struct {
@@ -44,7 +45,7 @@ func GetIssueList(projectID, budgetID int) []IssueWeb {
 		Joins("INNER JOIN statuses AS s ON s.id = i.status_id").
 		Joins("INNER JOIN users AS uc ON uc.id = i.creator_id").
 		Joins("INNER JOIN users AS ua ON ua.id = i.assigned_to_id").
-		Where(where).Find(&issues)
+		Where(where).Order("id desc").Find(&issues)
 	return issues
 }
 
@@ -52,7 +53,7 @@ func GetIssue(id uint) IssueWeb {
 	issue := IssueWeb{}
 	DB.Table("issues").
 		Select("issues.id, issues.name, issues.description, statuses.name as status_name, trackers.name as tracker_name, "+
-			"issues.creator_id, issues.assigned_to_id, issues.status_id, issues.tracker_id, issues.budget_id,"+
+			"issues.creator_id, issues.assigned_to_id, issues.status_id, issues.tracker_id, issues.budget_id, issues.estimated_hours, "+
 			"u.last_name || ' ' || u.name || ' ' || u.middle_name as creator, uu.last_name || ' ' || uu.name || ' ' || uu.middle_name as assigned_to").
 		Joins("inner join statuses on statuses.id = issues.status_id").
 		Joins("inner join trackers on trackers.id = issues.tracker_id").

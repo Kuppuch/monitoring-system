@@ -34,13 +34,13 @@ func GetBudget(id int) Budget {
 
 func GetBudgets() []Budget {
 	var b []Budget
-	DB.Find(&b)
+	DB.Order("id desc").Find(&b)
 	return b
 }
 
 func GetProjectBudgets(projectID int) []Budget {
 	var b []Budget
-	DB.Where("project_id = ?", projectID).Find(&b)
+	DB.Where("project_id = ?", projectID).Order("id desc").Find(&b)
 	return b
 }
 

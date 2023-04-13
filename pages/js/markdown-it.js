@@ -8300,7 +8300,7 @@
   /** chainable, internal
 	 * MarkdownIt.configure(presets)
 	 *
-	 * Batch load of all options and compenent settings. This is internal method,
+	 * Batch load of all options and compenent risk. This is internal method,
 	 * and you probably will not need it. But if you will - see available presets
 	 * and data structure [here](https://github.com/markdown-it/markdown-it/tree/master/lib/presets)
 	 *

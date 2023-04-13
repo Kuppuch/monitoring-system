@@ -19,7 +19,7 @@
                 {{ .issue.Description }}
             </div>
             <div class="row">
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Статус</div>
                     <div class="cont">
                         <select name="Status" id="status">
@@ -30,19 +30,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Трекер</div>
                     <div class="cont">
                         {{ .issue.TrackerName }}
                     </div>
                 </div>
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Создал:</div>
                     <div class="cont">
                         {{ .issue.Creator }}
                     </div>
                 </div>
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Назначена на:</div>
                     <div class="cont">
                         {{ .issue.AssignedTo }}
@@ -50,24 +50,29 @@
                 </div>
             </div>
             <div class="row">
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Проект</div>
                     <p>{{ .issue.ProjectName }}</p>
                 </div>
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Бюджет</div>
                     <p>{{ .issue.BudgetName }}</p>
                 </div>
             </div>
             <div class="row">
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Времени затрачено</div>
                     <span id="timespent"></span>
-
+                </div>
+                <div class="content-block-h pv-1r">
+                    <div class="title">Оценка</div>
+                    <div class="cont">
+                        {{ .issue.EstimatedHours }}ч.
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="content-block-h">
+                <div class="content-block-h pv-1r">
                     <div class="title">Добавить трудосписания</div>
                     <div class="cont">
 
@@ -83,7 +88,7 @@
                 </div>
             </div>
             <div class="row">
-                <div id="button-success" class="content-block-h">
+                <div id="button-success" class="content-block-h pv-1r">
                     <button class="bg-success" id="saveTimespent" style="cursor: pointer" onclick="save()">Сохранить
                     </button>
                 </div>
@@ -104,7 +109,11 @@
         if (minute > 0) {
             timeResult += minute + 'мин.'
         }
+        const estimated = {{ .issue.EstimatedHours }}
         document.querySelector('#timespent').innerHTML = timeResult
+        if (Math.floor(timespent) + minute > estimated) {
+            document.querySelector('#timespent').classList.add("danger")
+        }
     });
 
     function save() {

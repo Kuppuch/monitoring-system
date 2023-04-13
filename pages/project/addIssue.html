@@ -15,10 +15,10 @@
         <h1>Создание задачи</h1>
         <div class="central-form">
             <form id="registration" class="registration">
-                <input type="text" class="form-control" id="nameInput" name="name" placeholder="Название" value="">
-                <textarea rows="10" cols="45" name="description" placeholder="Описание"></textarea>
+                <input type="text" class="form-control mt-30" id="nameInput" name="name" placeholder="Название" value="">
+                <textarea class="mt-30" rows="10" cols="45" name="description" placeholder="Описание"></textarea>
                 <div class="row">
-                    <div class="content-block-h">
+                    <div class="content-block-h pv-1r">
                         <div class="title">Статус</div>
                         <div class="cont">
                             <select name="status_id" id="status_id" class="status_id">
@@ -28,7 +28,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="content-block-h">
+                    <div class="content-block-h pv-1r">
                         <div class="title">Трекер</div>
                         <div class="cont">
                             <select name="tracker_id" id="tracker_id" class="tracker_id">
@@ -38,7 +38,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="content-block-h">
+                    <div class="content-block-h pv-1r">
                         <div class="title">Назначена на:</div>
                         <div class="cont">
                             <select name="assigned_to_id" id="assigned_to_id" class="assigned_to_id">
@@ -48,7 +48,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="content-block-h">
+                    <div class="content-block-h pv-1r">
                         <div class="title">Бюджет:</div>
                         <div class="cont">
                             <select name="budget" id="budget" class="budget">
@@ -58,6 +58,12 @@
                             </select>
                         </div>
                     </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Заложено времени:</div>
+                        <div class="cont">
+                            <input type="text" class="form-control" id="estimated_hours" name="estimated_hours" value="">
+                        </div>
+                    </div>
                 </div>
                 <button type="submit" class="btn" name="send" id="submitBtn">Создать задачу</button>
             </form>
@@ -65,38 +71,39 @@
     </main>
     <div class="right">
         {{ template "right-top.html" .}}
-        <div class="recent-updates">
-            <h2>Недавние изменения</h2>
-            <div class="updates">
-                <div class="update">
-                    <div class="profile-photo">
-                        <img src="/photo/1/photo.png" alt="">
-                    </div>
-                    <div class="message">
-                        <p><b>Куппе Роман</b> написал главную страницу</p>
-                        <small class="text-muted">2 Минуты назад</small>
-                    </div>
-                </div>
-                <div class="update">
-                    <div class="profile-photo">
-                        <img src="/photo/1/photo.png" alt="">
-                    </div>
-                    <div class="message">
-                        <p><b>Куппе Роман</b> написал главную страницу</p>
-                        <small class="text-muted">2 Минуты назад</small>
-                    </div>
-                </div>
-                <div class="update">
-                    <div class="profile-photo">
-                        <img src="/photo/1/photo.png" alt="">
-                    </div>
-                    <div class="message">
-                        <p><b>Куппе Роман</b> написал главную страницу</p>
-                        <small class="text-muted">2 Минуты назад</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{ template "resent-updates.html" .}}
+<!--        <div class="recent-updates">-->
+<!--            <h2>Недавние изменения</h2>-->
+<!--            <div class="updates">-->
+<!--                <div class="update">-->
+<!--                    <div class="profile-photo">-->
+<!--                        <img src="/photo/1/photo.png" alt="">-->
+<!--                    </div>-->
+<!--                    <div class="message">-->
+<!--                        <p><b>Куппе Роман</b> написал главную страницу</p>-->
+<!--                        <small class="text-muted">2 Минуты назад</small>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="update">-->
+<!--                    <div class="profile-photo">-->
+<!--                        <img src="/photo/1/photo.png" alt="">-->
+<!--                    </div>-->
+<!--                    <div class="message">-->
+<!--                        <p><b>Куппе Роман</b> написал главную страницу</p>-->
+<!--                        <small class="text-muted">2 Минуты назад</small>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="update">-->
+<!--                    <div class="profile-photo">-->
+<!--                        <img src="/photo/1/photo.png" alt="">-->
+<!--                    </div>-->
+<!--                    <div class="message">-->
+<!--                        <p><b>Куппе Роман</b> написал главную страницу</p>-->
+<!--                        <small class="text-muted">2 Минуты назад</small>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>
 <script src="/js/aside.js"></script>
@@ -131,6 +138,7 @@
         data.tracker_id = parseInt($('.tracker_id option:selected').val())
         data.assigned_to_id = parseInt($('.assigned_to_id option:selected').val())
         data.budget_id = parseInt($('.budget option:selected').val())
+        data.estimated_hours = parseInt($('#estimated_hours').val())
 
         $.ajax({
             type: "POST",

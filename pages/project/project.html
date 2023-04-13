@@ -254,7 +254,6 @@
                     "                        </thead>\n" +
                     "                        <tbody>\n"
                 )
-
                 $(data).each(function (i, elem) {
                     $("tbody").append(
                         "<tr>\n" +
@@ -263,8 +262,8 @@
                         "<td>" + elem['StatusName'] + "</td>\n" +
                         "<td>" + elem['Name'] + "</td>\n" +
                         "<td>" + elem['AssignedTo'] + "</td>\n" +
-                        "<td>Обновлено Заглушка</td>\n" +
-                        "<td>Оценка Заглушка</td>\n" +
+                        "<td>" + elem['UpdatedAt'] + "</td>\n" +
+                        "<td>" + elem['estimated_hours'] + "</td>\n" +
                         "<td>" + elem['TimespentData'] + "</td>\n" +
                         "<td>" + elem['BudgetName'] + "</td>\n" +
                         "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +

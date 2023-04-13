@@ -8,7 +8,6 @@ import (
 	"monitoring-system/services/api/public"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
-	"net/http"
 	"strings"
 )
 
@@ -94,11 +93,9 @@ func Router() {
 		notification.GET("/read", setReadNotification)
 	}
 
-	setting := r.Group("setting")
+	risk := r.Group("risk")
 	{
-		setting.GET("/", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "settings.html", nil)
-		})
+		risk.GET("", getRiskPage)
 	}
 
 	r.GET("/srs", srsPage)

@@ -11,9 +11,11 @@
 <div class="container">
     {{template "aside.html" .}}
     <main>
-        <form action="" method="POST" enctype="multipart/form-data">
+        <form class="mt-30" action="" method="POST" enctype="multipart/form-data">
             <input type="file" name="image" id="image">
-            <button type="button" onclick="myFunction()" id="send">Отправить</button>
+            <div id="button-success" class="content-block-h">
+                <button type="button" onclick="myFunction()" id="send">Отправить</button>
+            </div>
         </form>
     </main>
     <div class="right">
@@ -25,9 +27,40 @@
     function myFunction() {
         let photo = document.getElementById("image").files[0];
         let formData = new FormData();
-        console.log("1")
         formData.append("image", photo);
-        fetch('/upload', {method: "POST", body: formData});
+        // fetch('/upload', {method: "POST", body: formData});
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: 'http://' + window.location.host + '/upload',
+        //     success: function (data) {
+        //
+        //     },
+        //     error: function (data) {
+        //         alert(data.statusText);
+        //     }
+        // });
+        $.ajax({
+            url: 'http://' + window.location.host + '/upload',
+            type: "POST",
+            data: formData,
+            success: function (msg) {
+                const htmlStr =
+                    '<div id="success" class="content-block-v">' +
+                        '<span class="material-icons-sharp success">done</span>' +
+                        '<small class="text-muted">Обновите страницу с кешем</small>' +
+                    '</div>'
+                document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
+                setTimeout(hideSuccess, 2000);
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+    function hideSuccess() {
+        document.querySelector('#success').remove()
     }
 </script>
 <script src="/js/right-top.js"></script>
