@@ -243,11 +243,11 @@ func saveIssue(c *gin.Context) {
 	}
 	t, statusID, err := parseTimespent(m, user, issueID)
 	if err != nil {
-		logging.Print.Error("error parse timespent", err)
+		logging.Print.Error("error parse timespent ", err)
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  err,
 			Type: 0,
-			Meta: "error parse timespent",
+			Meta: err.Error(),
 		})
 		return
 	}
@@ -312,10 +312,19 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 			minuteStr = strings.TrimSpace(spentStr[hourDelimiter:i])
 		}
 	}
+	if len(hourStr) < 1 {
+		hourStr = "0"
+	}
+	if len(minuteStr) < 1 {
+		minuteStr = "0"
+	}
 	hour, err := strconv.Atoi(hourStr)
 	minute, err := strconv.Atoi(minuteStr)
 	if err != nil {
 		return middleware.Timespent{}, 0, err
+	}
+	if minute%15 != 0 {
+		return middleware.Timespent{}, 0, errors.New("минуты должны быть кратны 15")
 	}
 	minuteFloat := float32(minute) / float32(60)
 	fmt.Println(hour, minute)

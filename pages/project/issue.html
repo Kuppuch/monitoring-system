@@ -132,7 +132,6 @@
             url: 'http://' + window.location.host + '/issue/save/' + path,
             data: JSON.stringify(data),
             success: function (dataresp) {
-                // window.location = 'http://'+window.location.host+'/project'
                 let minute = (dataresp.timespent - Math.floor(dataresp.timespent)) * 60
                 let timeResult = Math.floor(dataresp.timespent) + 'ч. '
                 if (minute > 0) {
@@ -144,10 +143,10 @@
                 document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
                 setTimeout(hideSuccess, 2000);
             },
-            error: function (data) {
-                alert(data.statusText);
-                console.log(data.statusText)
-                // window.location = 'http://'+window.location.host+'/project'
+            error: function (dataJSON) {
+                const data = JSON.parse(dataJSON.responseText)
+                alert(data.Meta);
+                console.log(data.Meta)
             }
         });
     }
