@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>База рисков</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/js.cookie.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html" .}}
+    <main>
+        <h1>База рисков</h1>
+        <div class="issues">
+            <div class="issues-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Описание</th>
+<!--                        <th>Влияние на проект</th>-->
+                        <th>Уровень</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{ range $risks := .risks }}
+                    <tr>
+                        <td>{{ .Description }}</td>
+<!--                        <td>{{ .Impact }}</td>-->
+                        <td>{{ .Level }}</td>
+                    </tr>
+                    {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" .}}
+        {{ template "resent-updates.html" }}
+        <div class="sales-analytics">
+            <div class="item add-product">
+                <div>
+                    <span class="material-icons-sharp">add</span>
+                    <h3 id="add-risk">Добавить риск</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+    let addRisk = document.querySelector('#add-risk')
+    addRisk.addEventListener('click', function() {
+        window.location.href = '/risk/create'
+    })
+</script>
+</body>
+</html>

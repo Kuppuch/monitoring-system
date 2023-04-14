@@ -22,6 +22,7 @@ func Router() {
 	r.Static("/js", "./pages/js")
 	r.Static("/img", "./pages/img")
 	r.Static("/photo", "./lib/users")
+	r.Static("/favicon.ico", "./pages/img/favicon.ico")
 
 	r.Use(cors.AllowAll())
 	r.Use(AuthRequired)
@@ -96,6 +97,9 @@ func Router() {
 	risk := r.Group("risk")
 	{
 		risk.GET("", getRiskPage)
+		risk.GET("/list", getRiskListPage)
+		risk.GET("/create", getRiskCreatePage)
+		risk.POST("/create", InserRisk)
 	}
 
 	r.GET("/srs", srsPage)

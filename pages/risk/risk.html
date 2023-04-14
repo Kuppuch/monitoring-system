@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Настройки</title>
+    <title>Риски</title>
     <link rel="stylesheet" href="../css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -12,7 +12,42 @@
 <div class="container">
     {{template "aside.html" .}}
     <main>
-        <h1>Заглушка</h1>
+        <h1>Риски</h1>
+        <div id="insights" class="insights mt-30">
+            <div class="sales">
+                <span class="material-icons-sharp">storage</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>База рисков</h3>
+                        <h1>{{ .countRisk }}</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Последние {{ .timeBetween }} минут</small>
+            </div>
+            <!------------------ END OF SALES ------------------>
+            <div class="expenses">
+                <span class="material-icons-sharp">bar_chart</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>В разработке</h3>
+                        <h1>В разработке</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Последние 24 часа</small>
+            </div>
+            <!------------------ END OF EXPENSES ------------------>
+            <div class="income">
+                <span class="material-icons-sharp">stacked_line_chart</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>В разработке</h3>
+                        <h1>В разработке</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Последние 24 часа</small>
+            </div>
+            <!------------------ END OF INCOME ------------------>
+        </div>
     </main>
     <div class="right">
         {{ template "right-top.html" .}}
@@ -30,5 +65,12 @@
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js" ></script>
+<script>
+    const insights = document.querySelector('#insights')
+    insights.addEventListener('click', function() {
+        window.location.href = '/risk/list'
+    })
+
+</script>
 </body>
 </html>

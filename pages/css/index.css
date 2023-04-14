@@ -197,6 +197,14 @@ b {
     padding: 1rem 0;
 }
 
+.mw-80vw {
+    max-width: 62.6vw;
+}
+
+.mw-80p {
+    max-width: 100%;
+}
+
 aside {
     height: 100vh;
 }
@@ -571,6 +579,8 @@ input[type='text'], textarea {
     border-radius: var(--border-radius-3);
     color: var(--color-dark);
     font-size: 14px;
+    resize:vertical;
+    min-height:50px;
 }
 
 main .central-form form select {

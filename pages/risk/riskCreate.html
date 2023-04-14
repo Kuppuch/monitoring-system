@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление риска</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/js.cookie.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html" .}}
+    <main>
+        <h1>Добавление риска</h1>
+        <div class="central-form" style="height: 80vh; overflow-y: auto">
+            <form id="registration" class="registration">
+                <textarea rows="4" cols="45" id="Description" name="description" placeholder="Описание риска"></textarea>
+                <textarea class="mt-30" rows="4" cols="45" id="Impact" name="description" placeholder="Потенциальное воздействие на проект"></textarea>
+                <input type="text" class="form-control mt-30" id="ProbabilityOccurrence" name="name" placeholder="Вероятность возникновения" value="">
+                <input type="text" class="form-control mt-30" id="Influence" name="name" placeholder="Влияние на проект" value="">
+                <input type="text" class="form-control mt-30" id="Level" name="name" placeholder="Уровень риска" value="">
+                <textarea class="mt-30" rows="4" cols="45" id="Solution" name="description" placeholder="Вариант решения "></textarea>
+<!--                <div id="button-success" class="content-block-h pv-1r">-->
+                    <button type="submit" class="btn" name="send" id="submitBtn">Сохранить</button>
+<!--                </div>-->
+            </form>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" .}}
+        {{ template "resent-updates.html" .}}
+    </div>
+</div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+    $('.registration').on('submit', (event) => {
+        event.preventDefault();
+        let data = $(event.target)
+            .serializeArray()
+            .reduce(function (json, {name, value}) {
+                json[name] = value;
+                return json;
+            }, {})
+
+        data.Description = $('#Description').val()
+        data.Impact = $('#Impact').val()
+        data.Solution = $('#Solution').val()
+        data.Influence = parseFloat($('#Influence').val())
+        data.Level = parseFloat($('#Level').val())
+        data.ProbabilityOccurrence = parseFloat($('#ProbabilityOccurrence').val())
+
+        $.ajax({
+            type: "POST",
+            url: 'http://'+window.location.host+'/risk/create',
+            data: JSON.stringify(data),
+            success: function (data) {
+                const htmlStr = '<span id="success" class="material-icons-sharp success">done</span>'
+                document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
+                setTimeout(hideSuccess, 2000);
+            },
+            error: function (data) {
+                alert(data.statusText)
+                console.log(data.statusText)
+            }
+        })
+    })
+
+    function hideSuccess() {
+        document.querySelector('#success').remove()
+    }
+</script>
+</body>
+</html>
