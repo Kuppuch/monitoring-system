@@ -101,16 +101,6 @@ func insertUser(c *gin.Context) {
 		return
 	}
 	if dbUser.ID > 0 {
-		c.JSON(http.StatusBadRequest, gin.Error{
-			Err:  errors.New("registration failed"),
-			Type: 0,
-			Meta: "user with given email address already exists",
-		})
-		return
-	}
-
-	if user.ID > 0 {
-
 		user.Update()
 		c.JSON(http.StatusOK, middleware.GetSuccess())
 		return

@@ -262,7 +262,7 @@
                         "<td>" + elem['StatusName'] + "</td>\n" +
                         "<td>" + elem['Name'] + "</td>\n" +
                         "<td>" + elem['AssignedTo'] + "</td>\n" +
-                        "<td>" + elem['UpdatedAt'] + "</td>\n" +
+                        "<td>" + parseTime(elem['UpdatedAt']) + "</td>\n" +
                         "<td>" + elem['estimated_hours'] + "</td>\n" +
                         "<td>" + elem['TimespentData'] + "</td>\n" +
                         "<td>" + elem['BudgetName'] + "</td>\n" +
@@ -289,6 +289,18 @@
                 // window.location = 'http://'+window.location.host+'/project'
             }
         });
+    }
+
+    function parseTime(time) {
+        const d = new Date(time)
+        var date_format_str = (d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString()) + // часы
+            ":" + ((parseInt(d.getMinutes())).toString().length==2?(parseInt(d.getMinutes())).toString():"0"+(parseInt(d.getMinutes())).toString()) + // минуты
+            ' ' + (d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString()) + // день
+            '.' + ((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+  // месяц
+            '.' + d.getFullYear().toString() // год
+
+        console.log(date_format_str)
+        return date_format_str
     }
 
     export const apiGetDocContent = async (rep) => {

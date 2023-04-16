@@ -18,7 +18,7 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>Сообщение</th>
+                        <th class="left-align">Сообщение</th>
                         <th>Ссылка</th>
                     </tr>
                     </thead>
@@ -27,9 +27,9 @@
                     <tr>
                         <td hidden="hidden">{{ .ID }}</td>
                         {{ if .View}}
-                        <td>{{ .Content }}</td>
+                        <td class="left-align">{{ .Content }}</td>
                         {{ else }}
-                        <td><b>{{ .Content }}</b></td>
+                        <td class="left-align"><b>{{ .Content }}</b></td>
                         {{ end }}
                         <td id="source">
                             <a href='../{{ .Source }}'>ссылка</a>

@@ -43,7 +43,7 @@
         </div>
         <div class="form-floating mb-3">
             <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com"
-                   value="{{.user.Email}}">
+                   value="{{.user.Email}}" {{ if .user }} readonly {{ end }} >
             <label for="emailInput">Email</label>
         </div>
         {{if .user}}

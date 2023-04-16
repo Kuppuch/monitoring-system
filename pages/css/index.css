@@ -205,6 +205,18 @@ b {
     max-width: 100%;
 }
 
+.left-align {
+    text-align: left;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.center-align {
+    text-align: center;
+}
+
 aside {
     height: 100vh;
 }
@@ -464,7 +476,7 @@ main .issues:hover {
 
 .issues-content table {
     width: 100%;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .issues-content table tbody tr {
@@ -579,8 +591,8 @@ input[type='text'], textarea {
     border-radius: var(--border-radius-3);
     color: var(--color-dark);
     font-size: 14px;
-    resize:vertical;
-    min-height:50px;
+    resize: vertical;
+    min-height: 50px;
 }
 
 main .central-form form select {

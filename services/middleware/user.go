@@ -59,5 +59,9 @@ func (u *User) Update() {
 	user := User{}
 	DB.Where("id = ?", u.ID).Find(&user)
 	u.Password = user.Password
+	// Защита от изменения админского пользователя
+	if u.Email == "admin@admin.ru" {
+		return
+	}
 	DB.Model(u).Save(&u)
 }
