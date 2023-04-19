@@ -869,6 +869,25 @@ section {
     box-shadow: none;
 }
 
+.graph {
+    width: 100%;
+}
+
+.analytics {
+    width: 33%;
+    background: var(--color-warning);
+}
+
+.development {
+    width: 33%;
+    background: var(--color-success);
+}
+
+.qa {
+    width: 33%;
+    background: var(--color-primary);
+}
+
 /* ================= MEDIA QUERIES ================== */
 @media screen and (max-width: 1200px) {
     .container {
