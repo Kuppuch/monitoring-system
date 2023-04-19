@@ -27,6 +27,12 @@ type ProjectWeb struct {
 	Updated   int64
 }
 
+type ProjectTimespent struct {
+	RoleID    int
+	Timespent float32
+	ProjectID int
+}
+
 func GetProjects(userID uint) []ProjectWeb {
 	var projects []ProjectWeb
 	tx := DB.Table("projects as p").Select("p.*, COUNT(i.budget_id) as issues_cnt").
@@ -97,4 +103,18 @@ func (p *Project) UpdateStatus(statusID int) (int64, error) {
 		return 0, tx.Error
 	}
 	return tx.RowsAffected, nil
+}
+
+func GetProjectTimespent() []ProjectTimespent {
+	var projectTimespent []ProjectTimespent
+	DB.Raw(`SELECT hr.id AS role_id, SUM(t.spent) AS timespent, p.id AS project_id
+				  FROM timespents AS t
+				 INNER JOIN issues AS i ON i.id = t.issue_id
+				 INNER JOIN budgets AS b ON b.id = i.budget_id
+				 INNER JOIN projects AS p ON p.id = b.project_id
+				 INNER JOIN roles AS r ON r.id = t.role_id
+				 INNER JOIN head_roles AS hr ON hr.id = r.head_role_id
+				 GROUP BY hr.id, p.id`).
+		Find(&projectTimespent)
+	return projectTimespent
 }

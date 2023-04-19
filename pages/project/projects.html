@@ -30,12 +30,15 @@
                         <h1>{{ .IssuesCnt }}</h1>
                     </div>
                 </div>
-                <div id="graph">
+                <div class="graph">
                     <div class="analytics"></div>
                     <div class="development"></div>
                     <div class="qa"></div>
                 </div>
-                <small class="text-muted updated">{{ .Updated }}</small>
+                <div class="row space-between_center">
+                    <small class="text-muted updated">{{ .Updated }}</small>
+                    <span hidden class="material-icons-sharp bg-danger">warning</span>
+                </div>
             </div>
             {{ end }}
         </div>
@@ -101,6 +104,32 @@
             }
             containers[i].innerHTML = finalStr
         }
+    })
+
+    addEventListener("load", () => {
+        $.ajax({
+            type: "GET",
+            url: 'http://'+window.location.host+'/project/timespent',
+            success: function (data) {
+                let insights = document.querySelector('.insights')
+                for (let i = 0; i < insights.children.length; i++) {
+                    let sales = insights.children[i]
+                    console.log(data[sales.children[0].innerHTML])
+                    let timespents = data[sales.children[0].innerHTML]
+                    for (let j = 0; j < timespents.length; j++) {
+                        if (timespents[j].role_id === 1) {
+                            sales.children[4].children[0].setAttribute("style","width:" + timespents[j].timespent + "px")
+                        }
+                        if (timespents[j].role_id === 2) {
+                            sales.children[4].children[1].setAttribute("style","width:" + timespents[j].timespent + "px")
+                        }
+                        if (timespents[j].role_id === 3) {
+                            sales.children[4].children[2].setAttribute("style","width:" + timespents[j].timespent + "px")
+                        }
+                    }
+                }
+            }
+        });
     })
 
 </script>

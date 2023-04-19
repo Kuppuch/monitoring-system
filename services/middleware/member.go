@@ -37,7 +37,9 @@ func GetMembers(projectId int) []MemberView {
 		Joins("INNER JOIN members as m ON m.id = pr.member_id").
 		Joins("INNER JOIN roles as r ON r.id = pr.role_id").
 		Joins("INNER JOIN users as u ON u.id = m.user_id").
-		Where("m.project_id = ?", projectId).Find(&memberView)
+		Where("m.project_id = ?", projectId).
+		Order("u.last_name").
+		Find(&memberView)
 	if tx.Error != nil {
 		logging.Print.Warning(tx.Error)
 	}
