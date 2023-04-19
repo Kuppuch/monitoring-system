@@ -19,6 +19,7 @@
                         <tr>
                             <th>Номер</th>
                             <th>Задача</th>
+                            <th>Проект</th>
                             <th>Создана</th>
                         </tr>
                     </thead>
@@ -27,6 +28,7 @@
                         <tr>
                             <td>{{ .ID }}</td>
                             <td>{{ .Issue.Name }}</td>
+                            <td>{{ .ProjectName }}</td>
                             <td>{{ .Issue.Model.CreatedAt }}</td>
                         </tr>
                     {{ end }}

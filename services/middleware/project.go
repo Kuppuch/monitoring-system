@@ -9,14 +9,16 @@ import (
 
 type Project struct {
 	gorm.Model
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	IsPublic    bool   `json:"isPublic"`
-	StatusID    uint   `json:"status"`
-	//Issues      []Issue  `gorm:"foreignKey:ProjectID" json:"issues"`
+	Name            string          `json:"name"`
+	Description     string          `json:"description"`
+	IsPublic        bool            `json:"isPublic"`
+	StatusID        uint            `json:"status"`
+	PlanStart       time.Time       `json:"planStart"`
+	PlanFinish      time.Time       `json:"planFinish"`
 	Members         []Member        `gorm:"foreignKey:ProjectID" json:"members"`
 	Budgets         []Budget        `gorm:"foreignKey:ProjectID" json:"budgets"`
 	GitRepositories []GitRepository `gorm:"foreignKey:ProjectID" json:"gitRepositories"`
+	//Issues          []Issue         `gorm:"foreignKey:ProjectID" json:"issues"`
 }
 
 type ProjectWeb struct {

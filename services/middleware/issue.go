@@ -68,11 +68,14 @@ func GetUserIssues(id uint) []IssueWeb {
 	DB.Table("issues").
 		Select("issues.id, issues.name, issues.description, statuses.name as status_name, trackers.name as tracker_name, "+
 			"issues.creator_id, issues.assigned_to_id, issues.status_id, issues.tracker_id, "+
-			"u.last_name || ' ' || u.name || ' ' || u.middle_name as creator, uu.last_name || ' ' || uu.name || ' ' || uu.middle_name as assigned_to").
+			"u.last_name || ' ' || u.name || ' ' || u.middle_name as creator, uu.last_name || ' ' || uu.name || ' ' || uu.middle_name as assigned_to, "+
+			"p.name as project_name").
 		Joins("inner join statuses on statuses.id = issues.status_id").
 		Joins("inner join trackers on trackers.id = issues.tracker_id").
 		Joins("inner join users as u on u.id = issues.creator_id").
 		Joins("inner join users as uu on uu.id = issues.assigned_to_id").
+		Joins("inner join budgets as b on b.id = issues.budget_id").
+		Joins("inner join projects as p on p.id = b.project_id").
 		Where("issues.assigned_to_id = ?", id).Find(&issues)
 	return issues
 }
