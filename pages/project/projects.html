@@ -31,9 +31,9 @@
                     </div>
                 </div>
                 <div class="graph">
-                    <div class="analytics"></div>
-                    <div class="development"></div>
-                    <div class="qa"></div>
+<!--                    <div class="analytics"></div>-->
+<!--                    <div class="development"></div>-->
+<!--                    <div class="qa"></div>-->
                 </div>
                 <div class="row space-between_center">
                     <small class="text-muted updated">{{ .Updated }}</small>
@@ -116,15 +116,33 @@
                     let sales = insights.children[i]
                     console.log(data[sales.children[0].innerHTML])
                     let timespents = data[sales.children[0].innerHTML]
-                    for (let j = 0; j < timespents.length; j++) {
-                        if (timespents[j].role_id === 1) {
-                            sales.children[4].children[0].setAttribute("style","width:" + timespents[j].timespent + "px")
+                    const start = Date.parse(timespents.project_start)
+                    const end = Date.parse(timespents.project_end)
+                    let fullProjectWorkTime = Math.ceil(Math.ceil((end - start) / 1000 / 60 / 60 / 24) / 7 * 5) * 60
+                    for (let j = 0; j < timespents.role_timespents.length; j++) {
+                        if (timespents.role_timespents[j].role_id === 1) {
+                            let percent = 100*timespents.role_timespents[j].timespent/fullProjectWorkTime
+                            if (percent < 1) {
+                                percent = Math.ceil(percent)
+                            }
+                            const htmlStr = '<div class="development" style="width: ' + percent + '%"></div>'
+                            sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
                         }
-                        if (timespents[j].role_id === 2) {
-                            sales.children[4].children[1].setAttribute("style","width:" + timespents[j].timespent + "px")
+                        if (timespents.role_timespents[j].role_id === 2) {
+                            let percent = 100*timespents.role_timespents[j].timespent/fullProjectWorkTime
+                            if (percent < 1) {
+                                percent = Math.ceil(percent)
+                            }
+                            const htmlStr = '<div class="analytics" style="width: ' + percent + '%"></div>'
+                            sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
                         }
-                        if (timespents[j].role_id === 3) {
-                            sales.children[4].children[2].setAttribute("style","width:" + timespents[j].timespent + "px")
+                        if (timespents.role_timespents[j].role_id === 3) {
+                            let percent = 100*timespents.role_timespents[j].timespent/fullProjectWorkTime
+                            if (percent < 1) {
+                                percent = Math.ceil(percent)
+                            }
+                            const htmlStr = '<div class="qa" style="width: ' + percent + '%"></div>'
+                            sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
                         }
                     }
                 }

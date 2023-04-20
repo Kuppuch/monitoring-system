@@ -298,17 +298,33 @@ func GetActualGitRepository(c *gin.Context) {
 }
 
 func getProjectTimespent(c *gin.Context) {
-	projectTimespent := middleware.GetProjectTimespent()
 	type RoleTimespent struct {
 		RoleID    int     `json:"role_id"`
 		Timespent float32 `json:"timespent"`
 	}
-	buildTimespent := make(map[int][]RoleTimespent)
+	type ProjectInfo struct {
+		ProjectStart   time.Time       `json:"project_start"`
+		ProjectEnd     time.Time       `json:"project_end"`
+		RoleTimespents []RoleTimespent `json:"role_timespents"`
+	}
+
+	projectTimespent := middleware.GetProjectTimespent()
+	buildRoleTimespent := make(map[int][]RoleTimespent)
 	for _, v := range projectTimespent {
-		buildTimespent[v.ProjectID] = append(buildTimespent[v.ProjectID], RoleTimespent{
+		buildRoleTimespent[v.ProjectID] = append(buildRoleTimespent[v.ProjectID], RoleTimespent{
 			RoleID:    v.RoleID,
 			Timespent: v.Timespent,
 		})
+	}
+
+	buildTimespent := make(map[int]ProjectInfo)
+	for i, v := range buildRoleTimespent {
+		project := middleware.GetProjectByID(i)
+		buildTimespent[i] = ProjectInfo{
+			ProjectStart:   project.PlanStart,
+			ProjectEnd:     project.PlanFinish,
+			RoleTimespents: v,
+		}
 	}
 	c.JSON(http.StatusOK, buildTimespent)
 }
