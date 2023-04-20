@@ -319,10 +319,10 @@ func getProjectTimespent(c *gin.Context) {
 
 	buildTimespent := make(map[int]ProjectInfo)
 	for i, v := range buildRoleTimespent {
-		project := middleware.GetProjectByID(i)
+		start, end := middleware.GetProjectBoundByID(i)
 		buildTimespent[i] = ProjectInfo{
-			ProjectStart:   project.PlanStart,
-			ProjectEnd:     project.PlanFinish,
+			ProjectStart:   start,
+			ProjectEnd:     end,
 			RoleTimespents: v,
 		}
 	}

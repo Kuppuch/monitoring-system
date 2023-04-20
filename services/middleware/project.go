@@ -81,6 +81,20 @@ func GetProjectByID(id int) *Project {
 	return &project
 }
 
+func GetProjectBoundByID(id int) (time.Time, time.Time) {
+	type TempStruct struct {
+		Start time.Time
+		End   time.Time
+	}
+	tempStruct := TempStruct{}
+	DB.Raw(`SELECT p.id, MIN(b.start_at) AS start, MAX(b.end_ad) AS end
+				  FROM budgets AS b
+				 INNER JOIN projects AS p ON p.id = b.project_id
+				 WHERE p.id = ?
+				 GROUP BY p.id`, id).Scan(&tempStruct)
+	return tempStruct.Start, tempStruct.End
+}
+
 func (p *Project) InsertProject() int64 {
 	tx := DB.Create(&p)
 	if tx.Error != nil {
