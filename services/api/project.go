@@ -185,8 +185,8 @@ func insertProjectMember(c *gin.Context) {
 		})
 		return
 	}
-	rowAffected := projectRole.InsertRole()
-	if rowAffected == 0 {
+	rowAffected := projectRole.InsertProjectRole()
+	if rowAffected != nil {
 		logging.Print.Error("failed insert project role. rowAffected =", rowAffected)
 		c.JSON(http.StatusInternalServerError, gin.Error{
 			Err:  err,

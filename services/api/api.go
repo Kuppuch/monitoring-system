@@ -42,6 +42,8 @@ func Router() {
 		adm.GET("", getAdminPage)
 		adm.GET("/roles", getRolePage)
 		adm.GET("/roles/head", getHeadRolePage)
+		adm.GET("/roles/create", getRoleCreatePage)
+		adm.POST("/roles/create", createRole)
 		adm.GET("/roles/head/create", getHeadRoleCreatePage)
 		adm.POST("/roles/head/create", createHeadRole)
 	}

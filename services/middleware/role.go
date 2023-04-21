@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"gorm.io/gorm"
-	"monitoring-system/services/logging"
 )
 
 type Role struct {
@@ -55,10 +54,18 @@ func GetProjectRoles(memberID uint) []ProjectRole {
 	return projectRoles
 }
 
-func (r *ProjectRole) InsertRole() int64 {
+func (r *Role) Insert() error {
 	tx := DB.Create(r)
 	if tx.Error != nil {
-		logging.Print.Warning(tx.Error)
+		return tx.Error
 	}
-	return tx.RowsAffected
+	return nil
+}
+
+func (r *ProjectRole) InsertProjectRole() error {
+	tx := DB.Create(r)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
 }

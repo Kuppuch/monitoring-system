@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Создание объединяющей роли</title>
+    <title>Создание роли</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -11,9 +11,9 @@
 {{template "header.html"}}
 <div class="container">
     {{ if .user}}
-    <h2 class="mu-3">Редактирование объединяющей роли</h2>
+    <h2 class="mu-3">Редактирование роли</h2>
     {{ else }}
-    <h2 class="mu-3">Добавление объединяющей роли</h2>
+    <h2 class="mu-3">Добавление роли</h2>
     {{end}}
     <form id="registration" class="registration">
         <div class="form-floating mb-3">
@@ -22,9 +22,11 @@
             <label for="nameInput">Название</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="sortInput" name="sort" placeholder="10"
-                   value="{{.sort}}">
-            <label for="nameInput">Вес сортировки</label>
+            <select name="HeadRoleID" id="HeadRoleID" class="HeadRoleID">
+                {{ range $headRoles := .headRoles }}
+                <option value="{{ .ID }}">{{ .Name }}</option>
+                {{ end }}
+            </select>
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3" name="send" id="submitBtn">Сохранить</button>
@@ -40,14 +42,14 @@
                 json[name] = value;
                 return json;
             }, {});
-        data.sort = parseInt(data.sort);
-
+        data.HeadRoleID = parseInt(data.HeadRoleID);
+        debugger
         $.ajax({
             type: "POST",
-            url: 'http://'+window.location.host+'/admin/roles/head/create',
+            url: 'http://'+window.location.host+'/admin/roles/create',
             data: JSON.stringify(data),
             success: function (data) {
-                window.location = 'http://'+window.location.host+'/admin/roles/head'
+                window.location = 'http://'+window.location.host+'/admin/roles'
             },
             error: function (data) {
                 const body = JSON.parse(data.responseText);
