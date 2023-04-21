@@ -61,43 +61,43 @@
     let queryDist = {};
     location.search.substring(1).split('&').forEach((item) => {
         let param = item.split('=');
-        queryDist[param[0]] = param[1];
+        queryDist[param[0]] = param[1]
     })
 
-    const url = new URL(location.href);
-    const params = url.pathname.split("/");
+    const url = new URL(location.href)
+    const params = url.pathname.split("/")
 
     addProductBtn.addEventListener('click', () => {
-        location.assign("/issue/create?project_id=" + params[2]);
+        location.assign("/issue/create?project_id=" + params[2])
     })
     getBudgets();
 
     //      переключение между вкладками
-    const insights = document.querySelector(".submenu");
+    const insights = document.querySelector(".submenu")
     insights.addEventListener('click', (event) => {
-        let target = event.target;
+        let target = event.target
 
         if (target.tagName === 'LI' || target.tagName === 'A') {
             for (let index = 0; index < insights.children.length; index++) {
-                insights.children[index].classList.remove('active');
+                insights.children[index].classList.remove('active')
             }
             if (target.tagName === 'A') {
-                target = target.parentNode;
+                target = target.parentNode
             }
-            target.classList.add('active');
+            target.classList.add('active')
             if (target.innerHTML === 'Бюджеты') {
-                getBudgets();
+                getBudgets()
             }
             if (target.innerHTML === 'Задачи') {
-                getIssues("");
+                getIssues("")
             }
             if (target.innerHTML === 'Техническое задание') {
-                $(".issues-content").empty();
+                $(".issues-content").empty()
                 $(".issues-content").append($('<div id="doc" style="height: 70vh; overflow-y: auto; overflow-x: hidden">'))
                 getSRS()
             }
             if (target.innerHTML === 'Настройки') {
-                $(".issues-content").empty();
+                $(".issues-content").empty()
                 $.ajax({
                     type: "GET",
                     url: 'http://'+window.location.host+'/project/' + params[2] + '/members/list',
@@ -124,15 +124,15 @@
                                 "<td>" + elem['Role'] + "</td>\n" +
                                 "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
                                 "</tr>\n"
-                            );
+                            )
                         })
 
                         $(".issues-content").append(
                             "                        </tbody>" +
                             "</table>" +
-                            "</div");
+                            "</div")
                     },
-                });
+                })
 
                 $(".issues-content").prepend(
                     "<div class='row'>" +
@@ -151,7 +151,10 @@
                             '<select id="project-select" style="margin: 0 0 1rem 0">' +
                             '</div>'
                         ))
-                        $(".issues-content").append($('<button id="saveGitRep">Сохранить репозиторий</button>'))
+                        $(".issues-content").append($('<div class="row">\n' +
+                            '                <div id="button-success" class="content-block-h pv-1r">' +
+                            '<button id="saveGitRep">Сохранить репозиторий</button>\n' +
+                            '</div>\n'))
                         getGitProjectList()
                         setListener()
                     }
@@ -200,8 +203,8 @@
                         "<tr>\n" +
                         "<td hidden>" + elem['ID'] + "</td>\n" +
                         "<td>" + elem['name'] + "</td>\n" +
-                        "<td>Заглушка начало</td>\n" +
-                        "<td>Заглушка конец</td>\n" +
+                        "<td>" + parseTime(elem['start_at']) + "</td>\n" +
+                        "<td>" + parseTime(elem['end_ad']) + "</td>\n" +
                         "<td>" + elem['ext_id'] + "</td>\n" +
                         "<td><span class=\"material-icons-sharp\">more_horiz</span></td>\n" +
                         "</tr>\n"
@@ -367,10 +370,16 @@
                 data: data,
                 url: 'http://'+window.location.host+'/project/' + params[2] + '/link_rep',
                 success: function (data) {
-                    // console.log('done')
+                    const htmlStr = '<span id="success" class="material-icons-sharp success">done</span>'
+                    document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
+                    setTimeout(hideSuccess, 2000);
                 }
             });
         })
+    }
+
+    function hideSuccess() {
+        document.querySelector('#success').remove()
     }
 
 </script>

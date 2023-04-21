@@ -71,6 +71,8 @@ func insertProject(c *gin.Context) {
 	}
 	project := middleware.Project{}
 	err = json.Unmarshal(raw, &project)
+	m := map[string]interface{}{}
+	err = json.Unmarshal(raw, &m)
 	if err != nil {
 		logging.Print.Error("error unmarshal", err)
 		c.JSON(http.StatusBadRequest, gin.Error{
@@ -78,12 +80,15 @@ func insertProject(c *gin.Context) {
 			Type: 0,
 			Meta: "error by unmarshal project",
 		})
+		return
 	}
 	if len(project.Name) < 1 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
 	}
 	project.StatusID = 1
+	dateStart, err := time.Parse("2006-01-02T15:04:05.000Z", m["dateStart"].(string))
+	dateEnd, err := time.Parse("2006-01-02T15:04:05.000Z", m["dateEnd"].(string))
 	if rowAffected := project.InsertProject(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
@@ -92,8 +97,8 @@ func insertProject(c *gin.Context) {
 		Name:      "Основной",
 		ExtID:     0,
 		ProjectID: int(project.ID),
-		StartAt:   time.Time{},
-		EndAd:     time.Time{},
+		StartAt:   dateStart,
+		EndAd:     dateEnd,
 		StatusID:  3,
 	}
 	if rowAffected := budget.Insert(); rowAffected == 0 {

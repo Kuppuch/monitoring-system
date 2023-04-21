@@ -15,14 +15,29 @@
         <h1>Создание проекта</h1>
         <div class="central-form">
             <form id="registration" class="registration">
-                <input type="text" class="form-control mt-30" id="nameInput" name="name" placeholder="Название" value="" required>
+                <input type="text" class="form-control mt-30" id="nameInput" name="name" placeholder="Название" value=""
+                       required>
                 <input type="text" class="form-control mt-30" id="descriptionInput" name="description"
                        placeholder="Описание" value="">
-                <div>
-                    <input type="checkbox" name="isPublic" value="true" id="flexCheckDefault">
-                    <label class="form-check-label" for="flexCheckDefault">
-                        Публичный проект
-                    </label>
+<!--                <div>-->
+<!--                    <input type="checkbox" name="isPublic" value="true" id="flexCheckDefault">-->
+<!--                    <label class="form-check-label" for="flexCheckDefault">-->
+<!--                        Публичный проект-->
+<!--                    </label>-->
+<!--                </div>-->
+                <div class="row">
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Дата начала</div>
+                        <div class="date">
+                            <input id="dateStart" type="date" required>
+                        </div>
+                    </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Дата окончания</div>
+                        <div class="date">
+                            <input id="dateEnd" type="date" required>
+                        </div>
+                    </div>
                 </div>
                 <button type="submit" class="btn" name="send" id="submitBtn">Создать проект</button>
             </form>
@@ -66,39 +81,45 @@
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
-    <script>
-        menuBtn.addEventListener('click', () => {
-            sideMenu.style.display = 'block';
-        })
+<script>
+    menuBtn.addEventListener('click', () => {
+        sideMenu.style.display = 'block'
+    })
 
-        closeBtn.addEventListener('click', () => {
-            sideMenu.style.display = 'none'
-        })
+    closeBtn.addEventListener('click', () => {
+        sideMenu.style.display = 'none'
+    })
 
-        $('.registration').on('submit', (event) => {
-            event.preventDefault();
-            let data = $(event.target)
-                .serializeArray()
-                .reduce(function (json, {name, value}) {
-                    json[name] = value;
-                    return json;
-                }, {});
-            data.isPublic = data.isPublic === 'true';
-            console.log(data);
-            $.ajax({
-                type: "POST",
-                url: 'http://'+window.location.host+'/project/create',
-                data: JSON.stringify(data),
-                success: function (data) {
-                    window.location = 'http://'+window.location.host+'/project'
-                },
-                error: function (data) {
-                    alert(data.statusText);
-                    console.log(data.statusText)
-                    window.location = 'http://'+window.location.host+'/project'
-                }
-            });
+    let dateStart = document.querySelector('#dateStart')
+    dateStart.valueAsDate = new Date()
+
+    $('.registration').on('submit', (event) => {
+        event.preventDefault();
+        let data = $(event.target)
+            .serializeArray()
+            .reduce(function (json, {name, value}) {
+                json[name] = value
+                return json
+            }, {})
+        data.isPublic = data.isPublic === 'true'
+        data.dateStart = new Date($('#dateStart').val())
+        data.dateEnd = new Date($('#dateEnd').val())
+        $.ajax({
+            type: "POST",
+            url: 'http://' + window.location.host + '/project/create',
+            data: JSON.stringify(data),
+            success: function (data) {
+                debugger
+                window.location = 'http://' + window.location.host + '/project'
+            },
+            error: function (data) {
+                debugger
+                alert(data.statusText);
+                console.log(data.statusText)
+                //window.location = 'http://' + window.location.host + '/project'
+            }
         })
-    </script>
+    })
+</script>
 </body>
 </html>

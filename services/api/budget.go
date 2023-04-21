@@ -20,7 +20,8 @@ func getBudgets(c *gin.Context) {
 		return
 	}
 	if projectID > 0 {
-		c.JSON(http.StatusOK, middleware.GetProjectBudgets(projectID))
+		budgets := middleware.GetProjectBudgets(projectID)
+		c.JSON(http.StatusOK, budgets)
 		return
 	}
 	user, _ := GetUserByToken(c)
