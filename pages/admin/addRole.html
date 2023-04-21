@@ -10,15 +10,15 @@
 <body>
 {{template "header.html"}}
 <div class="container">
-    {{ if .user}}
+    {{ if .role }}
     <h2 class="mu-3">Редактирование роли</h2>
     {{ else }}
     <h2 class="mu-3">Добавление роли</h2>
-    {{end}}
+    {{ end }}
     <form id="registration" class="registration">
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="nameInput" name="name" placeholder="Менеджмент"
-                   value="{{.name}}">
+                   value="{{.role.Name}}">
             <label for="nameInput">Название</label>
         </div>
         <div class="form-floating mb-3">
@@ -32,30 +32,64 @@
             <button type="submit" class="btn btn-primary mb-3" name="send" id="submitBtn">Сохранить</button>
         </div>
     </form>
+    {{ if .role }}
+    <div class="col-auto">
+        <button class="btn btn-danger mb-3" name="send" id="deleteRole">Удалить</button>
+    </div>
+    {{ end }}
 </div>
 <script>
     $('.registration').on('submit', (event) => {
-        event.preventDefault();
+        event.preventDefault()
         let data = $(event.target)
             .serializeArray()
             .reduce(function (json, {name, value}) {
-                json[name] = value;
-                return json;
-            }, {});
-        data.HeadRoleID = parseInt(data.HeadRoleID);
-        debugger
+                json[name] = value
+                return json
+            }, {})
+        data.HeadRoleID = parseInt(data.HeadRoleID)
+        if ({{ .role.ID }} == null) {
+            $.ajax({
+                type: "POST",
+                url: 'http://' + window.location.host + '/admin/roles/create',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    window.location = 'http://' + window.location.host + '/admin/roles'
+                },
+                error: function (data) {
+                    const body = JSON.parse(data.responseText)
+                    alert(body.Meta)
+                }
+            })
+        } else {
+            $.ajax({
+                type: "PUT",
+                url: 'http://' + window.location.host + '/admin/roles/'+ {{ .role.ID }},
+                data: JSON.stringify(data),
+                success: function (data) {
+                    window.location = 'http://' + window.location.host + '/admin/roles'
+                },
+                error: function (data) {
+                    const body = JSON.parse(data.responseText)
+                    alert(body.Meta)
+                }
+            })
+        }
+    })
+
+    const deleteRole = document.querySelector('#deleteRole')
+    deleteRole.addEventListener('click', function () {
         $.ajax({
-            type: "POST",
-            url: 'http://'+window.location.host+'/admin/roles/create',
-            data: JSON.stringify(data),
-            success: function (data) {
+            type: "DELETE",
+            url: 'http://'+window.location.host+'/admin/roles/' + {{ .role.ID }},
+            success: function () {
                 window.location = 'http://'+window.location.host+'/admin/roles'
             },
             error: function (data) {
-                const body = JSON.parse(data.responseText);
-                alert(body.Meta);
+                const body = JSON.parse(data.responseText)
+                alert(body.Meta)
             }
-        });
+        })
     })
 </script>
 </body>

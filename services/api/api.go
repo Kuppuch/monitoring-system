@@ -40,12 +40,20 @@ func Router() {
 	adm := r.Group("admin")
 	{
 		adm.GET("", getAdminPage)
-		adm.GET("/roles", getRolePage)
-		adm.GET("/roles/head", getHeadRolePage)
+
+		adm.GET("/roles", getRolesPage)
+		adm.GET("/roles/:id", getRolePage)
 		adm.GET("/roles/create", getRoleCreatePage)
 		adm.POST("/roles/create", createRole)
+		adm.PUT("/roles/:id", putRole)
+		adm.DELETE("/roles/:id", deleteRole)
+
+		adm.GET("/roles/head", getHeadRolesPage)
+		adm.GET("/roles/head/:id", getHeadRolePage)
 		adm.GET("/roles/head/create", getHeadRoleCreatePage)
 		adm.POST("/roles/head/create", createHeadRole)
+		adm.PUT("/roles/head/:id", putHeadRole)
+		adm.DELETE("/roles/head/:id", deleteHeadRole)
 	}
 
 	user := r.Group("user")

@@ -305,7 +305,8 @@ func GetActualGitRepository(c *gin.Context) {
 
 func getProjectTimespent(c *gin.Context) {
 	type RoleTimespent struct {
-		RoleID    int     `json:"role_id"`
+		RoleID    int `json:"role_id"`
+		Sort      int
 		Timespent float32 `json:"timespent"`
 	}
 	type ProjectInfo struct {
@@ -319,6 +320,7 @@ func getProjectTimespent(c *gin.Context) {
 	for _, v := range projectTimespent {
 		buildRoleTimespent[v.ProjectID] = append(buildRoleTimespent[v.ProjectID], RoleTimespent{
 			RoleID:    v.RoleID,
+			Sort:      v.Sort,
 			Timespent: v.Timespent,
 		})
 	}
@@ -334,6 +336,11 @@ func getProjectTimespent(c *gin.Context) {
 			ProjectEnd:     end,
 			RoleTimespents: v,
 		}
+	}
+	for _, v := range buildTimespent {
+		sort.SliceStable(v.RoleTimespents, func(i, j int) bool {
+			return v.RoleTimespents[i].Sort < v.RoleTimespents[j].Sort
+		})
 	}
 	c.JSON(http.StatusOK, buildTimespent)
 }

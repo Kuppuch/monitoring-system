@@ -23,13 +23,15 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Название</th>
+            <th scope="col">Вес сортировки</th>
         </tr>
         </thead>
         <tbody>
         {{ range $headRoles := .headRoles }}
         <tr>
-            <th scope="row"><a href="roles/head/{{ .ID }}">{{ .ID }}</a></th>
+            <th scope="row"><a href="/admin/roles/head/{{ .ID }}">{{ .ID }}</a></th>
             <td>{{ .Name }}</td>
+            <td>{{ .Sort }}</td>
         </tr>
         {{ end }}
         </tbody>

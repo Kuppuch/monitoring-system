@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {{ if .role}}
+    <title>Редактирование объединяющей роли</title>
+    {{ else }}
     <title>Создание объединяющей роли</title>
+    {{ end }}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -10,7 +14,7 @@
 <body>
 {{template "header.html"}}
 <div class="container">
-    {{ if .user}}
+    {{ if .headRole}}
     <h2 class="mu-3">Редактирование объединяющей роли</h2>
     {{ else }}
     <h2 class="mu-3">Добавление объединяющей роли</h2>
@@ -18,18 +22,23 @@
     <form id="registration" class="registration">
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="nameInput" name="name" placeholder="Менеджмент"
-                   value="{{.name}}">
+                   value="{{.headRole.Name}}">
             <label for="nameInput">Название</label>
         </div>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="sortInput" name="sort" placeholder="10"
-                   value="{{.sort}}">
+                   value="{{.headRole.Sort}}">
             <label for="nameInput">Вес сортировки</label>
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3" name="send" id="submitBtn">Сохранить</button>
         </div>
     </form>
+    {{ if .headRole }}
+    <div class="col-auto">
+        <button class="btn btn-danger mb-3" name="send" id="deleteRole">Удалить</button>
+    </div>
+    {{ end }}
 </div>
 <script>
     $('.registration').on('submit', (event) => {
@@ -42,18 +51,48 @@
             }, {});
         data.sort = parseInt(data.sort);
 
+        if ({{ .headRole.ID }} == null) {
+            $.ajax({
+                type: "POST",
+                url: 'http://' + window.location.host + '/admin/roles/head/create',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    window.location = 'http://' + window.location.host + '/admin/roles/head'
+                },
+                error: function (data) {
+                    const body = JSON.parse(data.responseText);
+                    alert(body.Meta);
+                }
+            })
+        } else {
+            $.ajax({
+                type: "PUT",
+                url: 'http://' + window.location.host + '/admin/roles/head/'+{{ .headRole.ID }},
+                data: JSON.stringify(data),
+                success: function (data) {
+                    window.location = 'http://' + window.location.host + '/admin/roles/head'
+                },
+                error: function (data) {
+                    const body = JSON.parse(data.responseText);
+                    alert(body.Meta);
+                }
+            })
+        }
+    })
+
+    const deleteRole = document.querySelector('#deleteRole')
+    deleteRole.addEventListener('click', function () {
         $.ajax({
-            type: "POST",
-            url: 'http://'+window.location.host+'/admin/roles/head/create',
-            data: JSON.stringify(data),
-            success: function (data) {
-                window.location = 'http://'+window.location.host+'/admin/roles/head'
-            },
-            error: function (data) {
-                const body = JSON.parse(data.responseText);
-                alert(body.Meta);
-            }
-        });
+            type: "DELETE",
+            url: 'http://'+window.location.host+'/admin/roles/head/' + {{ .headRole.ID }},
+        success: function () {
+            window.location = 'http://'+window.location.host+'/admin/roles/head'
+        },
+        error: function (data) {
+            const body = JSON.parse(data.responseText)
+            alert(body.Meta)
+        }
+    })
     })
 </script>
 </body>

@@ -109,11 +109,9 @@
             url: 'http://' + window.location.host + '/project/create',
             data: JSON.stringify(data),
             success: function (data) {
-                debugger
                 window.location = 'http://' + window.location.host + '/project'
             },
             error: function (data) {
-                debugger
                 alert(data.statusText);
                 console.log(data.statusText)
                 //window.location = 'http://' + window.location.host + '/project'

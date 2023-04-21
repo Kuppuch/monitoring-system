@@ -111,9 +111,15 @@ func insertHeadRoles() {
 			"Аналитика",
 			"Тестирование",
 		}
-		for _, v := range data {
+		dataSort := []int{
+			2,
+			1,
+			3,
+		}
+		for i, v := range data {
 			DB.Create(&HeadRole{
 				Name: v,
+				Sort: dataSort[i],
 			})
 		}
 	}

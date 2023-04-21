@@ -38,10 +38,18 @@ func GetFullInfoRoles() []RoleInfo {
 	return rolesInfo
 }
 
-func GetRole(roldeID uint) Role {
+func GetRole(roleID uint) Role {
 	role := Role{}
-	DB.Where("id = ?", roldeID).Find(&role)
+	DB.Where("id = ?", roleID).Find(&role)
 	return role
+}
+
+func DeleteRole(roleID int) error {
+	tx := DB.Where("id = ?", roleID).Delete(&Role{})
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
 }
 
 func (r *ProjectRole) GetProjectRole() {
@@ -62,8 +70,25 @@ func (r *Role) Insert() error {
 	return nil
 }
 
+func (r *Role) Update() error {
+	tx := DB.Save(r)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 func (r *ProjectRole) InsertProjectRole() error {
 	tx := DB.Create(r)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func UnlickHeadRole(headRole int) error {
+	tx := DB.Model(&Role{}).Select("head_role_id").
+		Where("head_role_id = ?", headRole).Updates(map[string]interface{}{"head_role_id": nil})
 	if tx.Error != nil {
 		return tx.Error
 	}
