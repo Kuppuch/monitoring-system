@@ -8,6 +8,7 @@ import (
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -324,6 +325,9 @@ func getProjectTimespent(c *gin.Context) {
 
 	buildTimespent := make(map[int]ProjectInfo)
 	for i, v := range buildRoleTimespent {
+		sort.SliceStable(v, func(ii, jj int) bool {
+			return v[ii].RoleID < v[jj].RoleID
+		})
 		start, end := middleware.GetProjectBoundByID(i)
 		buildTimespent[i] = ProjectInfo{
 			ProjectStart:   start,

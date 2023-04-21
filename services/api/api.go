@@ -30,7 +30,6 @@ func Router() {
 	r.POST("upload", uploadProfileImg)
 
 	r.GET("/", getMainPage)
-	r.GET("/admin", getAdminPage)
 
 	r.GET("/login", getLoginPage)
 	r.POST("/login", login)
@@ -38,12 +37,21 @@ func Router() {
 	r.GET("/submit", getSubmitPage)
 	r.POST("/submit", submit)
 
+	adm := r.Group("admin")
+	{
+		adm.GET("", getAdminPage)
+		adm.GET("/roles", getRolePage)
+		adm.GET("/roles/head", getHeadRolePage)
+		adm.GET("/roles/head/create", getHeadRoleCreatePage)
+		adm.POST("/roles/head/create", createHeadRole)
+	}
+
 	user := r.Group("user")
 	{
-		adm := user.Group("adm")
+		uadm := user.Group("adm")
 		{
-			adm.GET("/:id", getUserAdm)
-			adm.POST("/register", insertUser)
+			uadm.GET("/:id", getUserAdm)
+			uadm.POST("/register", insertUser)
 		}
 
 		user.GET("/reg", getPage)
