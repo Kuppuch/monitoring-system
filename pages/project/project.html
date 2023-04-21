@@ -336,12 +336,18 @@
             url: 'http://'+window.location.host+'/project/' + params[2] + '/link_rep',
             success: function (data) {
                 gitRepository = JSON.parse(data).Repository
-                apiGetDocContent(gitRepository).then((result) => {
+                if (gitRepository) {
+                    apiGetDocContent(gitRepository).then((result) => {
+                        const container = document.querySelector('#doc')
+                        const resContent = Base64.decode(result.data.content)
+                        let html = md.render(resContent)
+                        container.insertAdjacentHTML( 'beforeend', html )
+                    })
+                } else {
                     const container = document.querySelector('#doc')
-                    const resContent = Base64.decode(result.data.content)
-                    let html = md.render(resContent)
-                    container.insertAdjacentHTML( 'beforeend', html );
-                })
+                    let html = '<h1>Git репозиторий не назначен</h1><h3>Перейдите в настройки, чтобы назначить</h3>'
+                    container.insertAdjacentHTML( 'beforeend', html )
+                }
             }
         });
     }
