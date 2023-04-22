@@ -4,8 +4,9 @@ import "gorm.io/gorm"
 
 type HeadRole struct {
 	gorm.Model
-	Name string
-	Sort int
+	Name  string
+	Sort  int
+	Color string
 }
 
 func (hr *HeadRole) Insert() error {

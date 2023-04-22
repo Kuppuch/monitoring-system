@@ -5,6 +5,7 @@
     <title>Объединяющие роли</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/admin.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
@@ -24,6 +25,7 @@
             <th scope="col">#</th>
             <th scope="col">Название</th>
             <th scope="col">Вес сортировки</th>
+            <th scope="col">Цвет</th>
         </tr>
         </thead>
         <tbody>
@@ -32,6 +34,16 @@
             <th scope="row"><a href="/admin/roles/head/{{ .ID }}">{{ .ID }}</a></th>
             <td>{{ .Name }}</td>
             <td>{{ .Sort }}</td>
+            <td>
+                <div style="
+                width: 20px;
+                height: 20px;
+                border-radius: 100%;
+                align-items: center;
+                margin-left: 5%;
+                background: {{ .Color }}">
+                </div>
+            </td>
         </tr>
         {{ end }}
         </tbody>

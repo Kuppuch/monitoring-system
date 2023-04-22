@@ -307,6 +307,7 @@ func getProjectTimespent(c *gin.Context) {
 	type RoleTimespent struct {
 		RoleID    int `json:"role_id"`
 		Sort      int
+		Color     string  `json:"color"`
 		Timespent float32 `json:"timespent"`
 	}
 	type ProjectInfo struct {
@@ -321,6 +322,7 @@ func getProjectTimespent(c *gin.Context) {
 		buildRoleTimespent[v.ProjectID] = append(buildRoleTimespent[v.ProjectID], RoleTimespent{
 			RoleID:    v.RoleID,
 			Sort:      v.Sort,
+			Color:     v.Color,
 			Timespent: v.Timespent,
 		})
 	}

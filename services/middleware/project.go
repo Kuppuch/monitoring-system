@@ -30,6 +30,7 @@ type ProjectWeb struct {
 type ProjectTimespent struct {
 	RoleID    int
 	Sort      int
+	Color     string
 	Timespent float32
 	ProjectID int
 }
@@ -122,7 +123,7 @@ func (p *Project) UpdateStatus(statusID int) (int64, error) {
 
 func GetProjectTimespent() []ProjectTimespent {
 	var projectTimespent []ProjectTimespent
-	DB.Raw(`SELECT hr.id AS role_id, hr.sort, SUM(t.spent) AS timespent, p.id AS project_id
+	DB.Raw(`SELECT hr.id AS role_id, hr.sort, hr.color, SUM(t.spent) AS timespent, p.id AS project_id
 				  FROM timespents AS t
 				 INNER JOIN issues AS i ON i.id = t.issue_id
 				 INNER JOIN budgets AS b ON b.id = i.budget_id

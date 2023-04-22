@@ -116,10 +116,16 @@ func insertHeadRoles() {
 			1,
 			3,
 		}
+		dataColor := []string{
+			"#41f1b6",
+			"#ffbb55",
+			"#7380ec",
+		}
 		for i, v := range data {
 			DB.Create(&HeadRole{
-				Name: v,
-				Sort: dataSort[i],
+				Name:  v,
+				Sort:  dataSort[i],
+				Color: dataColor[i],
 			})
 		}
 	}
