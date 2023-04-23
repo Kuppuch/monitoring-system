@@ -457,6 +457,10 @@ main .issues:hover {
     border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
 }
 
+.submenu:last-child {
+    right: 0;
+}
+
 .submenu li {
     padding: 1rem;
     text-transform: uppercase;

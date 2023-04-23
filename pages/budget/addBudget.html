@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление бюджета</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/js.cookie.js"></script>
+</head>
+<body>
+<div class="container">
+    {{template "aside.html" .}}
+    <main>
+        <h1>Создание бюджета</h1>
+        <div class="central-form">
+            <form id="registration" class="registration">
+                <input type="text" class="form-control mt-30" id="nameInput" name="name" placeholder="Название" value=""
+                       required>
+                <input type="text" class="form-control mt-30" id="ext_idInput" name="ext_id" placeholder="Внешний id" value="">
+                <div class="row">
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Дата начала</div>
+                        <div class="date">
+                            <input id="dateStart" type="date" required>
+                        </div>
+                    </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Дата окончания</div>
+                        <div class="date">
+                            <input id="dateEnd" type="date" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn" name="send" id="submitBtn">Создать бюджет</button>
+            </form>
+        </div>
+    </main>
+    <div class="right">
+        {{ template "right-top.html" .}}
+        {{ template "resent-updates.html" .}}
+    </div>
+</div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+    let dateStart = document.querySelector('#dateStart')
+    dateStart.valueAsDate = new Date()
+
+    $('.registration').on('submit', (event) => {
+        event.preventDefault();
+        let data = $(event.target)
+            .serializeArray()
+            .reduce(function (json, {name, value}) {
+                json[name] = value
+                return json
+            }, {})
+        data.start_at = new Date($('#dateStart').val())
+        data.end_ad = new Date($('#dateEnd').val())
+
+        let params = new URLSearchParams(window.location.search);
+        data.project_id = parseInt(params.get('project_id'))
+        data.ext_id = parseInt(data.ext_id)
+        debugger
+        $.ajax({
+            type: "POST",
+            url: 'http://' + window.location.host + '/budgets/create',
+            data: JSON.stringify(data),
+            success: function (data) {
+                window.location = 'http://' + window.location.host + '/project/'+params.get('project_id')
+            },
+            error: function (dataJSON) {
+                const data = JSON.parse(dataJSON.responseText)
+                alert(data.Meta);
+                console.log(data)
+                //window.location = 'http://' + window.location.host + '/project'
+            }
+        })
+    })
+</script>
+</body>
+</html>

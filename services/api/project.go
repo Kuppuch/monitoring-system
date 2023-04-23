@@ -363,6 +363,51 @@ func getProjectTimespent(c *gin.Context) {
 }
 
 func getProjectInfo(c *gin.Context) {
+	projectID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "projectID не является числом",
+		})
+		return
+	}
+	mainBudget := middleware.GetMainProjectBudgetByProjectID(projectID)
+	pti := middleware.GetProjectTimespentInfo(projectID, int(mainBudget.ID))
+	project := middleware.GetProjectByID(projectID)
+	user, _ := GetUserByToken(c)
+	budgets := middleware.GetProjectBudgets(projectID)
+	c.HTML(http.StatusOK, "infoProject.html", gin.H{"user": user, "pti": pti, "project": project, "budgets": budgets})
+}
 
-	c.HTML(http.StatusOK, "infoProject.html", nil)
+func getProjectBudgetInfo(c *gin.Context) {
+	projectID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "projectID не является числом",
+		})
+		return
+	}
+	budgetID, err := strconv.Atoi(c.DefaultQuery("budget_id", "0"))
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "budgetID не является числом",
+		})
+		return
+	}
+	budget := middleware.Budget{}
+	if budgetID == 0 {
+		budget = middleware.GetMainProjectBudgetByProjectID(projectID)
+	} else {
+		budget = middleware.GetBudget(budgetID)
+	}
+	pti := middleware.GetProjectTimespentInfo(projectID, int(budget.ID))
+	c.JSON(http.StatusOK, pti)
 }

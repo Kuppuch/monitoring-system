@@ -70,7 +70,7 @@ func insertBudget(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  err,
 			Type: 0,
-			Meta: "bad params",
+			Meta: "Название не может быть пустым",
 		})
 		return
 	}
@@ -78,11 +78,12 @@ func insertBudget(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  err,
 			Type: 0,
-			Meta: "project not exist",
+			Meta: "проект не существует",
 		})
 		return
 	}
 
+	b.StatusID = 1
 	rawAffected := b.Insert()
 	if err != nil || rawAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.Error{
@@ -93,6 +94,22 @@ func insertBudget(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, middleware.GetSuccess())
+}
+
+func getBudgetCreatePage(c *gin.Context) {
+	projectID, err := strconv.Atoi(c.DefaultQuery("project_id", "0"))
+	if err != nil {
+		logging.Print.Error("error ", err)
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	project := middleware.GetProjectByID(projectID)
+	if project.ID == 0 {
+		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
+		return
+	}
+	user, _ := GetUserByToken(c)
+	c.HTML(http.StatusOK, "addBudget.html", gin.H{"user": user})
 }
 
 func getBudgetTimespent(c *gin.Context) {

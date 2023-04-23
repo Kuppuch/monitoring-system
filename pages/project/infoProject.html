@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Инофрмация о проекте</title>
-    <link rel="stylesheet" href="../css/index.css">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/js.cookie.js"></script>
@@ -12,23 +12,82 @@
 <div class="container">
     {{template "aside.html" .}}
     <main>
-        <h1>Создание проекта</h1>
+        <h1>Информация по проекту {{ .project.Name }}</h1>
+        <div class="issues-content">
+            <div class="content-block-h pv-1r">
+                <div class="title">Бюджет:</div>
+                <div class="cont">
+                    <select name="budget" id="budget" class="budget">
+                        {{ range $budgets := .budgets }}
+                        <option value="{{ .ID }}">{{ .Name }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+            </div>
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
     </main>
     <div class="right">
         {{ template "right-top.html" .}}
         {{ template "resent-updates.html" }}
-        <!-------------------- END OF RECENT UPDATES -------------------->
-        <div class="sales-analytics">
-            <div class="item add-product">
-                <div>
-                    <span class="material-icons-sharp">add</span>
-                    <h3 id="add-budget-task"></h3>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const url = new URL(location.href)
+    const params = url.pathname.split("/")
+
+    let pti = {{ .pti }}
+    console.log(pti)
+    const ctx = document.getElementById('myChart');
+    build(pti)
+
+    function build(dataset) {
+        let data = []
+        let name = []
+        for (let i = 0; i < dataset.length; i++) {
+            data.push(dataset[i].Spent)
+            name.push(dataset[i].IssueName)
+        }
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: name,
+                datasets: [{
+                    label: 'Трудозатраты и оценки',
+                    data: data,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        ctx.update();
+    }
+
+
+    const budgetSelector = document.querySelector('#budget')
+    budgetSelector.addEventListener('change', function () {
+        $.ajax({
+            type: "GET",
+            url: 'http://'+window.location.host+'/project/' + params[2] + '/info/budget?budget_id=' + parseInt($('#budget option:selected').val()),
+            success: function (data) {
+                console.log(data)
+                build(data)
+            }
+        });
+    })
+</script>
 </body>
 </html>

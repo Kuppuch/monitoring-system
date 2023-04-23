@@ -19,6 +19,7 @@
                 <li class="my">Задачи</li>
                 <li class="my">Техническое задание</li>
                 <li class="my">Настройки</li>
+                <li class="my">Информация</li>
             </ul>
             <div class="issues-content">
             </div>
@@ -68,7 +69,19 @@
     const params = url.pathname.split("/")
 
     addProductBtn.addEventListener('click', () => {
-        location.assign("/issue/create?project_id=" + params[2])
+        const submenu = document.querySelector('.submenu')
+        let active = 'Бюджеты'
+        for (let i = 0; i < submenu.children.length; i++) {
+            if (submenu.children[i].classList.contains('active')) {
+                active = submenu.children[i].innerHTML
+                break
+            }
+        }
+        if (active === 'Бюджеты') {
+            location.assign("/budgets/create?project_id=" + params[2])
+        } else {
+            location.assign("/issue/create?project_id=" + params[2])
+        }
     })
     getBudgets();
 
@@ -173,6 +186,10 @@
                 addMemberBtn.addEventListener('click', () => {
                     location.href='/project/' + params[2] + '/members'
                 })
+            }
+            if (target.innerHTML === 'Информация') {
+                debugger
+                window.location.href = '/project/'+ params[2] + '/info'
             }
         }
     })

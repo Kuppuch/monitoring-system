@@ -146,6 +146,10 @@
                 const data = JSON.parse(dataJSON.responseText)
                 alert(data.Meta);
                 console.log(data.Meta)
+            },
+            complete: function () {
+                const timespentInput = document.querySelector('#timespentInput')
+                timespentInput.value = ''
             }
         });
     }

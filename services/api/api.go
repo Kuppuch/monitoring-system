@@ -74,7 +74,6 @@ func Router() {
 	{
 		project.GET("/", getProjectsPage)
 		project.GET("/:id", getProjectPage)
-		project.GET("/:id/info", getProjectPage)
 		project.GET("/create", getProjectCreatePage)
 		project.POST("/create", insertProject)
 		project.GET("/:id/members", getMemberPage)
@@ -83,6 +82,8 @@ func Router() {
 		project.POST("/:id/link_rep", linkGitRepository)
 		project.GET("/:id/link_rep", GetActualGitRepository)
 		project.GET("/timespent", getProjectTimespent)
+		project.GET("/:id/info", getProjectInfo)
+		project.GET("/:id/info/budget", getProjectBudgetInfo)
 
 	}
 
@@ -102,7 +103,11 @@ func Router() {
 	{
 		budget.GET("", getBudgets)
 		budget.GET("/:id", getBudget)
+		// внешнее api
 		budget.POST("", insertBudget)
+		// конец внешнего api
+		budget.GET("/create", getBudgetCreatePage)
+		budget.POST("/create", insertBudget)
 		budget.GET("/:id/timespent", getBudgetTimespent)
 	}
 
@@ -119,6 +124,7 @@ func Router() {
 	{
 		risk.GET("", getRiskPage)
 		risk.GET("/list", getRiskListPage)
+		//risk.GET("/list", getExpPage)
 		risk.GET("/create", getRiskCreatePage)
 		risk.POST("/create", InserRisk)
 	}

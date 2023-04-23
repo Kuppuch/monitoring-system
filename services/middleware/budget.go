@@ -53,7 +53,7 @@ func GetBudgetsWithProject() []BudgetView {
 
 func GetProjectBudgets(projectID int) []Budget {
 	var b []Budget
-	DB.Where("project_id = ?", projectID).Order("id desc").Find(&b)
+	DB.Where("project_id = ?", projectID).Order("id").Find(&b)
 	return b
 }
 
