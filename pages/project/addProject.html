@@ -111,9 +111,10 @@
             success: function (data) {
                 window.location = 'http://' + window.location.host + '/project'
             },
-            error: function (data) {
-                alert(data.statusText);
-                console.log(data.statusText)
+            error: function (dataJSON) {
+                const data = JSON.parse(dataJSON.responseText)
+                alert(data.Meta);
+                console.log(data)
                 //window.location = 'http://' + window.location.host + '/project'
             }
         })

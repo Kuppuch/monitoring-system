@@ -74,6 +74,7 @@ func Router() {
 	{
 		project.GET("/", getProjectsPage)
 		project.GET("/:id", getProjectPage)
+		project.GET("/:id/info", getProjectPage)
 		project.GET("/create", getProjectCreatePage)
 		project.POST("/create", insertProject)
 		project.GET("/:id/members", getMemberPage)
@@ -100,6 +101,7 @@ func Router() {
 	budget := r.Group("budgets")
 	{
 		budget.GET("", getBudgets)
+		budget.GET("/:id", getBudget)
 		budget.POST("", insertBudget)
 		budget.GET("/:id/timespent", getBudgetTimespent)
 	}

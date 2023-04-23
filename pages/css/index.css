@@ -96,6 +96,7 @@ h2 {
 
 h3 {
     font-size: 0.87rem;
+    min-height: 21px;
 }
 
 h4 {

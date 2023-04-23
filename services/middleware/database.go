@@ -146,10 +146,26 @@ func insertRoles() {
 			"Менеджер",
 			"Дизайнер",
 		}
-		for _, v := range data {
-			DB.Create(&Role{
-				Name: v,
-			})
+		dataHeadRole := []uint{
+			1,
+			1,
+			1,
+			1,
+			2,
+			3,
+		}
+		for i, v := range data {
+			if i < len(dataHeadRole) {
+				DB.Create(&Role{
+					Name:       v,
+					HeadRoleID: dataHeadRole[i],
+				})
+			} else {
+				DB.Create(&Role{
+					Name: v,
+				})
+			}
+
 		}
 	}
 }

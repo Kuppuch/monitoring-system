@@ -25,8 +25,23 @@ func getBudgets(c *gin.Context) {
 		return
 	}
 	user, _ := GetUserByToken(c)
-	budgets := middleware.GetBudgets()
-	c.HTML(http.StatusOK, "budgets.html", gin.H{"budgets": budgets, "user": user})
+	budgetsView := middleware.GetBudgetsWithProject()
+	c.HTML(http.StatusOK, "budgets.html", gin.H{"budgets": budgetsView, "user": user})
+}
+
+func getBudget(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed parse int",
+		})
+		return
+	}
+	budget := middleware.GetBudget(id)
+	user, _ := GetUserByToken(c)
+	c.HTML(http.StatusOK, "budget.html", gin.H{"budget": budget, "user": user})
 }
 
 func insertBudget(c *gin.Context) {

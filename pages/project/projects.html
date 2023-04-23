@@ -78,7 +78,10 @@
         let containers = document.getElementsByClassName('updated')
         for (let i = 0; i < containers.length; i++) {
             let second = containers[i].innerHTML
-            let finalStr = 'Последние '
+            if (second.length < 1) {
+                continue
+            }
+            let finalStr = 'Изменено '
             let month = Math.floor(second / 60 / 60 / 24 / 30)
             let day = Math.floor(second / 60 / 60 / 24) - (month * 30)
             let hour = Math.floor(second / 60 / 60) - (day * 24)
@@ -97,9 +100,9 @@
                 finalStr += second + ' сек.'
             }
             if (month > 0) {
-                finalStr = 'Более ' + month + ' мес.'
+                finalStr = 'Изменено более ' + month + ' мес.'
             }
-            containers[i].innerHTML = finalStr
+            containers[i].innerHTML = finalStr + ' назад'
         }
     })
 
@@ -108,45 +111,24 @@
             type: "GET",
             url: 'http://' + window.location.host + '/project/timespent',
             success: function (data) {
-                let insights = document.querySelector('.insights')
-                for (let i = 0; i < insights.children.length; i++) {
-                    let sales = insights.children[i]
-                    console.log(data[sales.children[0].innerHTML])
-                    let timespents = data[sales.children[0].innerHTML]
-                    const start = Date.parse(timespents.project_start)
-                    const end = Date.parse(timespents.project_end)
-                    let fullProjectWorkTime = Math.ceil(Math.ceil((end - start) / 1000 / 60 / 60 / 24) / 7 * 5) * 60
-                    for (let j = 0; j < timespents.role_timespents.length; j++) {
-                        let percent = 100 * timespents.role_timespents[j].timespent / fullProjectWorkTime
-                        if (percent < 1) {
-                            percent = Math.ceil(percent)
+                if (data != null) {
+                    let insights = document.querySelector('.insights')
+                    for (let i = 0; i < insights.children.length; i++) {
+                        let sales = insights.children[i]
+                        let timespents = data[sales.children[0].innerHTML]
+                        if (timespents) {
+                            const start = Date.parse(timespents.project_start)
+                            const end = Date.parse(timespents.project_end)
+                            let fullProjectWorkTime = Math.ceil(Math.ceil((end - start) / 1000 / 60 / 60 / 24) / 7 * 5) * 60
+                            for (let j = 0; j < timespents.role_timespents.length; j++) {
+                                let percent = 100 * timespents.role_timespents[j].timespent / fullProjectWorkTime
+                                if (percent < 1) {
+                                    percent = Math.ceil(percent)
+                                }
+                                const htmlStr = '<div style="width: ' + percent + '%; height: 100%; background: ' + timespents.role_timespents[j].color + ' "></div>'
+                                sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
+                            }
                         }
-                        const htmlStr = '<div style="width: ' + percent + '%; height: 100%; background: ' + timespents.role_timespents[j].color +' "></div>'
-                        sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
-                        // if (timespents.role_timespents[j].role_id === 1) {
-                        //     let percent = 100*timespents.role_timespents[j].timespent/fullProjectWorkTime
-                        //     if (percent < 1) {
-                        //         percent = Math.ceil(percent)
-                        //     }
-                        //     const htmlStr = '<div class="development" style="width: ' + percent + '%"></div>'
-                        //     sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
-                        // }
-                        // if (timespents.role_timespents[j].role_id === 2) {
-                        //     let percent = 100*timespents.role_timespents[j].timespent/fullProjectWorkTime
-                        //     if (percent < 1) {
-                        //         percent = Math.ceil(percent)
-                        //     }
-                        //     const htmlStr = '<div class="analytics" style="width: ' + percent + '%"></div>'
-                        //     sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
-                        // }
-                        // if (timespents.role_timespents[j].role_id === 3) {
-                        //     let percent = 100*timespents.role_timespents[j].timespent/fullProjectWorkTime
-                        //     if (percent < 1) {
-                        //         percent = Math.ceil(percent)
-                        //     }
-                        //     const htmlStr = '<div class="qa" style="width: ' + percent + '%"></div>'
-                        //     sales.children[4].insertAdjacentHTML('beforeend', htmlStr)
-                        // }
                     }
                 }
             }

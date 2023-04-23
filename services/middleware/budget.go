@@ -16,6 +16,11 @@ type Budget struct {
 	Issues    []Issue   `gorm:"foreignKey:BudgetID" json:"timespent,omitempty"`
 }
 
+type BudgetView struct {
+	Budget
+	ProjectName string
+}
+
 func (b Budget) Insert() int64 {
 	b.StatusID = 3 // в работе
 	tx := DB.Create(&b)
@@ -36,6 +41,14 @@ func GetBudgets() []Budget {
 	var b []Budget
 	DB.Order("id desc").Find(&b)
 	return b
+}
+
+func GetBudgetsWithProject() []BudgetView {
+	var bv []BudgetView
+	DB.Table("budgets AS b").Select("b.id, b.name, b.ext_id, b.start_at, b.end_ad, b.status_id, b.project_id, p.name AS project_name").
+		Joins("INNER JOIN projects AS p ON p.id = b.project_id").
+		Where("p.deleted_at IS NULL").Find(&bv)
+	return bv
 }
 
 func GetProjectBudgets(projectID int) []Budget {

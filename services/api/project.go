@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"monitoring-system/config"
@@ -20,6 +21,11 @@ func getProjectsPage(c *gin.Context) {
 		projects = middleware.GetAllProjects()
 	} else {
 		projects = middleware.GetProjects(user.ID)
+	}
+	for i, project := range projects {
+		if len([]rune(project.Name)) > 15 {
+			projects[i].Name = string([]rune(project.Name)[0:15]) + "..."
+		}
 	}
 
 	c.HTML(http.StatusOK, "projects.html", gin.H{"projects": projects, "user": user})
@@ -90,6 +96,15 @@ func insertProject(c *gin.Context) {
 	project.StatusID = 1
 	dateStart, err := time.Parse("2006-01-02T15:04:05.000Z", m["dateStart"].(string))
 	dateEnd, err := time.Parse("2006-01-02T15:04:05.000Z", m["dateEnd"].(string))
+	if dateEnd.Sub(dateStart).Hours() < 8 {
+		logging.Print.Error("trying to create a project less than 8 hours long")
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  errors.New("trying to create a project less than 8 hours long"),
+			Type: 0,
+			Meta: "Нельзя создавать проект длительностью менее 1 дня",
+		})
+		return
+	}
 	if rowAffected := project.InsertProject(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
@@ -345,4 +360,9 @@ func getProjectTimespent(c *gin.Context) {
 		})
 	}
 	c.JSON(http.StatusOK, buildTimespent)
+}
+
+func getProjectInfo(c *gin.Context) {
+
+	c.HTML(http.StatusOK, "infoProject.html", nil)
 }

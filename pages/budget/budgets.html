@@ -19,6 +19,7 @@
                     <thead>
                     <tr>
                         <th>Бюджет</th>
+                        <th>Проект</th>
                         <th>Дата начала</th>
                         <th>Дата конца</th>
                         <th>Внешний ID</th>
@@ -30,8 +31,9 @@
                     <tr>
                         <td hidden>{{.ID}}</td>
                         <td>{{.Name}}</td>
-                        <td>Заглушка начало</td>
-                        <td>Заглушка конец</td>
+                        <td>{{.ProjectName}}</td>
+                        <td class="parseTime">{{.StartAt}}</td>
+                        <td class="parseTime">{{.EndAd}}</td>
                         <td>{{.ExtID}}</td>
                         <td><span class="material-icons-sharp">more_horiz</span></td>
                     </tr>
@@ -55,5 +57,33 @@
         </div>
     </div>
 </div>
+<script src="/js/aside.js"></script>
+<script src="/js/right-top.js"></script>
+<script>
+
+    let times = document.getElementsByClassName('parseTime')
+    for (let i = 0; i < times.length; i++) {
+        times[i].innerHTML = parseTime(times[i].innerHTML.replace('MSK', ''))
+    }
+
+    function parseTime(time) {
+        const d = new Date(time)
+        var date_format_str = /*(d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString()) + // часы
+            ":" + ((parseInt(d.getMinutes())).toString().length==2?(parseInt(d.getMinutes())).toString():"0"+(parseInt(d.getMinutes())).toString()) + // минуты
+            ' ' + */(d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString()) + // день
+            '.' + ((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+  // месяц
+            '.' + d.getFullYear().toString() // год
+        return date_format_str
+    }
+
+    const tbody = document.querySelector('tbody')
+    for (let i = 0; i < tbody.children.length; i++) {
+        tbody.children[i].addEventListener('click', function () {
+            const bID = tbody.children[i].children[0].innerHTML
+            // window.location.href = 'http://'+window.location.host+'/budgets/' + bID
+            location.assign('/budgets/' + bID)
+        })
+    }
+</script>
 </body>
 </html>
