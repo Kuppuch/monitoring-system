@@ -83,7 +83,7 @@ func Router() {
 		project.GET("/:id/link_rep", GetActualGitRepository)
 		project.GET("/timespent", getProjectTimespent)
 		project.GET("/:id/info", getProjectInfo)
-		project.GET("/:id/info/budget", getProjectBudgetInfo)
+		project.POST("/:id/info/budget", getProjectBudgetInfo)
 
 	}
 

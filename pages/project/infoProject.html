@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Информация по проекту {{ .project.Name }}</title>
     <link rel="stylesheet" href="../../css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -13,7 +13,7 @@
     {{template "aside.html" .}}
     <main>
         <h1>Информация по проекту {{ .project.Name }}</h1>
-        <div class="issues-content">
+        <div class="issues-content" style="height: 90vh; overflow-y: auto">
             <div class="content-block-h pv-1r">
                 <div class="title">Бюджет:</div>
                 <div class="cont">
@@ -24,8 +24,39 @@
                     </select>
                 </div>
             </div>
-            <div>
-                <canvas id="myChart"></canvas>
+            <div class="row">
+                <div class="content-block-h pv-1r">
+                    <div class="title">Дата начала бюджета</div>
+                    <div class="cont">
+                        <p id="budgetStart"></p>
+                    </div>
+                </div>
+                <div class="content-block-h pv-1r">
+                    <div class="title">Дата конца бюджета</div>
+                    <div class="cont">
+                        <p id="budgetEnd"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-block-h pv-1r">
+                    <div class="title">Дата начала</div>
+                    <div class="date">
+                        <input id="dateStart" type="date" required>
+                    </div>
+                </div>
+                <div class="content-block-h pv-1r">
+                    <div class="title">Дата окончания</div>
+                    <div class="date">
+                        <input id="dateEnd" type="date" required>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn" name="send" id="submitBtn">Загрузить</button>
+                </div>
+            </div>
+            <div id="canvas_container">
+
             </div>
         </div>
     </main>
@@ -39,19 +70,48 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    addEventListener("load", (event) => {
+        let budgets = {{ .budgets }}
+        const budget = document.querySelector('#budget')
+
+        for (let i = 0; i < budgets.length; i++) {
+            if (budgets[i].ID === parseInt(budget.value)) {
+                document.querySelector('#budgetStart').innerHTML = parseTime(budgets[i].start_at)
+                document.querySelector('#budgetEnd').innerHTML = parseTime(budgets[i].end_ad)
+            }
+        }
+    });
+
+    function parseTime(time) {
+        const d = new Date(time)
+        var date_format_str = (d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString()) + // часы
+            ":" + ((parseInt(d.getMinutes())).toString().length==2?(parseInt(d.getMinutes())).toString():"0"+(parseInt(d.getMinutes())).toString()) + // минуты
+            ' ' + (d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString()) + // день
+            '.' + ((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+  // месяц
+            '.' + d.getFullYear().toString() // год
+
+        return date_format_str
+    }
+
     const url = new URL(location.href)
     const params = url.pathname.split("/")
 
     let pti = {{ .pti }}
     console.log(pti)
-    const ctx = document.getElementById('myChart');
     build(pti)
 
     function build(dataset) {
-        let data = []
+        let canvas_container = document.querySelector('#canvas_container')
+        let ctx = document.createElement('canvas')
+        ctx.id = 'myChart'
+        canvas_container.append(ctx)
+
+        let spent = []
+        let estimatedHours = []
         let name = []
         for (let i = 0; i < dataset.length; i++) {
-            data.push(dataset[i].Spent)
+            spent.push(dataset[i].Spent)
+            estimatedHours.push(dataset[i].EstimatedHours)
             name.push(dataset[i].IssueName)
         }
 
@@ -60,10 +120,16 @@
             data: {
                 labels: name,
                 datasets: [{
-                    label: 'Трудозатраты и оценки',
-                    data: data,
-                    borderWidth: 1
-                }]
+                    label: 'Трудозатраты',
+                    data: spent,
+                    backgroundColor: "#3e95cd",
+                },
+                {
+                    label: 'Оценки',
+                    backgroundColor: "#8e5ea2",
+                    data: estimatedHours
+                },
+]
             },
             options: {
                 scales: {
@@ -72,22 +138,39 @@
                     }
                 }
             }
-        });
-        ctx.update();
+        })
     }
 
+    let submitBtn = document.querySelector('#submitBtn')
+    submitBtn.addEventListener('click', function () {
+        sendRequest()
+    })
 
     const budgetSelector = document.querySelector('#budget')
     budgetSelector.addEventListener('change', function () {
+        sendRequest()
+    })
+
+    function sendRequest() {
+        let data = {}
+        data.dateStart = $('#dateStart').val()
+        data.dateEnd = $('#dateEnd').val()
+        data.budgetId = parseInt($('#budget option:selected').val())
+        let jData = JSON.stringify(data)
+
         $.ajax({
-            type: "GET",
-            url: 'http://'+window.location.host+'/project/' + params[2] + '/info/budget?budget_id=' + parseInt($('#budget option:selected').val()),
+            type: "POST",
+            url: 'http://' + window.location.host + '/project/' + params[2] + '/info/budget',
+            data: jData,
             success: function (data) {
                 console.log(data)
+                const ctx = document.getElementById('myChart');
+                ctx.remove()
+
                 build(data)
             }
         });
-    })
+    }
 </script>
 </body>
 </html>

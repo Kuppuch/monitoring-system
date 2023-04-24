@@ -374,7 +374,7 @@ func getProjectInfo(c *gin.Context) {
 		return
 	}
 	mainBudget := middleware.GetMainProjectBudgetByProjectID(projectID)
-	pti := middleware.GetProjectTimespentInfo(projectID, int(mainBudget.ID))
+	pti := middleware.GetProjectTimespentInfo(projectID, int(mainBudget.ID), time.Time{}, time.Time{})
 	project := middleware.GetProjectByID(projectID)
 	user, _ := GetUserByToken(c)
 	budgets := middleware.GetProjectBudgets(projectID)
@@ -392,7 +392,10 @@ func getProjectBudgetInfo(c *gin.Context) {
 		})
 		return
 	}
-	budgetID, err := strconv.Atoi(c.DefaultQuery("budget_id", "0"))
+	raw, err := c.GetRawData()
+	var m = make(map[string]interface{})
+	err = json.Unmarshal(raw, &m)
+	budgetID := int(m["budgetId"].(float64))
 	if err != nil {
 		logging.Print.Error(err)
 		c.JSON(http.StatusBadRequest, gin.Error{
@@ -408,6 +411,19 @@ func getProjectBudgetInfo(c *gin.Context) {
 	} else {
 		budget = middleware.GetBudget(budgetID)
 	}
-	pti := middleware.GetProjectTimespentInfo(projectID, int(budget.ID))
+	dateStartStr := m["dateStart"].(string)
+	dateEndStr := m["dateEnd"].(string)
+	dateStart, err := time.Parse("2006-01-02", dateStartStr)
+	dateEnd, err := time.Parse("2006-01-02", dateEndStr)
+	if err != nil && (len(dateStartStr) > 0 && len(dateEndStr) > 0) {
+		logging.Print.Error(err)
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "дата начала или конца не является датой",
+		})
+		return
+	}
+	pti := middleware.GetProjectTimespentInfo(projectID, int(budget.ID), dateStart, dateEnd)
 	c.JSON(http.StatusOK, pti)
 }
