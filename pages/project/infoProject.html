@@ -55,8 +55,9 @@
                     <button type="submit" class="btn" name="send" id="submitBtn">Загрузить</button>
                 </div>
             </div>
-            <div id="canvas_container">
-
+            <div id="budgetTimespentDetails">
+            </div>
+            <div id="timespents">
             </div>
         </div>
     </main>
@@ -95,16 +96,25 @@
 
     const url = new URL(location.href)
     const params = url.pathname.split("/")
+    
+    let fullBudgetTime = 0
+    let fullBudgetEstimated = 0
+    let fullBudgetTimespent = 0
 
+    let project = {{ .project }}
     let pti = {{ .pti }}
     console.log(pti)
     build(pti)
 
     function build(dataset) {
-        let canvas_container = document.querySelector('#canvas_container')
+        fullBudgetTime = 0
+        fullBudgetEstimated = 0
+        fullBudgetTimespent = 0
+        
+        let budgetTimespentDetails = document.querySelector('#budgetTimespentDetails')
         let ctx = document.createElement('canvas')
-        ctx.id = 'myChart'
-        canvas_container.append(ctx)
+        ctx.id = 'myChart1'
+        budgetTimespentDetails.append(ctx)
 
         let spent = []
         let estimatedHours = []
@@ -113,6 +123,8 @@
             spent.push(dataset[i].Spent)
             estimatedHours.push(dataset[i].EstimatedHours)
             name.push(dataset[i].IssueName)
+            fullBudgetTimespent += dataset[i].Spent
+            fullBudgetEstimated += dataset[i].EstimatedHours
         }
 
         new Chart(ctx, {
@@ -136,9 +148,16 @@
                     y: {
                         beginAtZero: true
                     }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Детализированные по задачам трудозатраты по бюджету'
+                    }
                 }
             }
         })
+        fullBudgetInfo()
     }
 
     let submitBtn = document.querySelector('#submitBtn')
@@ -164,12 +183,68 @@
             data: jData,
             success: function (data) {
                 console.log(data)
-                const ctx = document.getElementById('myChart');
+                const ctx = document.getElementById('myChart1');
                 ctx.remove()
+
+                let ctx2 = document.getElementById('myChart2')
+                ctx2.remove()
 
                 build(data)
             }
         });
+    }
+    
+    function fullBudgetInfo() {
+        let timespents = document.querySelector('#timespents')
+        let ctx = document.createElement('canvas')
+        ctx.id = 'myChart2'
+        timespents.append(ctx)
+
+        let workTime = Math.ceil(Date.parse(project.planFinish) - Date.parse(project.planStart)) / 1000 / 60 / 60
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['1'],
+                datasets: [
+                    {
+                        label: 'Трудозатраты',
+                        data: [fullBudgetTimespent],
+                        backgroundColor: "#3e95cd",
+                    },
+                    {
+                        label: 'Оценки',
+                        backgroundColor: "#8e5ea2",
+                        data: [fullBudgetEstimated]
+                    },
+                    // {
+                    //     label: 'Общее время проекта',
+                    //     backgroundColor: "#8e5ef2",
+                    //     data: [workTime]
+                    // }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                // Elements options apply to all of the options unless overridden in a dataset
+                // In this case, we are setting the border of each horizontal bar to be 2px wide
+                elements: {
+                    bar: {
+                        borderWidth: 2,
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Трудозатраты по бюджету'
+                    }
+                }
+            },
+        })
     }
 </script>
 </body>

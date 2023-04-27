@@ -378,6 +378,7 @@ func getProjectInfo(c *gin.Context) {
 	project := middleware.GetProjectByID(projectID)
 	user, _ := GetUserByToken(c)
 	budgets := middleware.GetProjectBudgets(projectID)
+
 	c.HTML(http.StatusOK, "infoProject.html", gin.H{"user": user, "pti": pti, "project": project, "budgets": budgets})
 }
 
