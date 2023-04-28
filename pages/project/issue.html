@@ -62,7 +62,7 @@
             <div class="row">
                 <div class="content-block-h pv-1r">
                     <div class="title">Времени затрачено</div>
-                    <span id="timespent"></span>
+                    <span id="timespent">{{ .timespent }}</span>
                 </div>
                 <div class="content-block-h pv-1r">
                     <div class="title">Оценка</div>
@@ -93,6 +93,36 @@
                     </button>
                 </div>
             </div>
+        </div>
+
+        <div class="issues-content">
+            <div class="content-block-v">
+                <span>Трудозатраты</span>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Автор</th>
+                    <th>Роль</th>
+                    <th>Время</th>
+                    <td style="width: 115px"></td>
+                </tr>
+                </thead>
+                <tbody>
+                {{ range $timespents := .timespents }}
+                <tr>
+                    <td hidden>{{ .TimespentID }}</td> <!-- TimespentID -->
+                    <td hidden>{{ .UserID }}</td> <!-- UserID -->
+                    <td>{{ .User }}</td>
+                    <td>{{ .Role }}</td>
+                    <td>{{ .Spent }}</td>
+                    <td>
+<!--                        <button id="editTimespent" style="cursor: pointer" onclick="save()">Редактировать</button>-->
+                    </td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
         </div>
     </main>
     <div class="right">
@@ -151,11 +181,68 @@
                 const timespentInput = document.querySelector('#timespentInput')
                 timespentInput.value = ''
             }
-        });
+        })
     }
 
     function hideSuccess() {
         document.querySelector('#success').remove()
+    }
+
+    const tbody = document.querySelector('tbody')
+    for (let i = 0; i < tbody.children.length; i++) {
+        let tr = tbody.children[i]
+        tr.addEventListener('click', function () {
+
+            if (tr.children[4].children.length < 1) {
+                let spent = tr.children[4].innerHTML
+                input = document.createElement('input')
+                input.id = 'timespent'+tr.children[0].innerHTML
+                input.value = spent
+
+                tr.children[4].innerHTML = ''
+
+                button = document.createElement('button')
+                button.id = 'editTimespent'+tr.children[0].innerHTML
+                button.style = 'cursor: pointer'
+                button.innerHTML = 'Редактировать'
+
+            //<button id="editTimespent" style="cursor: pointer" onclick="save()">Редактировать</button>
+                tr.children[4].append(input)
+                tr.children[4].style = 'width: 220px'
+                tr.children[5].append(button)
+
+                button.onclick = function () {
+                    saveTimespent(tr.children[0].innerHTML)
+                }
+            }
+        })
+    }
+
+    function saveTimespent(timespentID) {
+        const inputTimespent = document.querySelector('#timespent'+timespentID)
+        const buttonTimespent = document.querySelector('#editTimespent'+timespentID)
+        let data = {}
+
+        data.timespentID = parseInt(timespentID)
+        data.value = parseFloat(inputTimespent.value)
+        data.time
+        $.ajax({
+            type: "PATCH",
+            url: 'http://' + window.location.host + '/timespent/save/',
+            data: JSON.stringify(data),
+            success: function (dataresp) {
+                console.log(dataresp)
+                let td = inputTimespent.parentElement
+                inputTimespent.remove()
+                buttonTimespent.remove()
+                td.innerHTML = dataresp.spent
+            },
+            error: function (dataJSON) {
+                const data = JSON.parse(dataJSON.responseText)
+                alert(data.Meta);
+                console.log(data.Meta)
+            }
+        })
     }
 </script>
 </body>

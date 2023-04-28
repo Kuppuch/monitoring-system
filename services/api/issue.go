@@ -76,11 +76,31 @@ func getIssueByID(c *gin.Context) {
 	statuses := middleware.GetStatusList()
 
 	timespent := middleware.GetIssueTimespent(id)
-	timespentMap := map[string]float32{
-		"timespent": 0.0,
+	var timespentCounter float32 = 0.0
+
+	type Timespents struct {
+		TimespentID uint
+		UserID      uint
+		Spent       float32
+		User        string
+		Role        string
 	}
+
+	timespents := []Timespents{}
 	for _, v := range timespent {
-		timespentMap["timespent"] += v.Spent
+		timespentCounter += v.Spent
+
+		timespentAuthor := middleware.User{}
+		timespentAuthor.ID = v.UserID
+		_ = timespentAuthor.GetUser()
+		role := middleware.GetRole(v.RoleID)
+		timespents = append(timespents, Timespents{
+			TimespentID: v.ID,
+			UserID:      timespentAuthor.ID,
+			User:        timespentAuthor.LastName + " " + timespentAuthor.Name,
+			Spent:       v.Spent,
+			Role:        role.Name,
+		})
 	}
 
 	c.HTML(
@@ -90,7 +110,8 @@ func getIssueByID(c *gin.Context) {
 			"statuses":     statuses,
 			"user":         user,
 			"projectRoles": userProjectRoles,
-			"timespent":    timespentMap["timespent"],
+			"timespent":    timespentCounter,
+			"timespents":   timespents,
 		})
 }
 

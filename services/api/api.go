@@ -129,6 +129,11 @@ func Router() {
 		risk.POST("/create", InserRisk)
 	}
 
+	timespent := r.Group("timespent")
+	{
+		timespent.PATCH("/save", updateTimespent)
+	}
+
 	r.GET("/srs", srsPage)
 
 	api := r.Group("api")

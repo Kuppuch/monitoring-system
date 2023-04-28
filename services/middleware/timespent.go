@@ -35,6 +35,20 @@ func GetIssueTimespent(issueID int) []Timespent {
 	return t
 }
 
+func GetTimespentByID(timespentID int) Timespent {
+	var t Timespent
+	DB.Where("id = ?", timespentID).Find(&t)
+	return t
+}
+
+func (t *Timespent) Update() error {
+	tx := DB.Save(t)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 type TimespentReport struct {
 	ID        int     `json:"ID"`
 	Spent     float32 `json:"spent"`
