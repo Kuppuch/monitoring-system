@@ -7,6 +7,7 @@ import (
 	"monitoring-system/services/middleware"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func getBudgets(c *gin.Context) {
@@ -74,13 +75,30 @@ func insertBudget(c *gin.Context) {
 		})
 		return
 	}
-	if project := middleware.GetProjectByID(b.ProjectID); project.ID == 0 {
+
+	project := middleware.GetProjectByID(b.ProjectID)
+	if project.ID == 0 {
 		c.JSON(http.StatusBadRequest, gin.Error{
 			Err:  err,
 			Type: 0,
 			Meta: "проект не существует",
 		})
 		return
+	}
+
+	projectBound := middleware.GetProjectBoundByBudgets(int(project.ID))
+	max, ok := projectBound["max"]
+	if ok && project.PlanFinish.Before(max.(time.Time)) {
+		project.PlanFinish = max.(time.Time)
+		err = project.UpdateFinishBound()
+		if err != nil {
+			logging.Print.Error("error update project finish bound: ", err)
+			c.JSON(http.StatusInternalServerError, gin.Error{
+				Err:  err,
+				Type: 0,
+				Meta: "не удалось обновить границы проекта по новому бюджету",
+			})
+		}
 	}
 
 	b.StatusID = 1

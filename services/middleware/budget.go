@@ -76,3 +76,9 @@ func (b Budget) UpdateStatus(statusId int) (int64, error) {
 	}
 	return tx.RowsAffected, nil
 }
+
+func GetProjectBoundByBudgets(projectID int) map[string]interface{} {
+	m := make(map[string]interface{})
+	DB.Model(&Budget{}).Select("MIN(start_at), MAX(end_ad)").Where("project_id = ?", projectID).Find(&m)
+	return m
+}

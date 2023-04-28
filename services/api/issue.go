@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"math"
 	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
@@ -25,19 +24,21 @@ func getIssueList(c *gin.Context) {
 		})
 		return
 	}
+
+	var issues []middleware.IssueWeb
 	if budgetID > 0 {
-		issues := middleware.GetIssueList(projectID, budgetID)
-		c.JSON(http.StatusOK, issues)
-		return
+		issues = middleware.GetIssueList(projectID, budgetID)
+	} else {
+		issues = middleware.GetIssueList(projectID, 0)
 	}
-	issues := middleware.GetIssueList(projectID, 0)
+
 	for i, v := range issues {
 		timespent := middleware.GetIssueTimespent(int(v.ID))
 		var counter float32 = 0
 		for _, t := range timespent {
 			counter += t.Spent
 		}
-		hour := math.Round(float64(counter))
+		hour := int(counter)
 		minute := (counter - float32(hour)) * 60
 		issues[i].TimespentData = fmt.Sprintf("%vч. %vмин.", hour, minute)
 	}

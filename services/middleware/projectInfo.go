@@ -8,6 +8,7 @@ import (
 type ProjectTimespentInfo struct {
 	Spent          float32
 	EstimatedHours int
+	IssueId        int
 	RoleName       string
 	IssueName      string
 	BudgetID       int
@@ -37,13 +38,13 @@ func GetProjectTimespentInfo(projectID int, budgetID int, dateStart time.Time, d
 			dateEnd.Day())
 	}
 
-	DB.Table("timespents AS t").Select("SUM(t.spent) AS spent, i.estimated_hours, r.name AS role_name, i.name AS issue_name, b.id AS budget_id, b.name AS budget_name").
+	DB.Table("timespents AS t").Select("SUM(t.spent) AS spent, i.estimated_hours, i.id as issue_id, i.name AS issue_name, b.id AS budget_id, b.name AS budget_name").
 		Joins("INNER JOIN issues AS i ON i.id = t.issue_id").
 		Joins("INNER JOIN budgets AS b ON b.id = i.budget_id").
 		Joins("INNER JOIN projects AS p ON p.id = b.project_id").
 		Joins("INNER JOIN roles AS r ON r.id = t.role_id").
 		Where("p.id = ? AND b.id = ? "+whereStr, projectID, budgetID).
-		Group("r.name, i.id, i.name, b.id, b.name, p.id, p.name").
+		Group("i.id, i.name, b.id, b.name, p.id, p.name").
 		Order("i.id").Find(&projectTimespentsInfo)
 	//DB.Raw(`SELECT SUM(t.spent) AS spent, i.estimated_hours, r.name AS role_name, i.name AS issue_name, b.id AS budget_id, b.name AS budget_name
 	//			FROM timespents AS t

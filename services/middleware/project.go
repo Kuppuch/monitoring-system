@@ -134,3 +134,11 @@ func GetProjectTimespent() []ProjectTimespent {
 		Find(&projectTimespent)
 	return projectTimespent
 }
+
+func (p *Project) UpdateFinishBound() error {
+	tx := DB.Save(p)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}

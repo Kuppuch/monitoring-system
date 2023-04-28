@@ -105,6 +105,8 @@ func insertProject(c *gin.Context) {
 		})
 		return
 	}
+	project.PlanStart = dateStart
+	project.PlanFinish = dateEnd
 	if rowAffected := project.InsertProject(); rowAffected == 0 {
 		c.JSON(http.StatusBadRequest, middleware.GetBadRequest())
 		return
