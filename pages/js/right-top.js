@@ -24,5 +24,5 @@ themeToggler.addEventListener('click', () => {
 const profile = document.querySelector(".profile");
 profile.addEventListener('click', () => {
     const params = profile.children[1].children[0].getAttribute("src").split("/");
-    window.location = "/user/"+params[2];
+    window.location = "/users/"+params[2];
 })

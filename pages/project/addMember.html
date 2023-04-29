@@ -81,7 +81,7 @@
             data: JSON.stringify(data),
             success: function () {
                 console.log(params[2]);
-                window.location = 'http://'+window.location.host+'/project/' + parseInt(params[2]);
+                window.location = 'http://'+window.location.host+'/projects/' + parseInt(params[2]);
             },
             error: function (data) {
                 const body = JSON.parse(data.responseText);

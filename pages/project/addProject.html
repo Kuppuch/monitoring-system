@@ -100,16 +100,16 @@
         data.dateEnd = new Date($('#dateEnd').val())
         $.ajax({
             type: "POST",
-            url: 'http://' + window.location.host + '/project/create',
+            url: 'http://' + window.location.host + '/projects/create',
             data: JSON.stringify(data),
             success: function (data) {
-                window.location = 'http://' + window.location.host + '/project'
+                window.location = 'http://' + window.location.host + '/projects'
             },
             error: function (dataJSON) {
                 const data = JSON.parse(dataJSON.responseText)
                 alert(data.Meta);
                 console.log(data)
-                //window.location = 'http://' + window.location.host + '/project'
+                //window.location = 'http://' + window.location.host + '/projects'
             }
         })
     })

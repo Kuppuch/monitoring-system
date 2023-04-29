@@ -53,7 +53,7 @@
 
         $.ajax({
             type: "POST",
-            url: 'http://'+window.location.host+'/risk/create',
+            url: 'http://'+window.location.host+'/risks/create',
             data: JSON.stringify(data),
             success: function (data) {
                 const htmlStr = '<span id="success" class="material-icons-sharp success">done</span>'

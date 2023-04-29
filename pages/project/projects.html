@@ -62,7 +62,7 @@
     const addProductBtn = document.querySelector(".add-product")
 
     addProductBtn.addEventListener('click', () => {
-        location.assign("/project/create");
+        location.assign("/projects/create");
     })
 
     const insights = document.querySelector(".insights");
@@ -70,7 +70,7 @@
         let sales = event.target.closest('.sales');
 
         if (sales.className === 'sales') {
-            location.assign("/project/" + sales.childNodes[1].innerHTML);
+            location.assign("/projects/" + sales.childNodes[1].innerHTML);
         }
     })
 
@@ -109,7 +109,7 @@
     addEventListener("load", () => {
         $.ajax({
             type: "GET",
-            url: 'http://' + window.location.host + '/project/timespent',
+            url: 'http://' + window.location.host + '/projects/timespent',
             success: function (data) {
                 if (data != null) {
                     let insights = document.querySelector('.insights')

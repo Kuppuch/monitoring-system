@@ -57,7 +57,7 @@
     let tbody = document.querySelector("tbody")
     for (let i = 0; i < tbody.children.length; i++) {
         tbody.children[i].addEventListener('click', function (evt) {
-            location.assign("/issue/" + evt.target.parentNode.children[0].innerHTML)
+            location.assign("/issues/" + evt.target.parentNode.children[0].innerHTML)
         })
     }
 </script>

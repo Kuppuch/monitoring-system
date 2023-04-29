@@ -56,7 +56,7 @@ func Router() {
 		adm.DELETE("/roles/head/:id", deleteHeadRole)
 	}
 
-	user := r.Group("user")
+	user := r.Group("users")
 	{
 		uadm := user.Group("adm")
 		{
@@ -70,7 +70,7 @@ func Router() {
 		user.GET("/:id", GetProfilePhoto)
 	}
 
-	project := r.Group("project")
+	project := r.Group("projects")
 	{
 		project.GET("/", getProjectsPage)
 		project.GET("/:id", getProjectPage)
@@ -87,7 +87,7 @@ func Router() {
 
 	}
 
-	issue := r.Group("issue")
+	issue := r.Group("issues")
 	{
 		issue.GET("", getIssueList)
 		issue.GET("/:id", getIssueByID)
@@ -120,7 +120,7 @@ func Router() {
 		notification.GET("/read", setReadNotification)
 	}
 
-	risk := r.Group("risk")
+	risk := r.Group("risks")
 	{
 		risk.GET("", getRiskPage)
 		risk.GET("/list", getRiskListPage)
@@ -129,7 +129,7 @@ func Router() {
 		risk.POST("/create", InserRisk)
 	}
 
-	timespent := r.Group("timespent")
+	timespent := r.Group("timespents")
 	{
 		timespent.PATCH("/save", updateTimespent)
 	}

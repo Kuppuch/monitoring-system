@@ -80,7 +80,7 @@
         if (active === 'Бюджеты') {
             location.assign("/budgets/create?project_id=" + params[2])
         } else {
-            location.assign("/issue/create?project_id=" + params[2])
+            location.assign("/issues/create?project_id=" + params[2])
         }
     })
     getBudgets();
@@ -113,7 +113,7 @@
                 $(".issues-content").empty()
                 $.ajax({
                     type: "GET",
-                    url: 'http://'+window.location.host+'/project/' + params[2] + '/members/list',
+                    url: 'http://'+window.location.host+'/projects/' + params[2] + '/members/list',
                     success: function (data) {
 
                         $(".issues-content").prepend(
@@ -156,7 +156,7 @@
                 // Выбор проекта
                 $.ajax({
                     type: "GET",
-                    url: 'http://'+window.location.host+'/project/' + params[2] + '/members/list',
+                    url: 'http://'+window.location.host+'/projects/' + params[2] + '/members/list',
                     success: function (data) {
                         $(".issues-content").append($(
                             '<div class=\'row\'> ' +
@@ -184,12 +184,12 @@
 
                 const addMemberBtn = document.querySelector('#addMember')
                 addMemberBtn.addEventListener('click', () => {
-                    location.href='/project/' + params[2] + '/members'
+                    location.href='/projects/' + params[2] + '/members'
                 })
             }
             if (target.innerHTML === 'Информация') {
                 debugger
-                window.location.href = '/project/'+ params[2] + '/info'
+                window.location.href = '/projects/'+ params[2] + '/info'
             }
         }
     })
@@ -245,7 +245,7 @@
             },
             error: function (data) {
                 alert(data.statusText)
-                // window.location = 'http://'+window.location.host+'/project'
+                // window.location = 'http://'+window.location.host+'/projects'
             }
         })
     }
@@ -253,7 +253,7 @@
     function getIssues(budgetID) {
         $.ajax({
             type: "GET",
-            url: 'http://'+window.location.host+'/issue?project_id=' + params[2] + budgetID,
+            url: 'http://'+window.location.host+'/issues?project_id=' + params[2] + budgetID,
             success: function (data) {
                 addProductBtnText.innerHTML = 'Добавить задачу'
                 $(".issues-content").empty();
@@ -299,14 +299,14 @@
                     let row = event.target.closest('tr');
                     if (row != null) {
                         if (row.tagName === 'TR') {
-                            location.assign("/issue/" + row.children[0].innerHTML);
+                            location.assign("/issues/" + row.children[0].innerHTML);
                         }
                     }
                 })
             },
             error: function (data) {
                 alert(data.statusText);
-                // window.location = 'http://'+window.location.host+'/project'
+                // window.location = 'http://'+window.location.host+'/projects'
             }
         });
     }
@@ -349,7 +349,7 @@
         let gitRepository = ""
         $.ajax({
             type: "GET",
-            url: 'http://'+window.location.host+'/project/' + params[2] + '/link_rep',
+            url: 'http://'+window.location.host+'/projects/' + params[2] + '/link_rep',
             success: function (data) {
                 gitRepository = JSON.parse(data).Repository
                 if (gitRepository) {
@@ -390,7 +390,7 @@
             $.ajax({
                 type: "POST",
                 data: data,
-                url: 'http://'+window.location.host+'/project/' + params[2] + '/link_rep',
+                url: 'http://'+window.location.host+'/projects/' + params[2] + '/link_rep',
                 success: function (data) {
                     const htmlStr = '<span id="success" class="material-icons-sharp success">done</span>'
                     document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);

@@ -18,7 +18,7 @@
             <h2>Все пользователи</h2>
         </div>
         <div class="col">
-            <a href="/user/reg" class="btn btn-primary">Добавить пользователя</a>
+            <a href="/users/reg" class="btn btn-primary">Добавить пользователя</a>
         </div>
     </div>
     <table class="table">
@@ -34,7 +34,7 @@
         <tbody>
         {{ range $users := .users }}
         <tr>
-            <th scope="row"><a href="user/adm/{{ .ID }}">{{ .ID }}</a></th>
+            <th scope="row"><a href="users/adm/{{ .ID }}">{{ .ID }}</a></th>
             <td>{{ .Name }}</td>
             <td>{{ .LastName }}</td>
             <td>{{ .Email }}</td>

@@ -110,15 +110,15 @@
 
         $.ajax({
             type: "POST",
-            url: 'http://'+window.location.host+'/issue/create',
+            url: 'http://'+window.location.host+'/issues/create',
             data: JSON.stringify(data),
             success: function (data) {
-                window.location = 'http://'+window.location.host+'/project?id=' + parseInt(queryDist.project_id);
+                window.location = 'http://'+window.location.host+'/projects?id=' + parseInt(queryDist.project_id);
             },
             error: function (data) {
                 alert(data.statusText);
                 console.log(data.statusText);
-                window.location = 'http://'+window.location.host+'/project?id=' + parseInt(queryDist.project_id);
+                window.location = 'http://'+window.location.host+'/projects?id=' + parseInt(queryDist.project_id);
             }
         })
     })
