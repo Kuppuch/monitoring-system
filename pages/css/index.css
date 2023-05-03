@@ -113,6 +113,11 @@ h4 {
     margin: 1rem 0;
 }
 
+/*fd - flex-direction*/
+.fd {
+    flex-direction: column;
+}
+
 .space-between_center {
     justify-content: space-between;
     align-items: center;
@@ -448,6 +453,20 @@ main .issues {
 
 main .issues:hover {
     box-shadow: none;
+}
+
+.issues-content {
+    width: 100%;
+}
+
+.issue-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.issue-srs {
+    width: 49%;
+    padding: 0 0 0 1rem;
 }
 
 .submenu {

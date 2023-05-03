@@ -104,6 +104,8 @@ func getIssueByID(c *gin.Context) {
 		})
 	}
 
+	issue.ProjectID = int(project.ID)
+
 	c.HTML(
 		http.StatusOK,
 		"issue.html",
@@ -371,7 +373,6 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 		minute = minute % 60
 	}
 	minuteFloat := float32(minute) / float32(60)
-	fmt.Println(hour, minute)
 	t := middleware.Timespent{
 		IssueID:  uint(issueID),
 		UserID:   user.ID,

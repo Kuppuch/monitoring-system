@@ -13,84 +13,95 @@
     {{template "aside.html" .}}
     <main>
         <h1>Задача {{ .issue.Name }}</h1>
-        <div class="issues-content">
-            <div class="content-block-v">
-                <span>Описание</span>
-                {{ .issue.Description }}
-            </div>
-            <div class="row">
-                <div class="content-block-h pv-1r">
-                    <div class="title">Статус</div>
-                    <div class="cont">
-                        <select name="Status" id="status">
-                            <option value="{{ .issue.StatusID }}">{{ .issue.StatusName }}</option>
-                            {{ range $statuses := .statuses }}
-                            <option value="{{ .ID }}">{{ .Name }}</option>
-                            {{ end }}
-                        </select>
+        <div class="issue-container">
+            <div id="issue-info" class="issues-content">
+                <div class="content-block-v">
+                    <span>Описание</span>
+                    {{ .issue.Description }}
+                </div>
+                <div class="row">
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Статус</div>
+                        <div class="cont">
+                            <select name="Status" id="status">
+                                <option value="{{ .issue.StatusID }}">{{ .issue.StatusName }}</option>
+                                {{ range $statuses := .statuses }}
+                                <option value="{{ .ID }}">{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Трекер</div>
+                        <div class="cont">
+                            {{ .issue.TrackerName }}
+                        </div>
+                    </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Создал:</div>
+                        <div class="cont">
+                            {{ .issue.Creator }}
+                        </div>
+                    </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Назначена на:</div>
+                        <div class="cont">
+                            {{ .issue.AssignedTo }}
+                        </div>
                     </div>
                 </div>
-                <div class="content-block-h pv-1r">
-                    <div class="title">Трекер</div>
-                    <div class="cont">
-                        {{ .issue.TrackerName }}
+                <div class="row">
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Проект</div>
+                        <p>{{ .issue.ProjectName }}</p>
+                    </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Бюджет</div>
+                        <p>{{ .issue.BudgetName }}</p>
                     </div>
                 </div>
-                <div class="content-block-h pv-1r">
-                    <div class="title">Создал:</div>
-                    <div class="cont">
-                        {{ .issue.Creator }}
+                <div class="row">
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Времени затрачено</div>
+                        <span id="timespent">{{ .timespent }}</span>
+                    </div>
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Оценка</div>
+                        <div class="cont">
+                            {{ .issue.EstimatedHours }}ч.
+                        </div>
                     </div>
                 </div>
-                <div class="content-block-h pv-1r">
-                    <div class="title">Назначена на:</div>
-                    <div class="cont">
-                        {{ .issue.AssignedTo }}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="content-block-h pv-1r">
-                    <div class="title">Проект</div>
-                    <p>{{ .issue.ProjectName }}</p>
-                </div>
-                <div class="content-block-h pv-1r">
-                    <div class="title">Бюджет</div>
-                    <p>{{ .issue.BudgetName }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="content-block-h pv-1r">
-                    <div class="title">Времени затрачено</div>
-                    <span id="timespent">{{ .timespent }}</span>
-                </div>
-                <div class="content-block-h pv-1r">
-                    <div class="title">Оценка</div>
-                    <div class="cont">
-                        {{ .issue.EstimatedHours }}ч.
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="content-block-h pv-1r">
-                    <div class="title">Добавить трудосписания</div>
-                    <div class="cont">
+                <div class="row">
+                    <div class="content-block-h pv-1r">
+                        <div class="title">Добавить трудосписания</div>
+                        <div class="cont">
 
-                        <input type="text" class="form-control" id="timespentInput" name="Timespent" placeholder="#h #m"
-                               value="" required>
-                        <p>Выберите роль</p>
-                        <select name="projectRoles" id="projectRoles">
-                            {{ range $projectRoles := .projectRoles }}
-                            <option value="{{ .ID }}">{{ .Name }}</option>
-                            {{ end }}
-                        </select>
+                            <input type="text" class="form-control" id="timespentInput" name="Timespent" placeholder="#h #m"
+                                   value="" required>
+                            <p>Выберите роль</p>
+                            <select name="projectRoles" id="projectRoles">
+                                {{ range $projectRoles := .projectRoles }}
+                                <option value="{{ .ID }}">{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div id="button-success" class="content-block-h pv-1r">
+                        <button class="bg-success" id="saveTimespent" style="cursor: pointer" onclick="save()">Сохранить
+                        </button>
+                    </div>
+                </div>
+
+                <button id="view-srs" style="cursor: pointer">Показать ТЗ
+                </button>
+
             </div>
-            <div class="row">
-                <div id="button-success" class="content-block-h pv-1r">
-                    <button class="bg-success" id="saveTimespent" style="cursor: pointer" onclick="save()">Сохранить
-                    </button>
+
+            <div id="issue-srs" style="display: none" class="issues-content issue-srs">
+                <div id="doc" style="height: 70vh; overflow-y: auto; overflow-x: hidden">
                 </div>
             </div>
         </div>
@@ -234,7 +245,7 @@
         data.time
         $.ajax({
             type: "PATCH",
-            url: 'http://' + window.location.host + '/timespent/save/',
+            url: 'http://' + window.location.host + '/timespents/save/',
             data: JSON.stringify(data),
             success: function (dataresp) {
                 console.log(dataresp)
@@ -306,6 +317,63 @@
             }
         })
     }
+
+    let isSrsView = false
+    const viewSrsBtn = document.querySelector('#view-srs')
+    viewSrsBtn.addEventListener('click', function () {
+        const issueSrsDiv = document.querySelector('#issue-srs')
+        const issueInfoDiv = document.querySelector('#issue-info')
+        if (isSrsView) {
+            issueSrsDiv.style.display = 'none'
+            viewSrsBtn.innerHTML = 'Показать ТЗ'
+            let rows = document.getElementsByClassName('row')
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].classList.remove('fd')
+                for (let j = 0; j < rows[i].children.length; j++) {
+                    rows[i].children[j].style.removeProperty('width')
+                }
+            }
+            issueInfoDiv.style.width = '100%'
+        } else {
+            issueSrsDiv.style.display = 'block'
+            viewSrsBtn.innerHTML = 'Скрыть ТЗ'
+            let rows = document.getElementsByClassName('row')
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].classList.add('fd')
+                for (let j = 0; j < rows[i].children.length; j++) {
+                    rows[i].children[j].style.width = '100%'
+                }
+            }
+            issueInfoDiv.style.width = '49%'
+        }
+        isSrsView = !isSrsView
+    })
+
+    function getSRS() {
+        var md = window.markdownit();
+
+        let gitRepository = ""
+        $.ajax({
+            type: "GET",
+            url: 'http://'+window.location.host+'/projects/' + params[2] + '/link_rep',
+            success: function (data) {
+                gitRepository = JSON.parse(data).Repository
+                if (gitRepository) {
+                    apiGetDocContent(gitRepository).then((result) => {
+                        const container = document.querySelector('#doc')
+                        const resContent = Base64.decode(result.data.content)
+                        let html = md.render(resContent)
+                        container.insertAdjacentHTML( 'beforeend', html )
+                    })
+                } else {
+                    const container = document.querySelector('#doc')
+                    let html = '<h1>Git репозиторий не назначен</h1><h3>Перейдите в настройки, чтобы назначить</h3>'
+                    container.insertAdjacentHTML( 'beforeend', html )
+                }
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
