@@ -127,10 +127,16 @@
     </main>
     <div class="right">
         {{ template "right-top.html" .}}
+        <div class="recent-updates">
+            <h2>Трудозатраты</h2>
+            <div id="timespent_div" class="updates">
+            </div>
+        </div>
     </div>
 </div>
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     addEventListener("load", (event) => {
         const timespent = {{ .timespent }}
@@ -241,6 +247,62 @@
                 const data = JSON.parse(dataJSON.responseText)
                 alert(data.Meta);
                 console.log(data.Meta)
+            }
+        })
+    }
+
+    build()
+    function build() {
+        fullBudgetTime = 0
+        fullBudgetEstimated = 0
+        fullBudgetTimespent = 0
+
+        let budgetTimespentDetails = document.querySelector('#timespent_div')
+        let ctx = document.createElement('canvas')
+        ctx.id = 'myChart1'
+        budgetTimespentDetails.style.height = '200%'
+        budgetTimespentDetails.style.width = '100%'
+        budgetTimespentDetails.append(ctx)
+
+        const timespent = {{ .timespent }}
+        const estimatedHours = {{ .issue.EstimatedHours }}
+
+        let timespentColor = "#41f1b6"
+        if (timespent > estimatedHours) {
+            timespentColor = "#ff7782"
+        }
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [''],
+                datasets: [
+                    {
+                        label: 'Трудозатраты',
+                        data: [timespent],
+                        backgroundColor: timespentColor,
+                    },
+                    {
+                        label: 'Оценка',
+                        backgroundColor: "#7380ec",
+                        data: [estimatedHours]
+                    },
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Трудозатраты по задаче (часов)'
+                    }
+                },
             }
         })
     }

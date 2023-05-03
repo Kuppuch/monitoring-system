@@ -9,6 +9,7 @@ import (
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -334,6 +335,23 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 			minuteStr = strings.TrimSpace(spentStr[hourDelimiter:i])
 		}
 	}
+
+	if len(spentStr) > 0 && len(hourStr) < 1 && len(minuteStr) < 1 {
+		if matched, _ := regexp.MatchString(`\d\s\d\d`, spentStr); matched {
+			hourStr = spentStr[0:1]
+			minuteStr = spentStr[2:4]
+		}
+		if matched, _ := regexp.MatchString(`^\d{1,2}$`, spentStr); matched {
+			if len(spentStr) < 2 {
+				hourStr = spentStr
+			} else if len(spentStr) < 3 {
+				minuteStr = spentStr
+			} else {
+				return middleware.Timespent{}, 0, errors.New("минуты должны быть не больше 60")
+			}
+		}
+	}
+
 	if len(hourStr) < 1 {
 		hourStr = "0"
 	}
@@ -347,6 +365,10 @@ func parseTimespent(m map[string]string, user middleware.User, issueID int) (mid
 	}
 	if minute%15 != 0 {
 		return middleware.Timespent{}, 0, errors.New("минуты должны быть кратны 15")
+	}
+	if minute > 59 {
+		hour = minute / 60
+		minute = minute % 60
 	}
 	minuteFloat := float32(minute) / float32(60)
 	fmt.Println(hour, minute)
