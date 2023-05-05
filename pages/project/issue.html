@@ -101,7 +101,7 @@
             </div>
 
             <div id="issue-srs" style="display: none" class="issues-content issue-srs">
-                <div id="doc" style="height: 70vh; overflow-y: auto; overflow-x: hidden">
+                <div id="doc" style="height: 80vh; overflow-y: auto; overflow-x: hidden">
                 </div>
             </div>
         </div>
@@ -148,7 +148,15 @@
 <script src="/js/aside.js"></script>
 <script src="/js/right-top.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+<script type="module" src="/js/markdown-it.js"></script>
+<script type="module">
+    import {
+        Octokit
+    } from 'https://cdn.skypack.dev/octokit'
+    import {
+        Base64
+    } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
+
     addEventListener("load", (event) => {
         const timespent = {{ .timespent }}
         let minute = (timespent - Math.floor(timespent)) * 60
@@ -212,13 +220,13 @@
 
             if (tr.children[4].children.length < 1) {
                 let spent = tr.children[4].innerHTML
-                input = document.createElement('input')
+                let input = document.createElement('input')
                 input.id = 'timespent'+tr.children[0].innerHTML
                 input.value = spent
 
                 tr.children[4].innerHTML = ''
 
-                button = document.createElement('button')
+                let button = document.createElement('button')
                 button.id = 'editTimespent'+tr.children[0].innerHTML
                 button.style = 'cursor: pointer'
                 button.innerHTML = 'Редактировать'
@@ -264,9 +272,9 @@
 
     build()
     function build() {
-        fullBudgetTime = 0
-        fullBudgetEstimated = 0
-        fullBudgetTimespent = 0
+        let fullBudgetTime = 0
+        let fullBudgetEstimated = 0
+        let fullBudgetTimespent = 0
 
         let budgetTimespentDetails = document.querySelector('#timespent_div')
         let ctx = document.createElement('canvas')
@@ -345,18 +353,21 @@
                 }
             }
             issueInfoDiv.style.width = '49%'
+            getSRS()
         }
         isSrsView = !isSrsView
     })
 
     function getSRS() {
+        const estimatedHours = {{ .issue.ProjectID }}
         var md = window.markdownit();
 
         let gitRepository = ""
         $.ajax({
             type: "GET",
-            url: 'http://'+window.location.host+'/projects/' + params[2] + '/link_rep',
+            url: 'http://'+window.location.host+'/projects/' + estimatedHours + '/link_rep',
             success: function (data) {
+                debugger
                 gitRepository = JSON.parse(data).Repository
                 if (gitRepository) {
                     apiGetDocContent(gitRepository).then((result) => {
@@ -372,6 +383,26 @@
                 }
             }
         });
+    }
+
+    const owner = 'vehicle-aggregator'
+    const repo = 'doc_sample'
+    const path = '1.md'
+    const org = 'vehicle-aggregator'
+
+    const octokit = new Octokit({
+        auth: {{ .token }}
+    })
+
+    export const apiGetDocContent = async (rep) => {
+        if (!rep) {
+            return
+        }
+        return await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner,
+            repo: rep,
+            path,
+        })
     }
 
 </script>
