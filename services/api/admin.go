@@ -86,6 +86,7 @@ func putRole(c *gin.Context) {
 			Type: 0,
 			Meta: "error by unmarshal role",
 		})
+		return
 	}
 	role.ID = uint(roleID)
 	if err = role.Update(); err != nil {
