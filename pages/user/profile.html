@@ -14,9 +14,14 @@
         <form class="mt-30" action="" method="POST" enctype="multipart/form-data">
             <input type="file" name="image" id="image">
             <div id="button-success" class="content-block-h">
-                <button type="button" onclick="myFunction()" id="send">Отправить</button>
+                <button type="button" onclick="saveProfilePhoto()" id="send">Отправить</button>
             </div>
         </form>
+        <div>
+            <input type="checkbox" class="custom-checkbox" id="mail_notify" name="mail_notify" checked>
+            <label for="mail_notify">Уведомления по E-mail</label>
+        </div>
+        <button type="button" onclick="save()" id="save">Сохранить</button>
     </main>
     <div class="right">
         {{ template "right-top.html" .}}
@@ -24,22 +29,11 @@
 </div>
 
 <script>
-    function myFunction() {
+    function saveProfilePhoto() {
         let photo = document.getElementById("image").files[0];
         let formData = new FormData();
         formData.append("image", photo);
-        // fetch('/upload', {method: "POST", body: formData});
 
-        // $.ajax({
-        //     type: "POST",
-        //     url: 'http://' + window.location.host + '/upload',
-        //     success: function (data) {
-        //
-        //     },
-        //     error: function (data) {
-        //         alert(data.statusText);
-        //     }
-        // });
         $.ajax({
             url: 'http://' + window.location.host + '/upload',
             type: "POST",
@@ -52,6 +46,34 @@
                     '</div>'
                 document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
                 setTimeout(hideSuccess, 2000);
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+    function save() {
+        let mailNotify = document.querySelector('#mail_notify')
+        console.log(mailNotify.checked)
+        let data = {}
+        data.email_notify = mailNotify.checked
+        $.ajax({
+            url: 'http://' + window.location.host + '/users/update',
+            type: "PATCH",
+            data: JSON.stringify(data),
+            success: function (msg) {
+                const htmlStr =
+                    '<div id="success" class="content-block-v">' +
+                    '<span class="material-icons-sharp success">done</span>' +
+                    '<small class="text-muted">Обновите страницу с кешем</small>' +
+                    '</div>'
+                document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
+                setTimeout(hideSuccess, 2000);
+            },
+            error: function (data) {
+                const body = JSON.parse(data.responseText);
+                alert(body.Meta);
             },
             cache: false,
             contentType: false,

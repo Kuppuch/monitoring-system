@@ -211,6 +211,44 @@ func uploadProfileImg(c *gin.Context) {
 	profile.Write(bb.Bytes())
 }
 
+func updateProfile(c *gin.Context) {
+	raw, _ := c.GetRawData()
+	var m = make(map[string]interface{})
+	err := json.Unmarshal(raw, &m)
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "не удалось прочитать запрос",
+		})
+		return
+	}
+	user, err := GetUserByToken(c)
+	if err != nil {
+		logging.Print.Error(err)
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "не удалось получить пользователя из токена",
+		})
+		return
+	}
+	for i, v := range m {
+		err = user.SmartUpdate(i, v)
+		if err != nil {
+			logging.Print.Error(err)
+			c.JSON(http.StatusInternalServerError, gin.Error{
+				Err:  err,
+				Type: 0,
+				Meta: "не обновить указанные атрибуты",
+			})
+			return
+		}
+	}
+	c.JSON(http.StatusOK, middleware.GetSuccess())
+}
+
 func GetProfilePhoto(c *gin.Context) {
 	id := c.Param("id")
 	_, err := ioutil.ReadFile("./lib/users/" + id + "/photo.png")

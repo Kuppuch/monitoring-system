@@ -67,6 +67,7 @@ func Router() {
 		user.GET("/reg", getPage)
 		user.GET("", getUser)
 		user.PATCH("/upload", uploadProfileImg)
+		user.PATCH("/update", updateProfile)
 		user.GET("/:id", GetProfilePhoto)
 	}
 

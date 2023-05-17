@@ -8,6 +8,7 @@ import (
 type User struct {
 	gorm.Model
 	Admin               bool           `json:"admin"`
+	EmailNotify         bool           `json:"email_notify"`
 	Name                string         `json:"name"`
 	LastName            string         `json:"lastname"`
 	MiddleName          string         `json:"middlename"`
@@ -64,4 +65,12 @@ func (u *User) Update() {
 		return
 	}
 	DB.Model(u).Save(&u)
+}
+
+func (u *User) SmartUpdate(field string, value interface{}) error {
+	tx := DB.Model(User{}).Where("id = ?", u.ID).Update(field, value)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
 }
