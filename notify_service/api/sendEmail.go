@@ -34,16 +34,10 @@ func SendEmail(c *gin.Context) {
 		})
 		return
 	}
-	mail := gomail.NewMessage()
-	mail.SetHeader("From", "vehicleaggregator@gmail.com")
-	mail.SetHeader("To", m.Recipient)
-	mail.SetHeader("Subject", "Confirm action")
-	rand.Seed(time.Now().UnixNano())
 	m.Code = strconv.Itoa(rand.Intn(8999) + 1000)
-	mail.SetBody("text/html", fmt.Sprintf("Your verification code: %s", m.Code))
-	d := gomail.NewDialer("smtp.gmail.com", 587, "vehicleaggregator@gmail.com", "hcbwxhrlwxgovdtu")
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-	if err = d.DialAndSend(mail); err != nil {
+	err = sender(m)
+
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.Error{
 			Err:  err,
 			Type: 0,
@@ -93,4 +87,49 @@ func GetCodeByEmail(c *gin.Context) {
 	}
 	pkg.DeleteMailByRecipient(mm.Recipient)
 	c.JSON(http.StatusOK, gin.H{"valid": true})
+}
+
+func SendEmailNotify(c *gin.Context) {
+	raw, err := c.GetRawData()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed get raw data",
+		})
+		return
+	}
+
+	m := pkg.Mail{}
+	err = json.Unmarshal(raw, &m)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "failed unmarshal raw data",
+		})
+		return
+	}
+	err = sender(m)
+}
+
+func sender(m pkg.Mail) error {
+	mail := gomail.NewMessage()
+	mail.SetHeader("From", "vehicleaggregator@gmail.com")
+	mail.SetHeader("To", m.Recipient)
+
+	//rand.Seed(time.Now().UnixNano())
+	if len(m.Code) > 0 {
+		mail.SetHeader("Subject", "Confirm action")
+		mail.SetBody("text/html", fmt.Sprintf("Your verification code: %s", m.Code))
+	} else {
+		mail.SetHeader("Subject", "Уведомление системы мониторинга")
+		mail.SetBody("text/html", m.Content)
+	}
+	d := gomail.NewDialer("smtp.gmail.com", 587, "vehicleaggregator@gmail.com", "hcbwxhrlwxgovdtu")
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	if err := d.DialAndSend(mail); err != nil {
+		return err
+	}
+	return nil
 }

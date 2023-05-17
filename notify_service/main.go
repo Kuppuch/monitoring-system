@@ -18,6 +18,7 @@ func main() {
 	r.Use(cors.AllowAll())
 	r.POST("/email", api.SendEmail)
 	r.POST("/email_code", api.GetCodeByEmail)
+	r.POST("/email/notify", api.SendEmailNotify)
 	err = r.Run(":25596")
 	if err != nil {
 		logging.Print.Error(err)

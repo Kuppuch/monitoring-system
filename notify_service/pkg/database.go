@@ -14,6 +14,7 @@ type Mail struct {
 	gorm.Model
 	Recipient string `json:"recipient"`
 	Code      string `json:"code"`
+	Content   string `json:"content"`
 }
 
 func Connector() error {
