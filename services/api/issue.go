@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"monitoring-system/config"
 	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
@@ -115,6 +116,7 @@ func getIssueByID(c *gin.Context) {
 			"projectRoles": userProjectRoles,
 			"timespent":    timespentCounter,
 			"timespents":   timespents,
+			"token":        config.GitToken,
 		})
 }
 

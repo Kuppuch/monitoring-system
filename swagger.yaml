@@ -1,0 +1,405 @@
+swagger: '2.0'
+info:
+  description: 'Описание методов сервиса мониторинга'
+  title: Monitoring
+  version: '1.0'
+  contact:
+    email: kuppuchr@gmail.com
+    name: Kuppe Roman
+host: localhost:25595
+basePath: /
+tags:
+  - name: project
+    description: 'Методы работы с проектами'
+paths:
+  /projects:
+    get:
+      summary: Получение списка проектов
+      tags: 
+      - project
+      operationId: get-projects
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/components/Project'
+          examples:
+            Example 1:
+              value:
+                - id: 0
+                  name: string
+                  description: string
+                  isPublic: true
+                  status: 1
+                  planStart: '2019-08-24T14:15:22Z'
+                  planFinish: '2019-08-24T14:15:22Z'
+                  issuesCnt: 0
+                  updated: 0
+  /projects/{id}:
+    get:
+      summary: Получение проекта
+      tags:
+      - project
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: 'Идентификатор проекта. Пример значения: "0103405"'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/components/Project'
+          examples:
+            Example 1:
+              value:
+                - id: 0
+                  name: string
+                  description: string
+                  isPublic: true
+                  status: 1
+                  planStart: '2019-08-24T14:15:22Z'
+                  planFinish: '2019-08-24T14:15:22Z'
+                  issuesCnt: 0
+                  updated: 0
+        '400':
+          $ref: '#/components/responses/Error'
+      operationId: get-project
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+        description: id проекта
+  /projects/create:
+    get:
+      summary: Получение страницы создания проекта
+      tags:
+      - project
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              page:
+                type: string
+          examples:
+            Example 1:
+              value:
+                page: addProject.html
+      operationId: get-projects-create-page
+    parameters: []
+    post:
+      tags: ['project']
+      description: Обязательные параметры. name, planStart, planFinish. Остальные параметры можно не заполнять
+      summary: Создание проекта
+      operationId: post-projects-create
+      parameters:
+      - name: body
+        in: body
+        required: true
+        description: тело запроса
+        schema:
+            $ref: '#/components/Project'
+      responses:
+        '201':
+          description: 'Success'
+          schema:
+            $ref: '#/components/responses/Success'
+        '400':
+          description: 'Error'
+          schema:
+            $ref: '#/components/responses/Error'
+  /projects/{id}/members:
+    get:
+      summary: Получение страницы добавления участников проекта
+      tags:
+      - project
+      responses:
+        '200':
+          description: OK
+          schema:
+            allOf:
+              - items:
+                  $ref: '#/components/User'
+          examples:
+            Example 1:
+              value:
+                - id: 0
+                  name: string
+                  description: string
+                  isPublic: true
+                  status: 1
+                  planStart: '2019-08-24T14:15:22Z'
+                  planFinish: '2019-08-24T14:15:22Z'
+                  issuesCnt: 0
+                  updated: 0
+      operationId: get-project-members
+      parameters: []
+    parameters:
+      - type: number
+        name: id
+        in: path
+        required: true
+        description: id проекта
+    post:
+      tags:
+      - project
+      summary: Добавление участников проекта
+      operationId: post-projects-projectID-member
+      parameters:
+        - type: number
+          name: id
+          in: path
+          required: true
+          description: id проекта
+        - name: member
+          in: body
+          required: true
+          description: 'Данные для связи участников проекта и ролей'
+          schema:
+            $ref: '#/components/MemberView'
+      responses:
+        '201':
+          description: 'Success'
+          schema:
+            $ref: '#/components/responses/Success'
+        '400':
+          description: 'Error'
+          schema:
+            $ref: '#/components/responses/Error'
+        '500':
+          description: 'Error'
+          schema:
+            $ref: '#/components/responses/Error'
+  /projects/{id}/members/list:
+    get:
+      summary: Получение страницы добавления участников проекта
+      tags:
+      - project
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/components/MemberView'
+          examples:
+            Example 1:
+              value:
+                - id: 0
+                  Name: string
+                  LastName: string
+                  Role: string
+        '400':
+          $ref: '#/components/responses/Error'
+      operationId: get-project-members-list
+      parameters: []
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+        description: id проекта
+  /projects/{id}/link_rep:
+    get:
+      summary: Получение списка репозиториев
+      tags:
+      - project
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+          examples:
+            Example 1:
+              value:
+                - string
+      operationId: get-project-links-rep
+      parameters: []
+    parameters:
+      - type: number
+        name: id
+        in: path
+        description: id проекта
+        required: true
+    post:
+      tags:
+      - project
+      summary: Добавление участников проекта
+      operationId: post-projects-link-rep
+      parameters:
+        - name: systemInitiator
+          in: header
+          type: string
+          required: true
+          description: Система-инициатор запроса
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/Error'
+  /projects/timespent:
+    get:
+      summary: Получение трудозатрат по проектам
+      tags:
+      - project
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              project_start:
+                type: string
+                format: date-time
+              project_end:
+                type: string
+                format: date-time
+              role_timespents:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    role_id:
+                      type: integer
+                    sort:
+                      type: integer
+                    color:
+                      type: string
+                    timespent:
+                      type: integer
+          examples:
+            Example 1:
+              value:
+                - id: 0
+                  name: string
+                  description: string
+                  isPublic: true
+                  status: 1
+                  planStart: '2019-08-24T14:15:22Z'
+                  planFinish: '2019-08-24T14:15:22Z'
+                  issuesCnt: 0
+                  updated: 0
+      operationId: get-project-timespents
+      parameters: []
+    parameters: []
+components:
+  User:
+    title: User
+    type: object
+    description: ''
+    x-examples:
+      Alice Smith:
+        id: 142
+        firstName: Alice
+        lastName: Smith
+        email: alice.smith@gmail.com
+        dateOfBirth: '1997-10-31'
+        emailVerified: true
+        signUpDate: '2019-08-24'
+    properties:
+      id:
+        type: integer
+        description: Unique identifier for the given user.
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+        format: email
+      dateOfBirth:
+        type: string
+        format: date
+        example: '1997-10-31'
+      emailVerified:
+        type: boolean
+        description: Set to true if the user's email has been verified.
+      createDate:
+        type: string
+        format: date
+        description: The date that the user was created.
+    required:
+      - id
+      - firstName
+      - lastName
+      - email
+      - emailVerified
+  Project:
+    title: Project
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      isPublic:
+        type: boolean
+      status:
+        type: integer
+        exclusiveMinimum: true
+        minimum: 1
+      planStart:
+        type: string
+        format: date-time
+      planFinish:
+        type: string
+        format: date-time
+      issuesCnt:
+        type: integer
+      updated:
+        type: integer
+  Role:
+    title: Role
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  MemberView:
+    title: MemberView
+    type: object
+    properties:
+      id:
+        type: integer
+      Name:
+        type: string
+      LastName:
+        type: string
+      Role:
+        type: string
+  securitySchemes:
+    auth:
+      name: API Key
+      type: apiKey
+      in: header
+  responses:
+    Error:
+      properties:
+        err:
+          description: 'Код ошибки'
+          type: string
+        type:
+          description: 'Тип ошибки'
+          type: integer
+        meta:
+          description: 'Описание ошибки'
+          type: string
+    Success:
+      properties:
+        code:
+          description: 'Код'
+          type: integer
+        status:
+          description: 'Описание'
+          type: string

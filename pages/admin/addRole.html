@@ -26,6 +26,7 @@
                 {{ range $headRoles := .headRoles }}
                 <option value="{{ .ID }}">{{ .Name }}</option>
                 {{ end }}
+                <option value="-1">Отвязать</option>
             </select>
         </div>
         <div class="col-auto">
@@ -48,6 +49,7 @@
                 return json
             }, {})
         data.HeadRoleID = parseInt(data.HeadRoleID)
+        debugger
         if ({{ .role.ID }} == null) {
             $.ajax({
                 type: "POST",

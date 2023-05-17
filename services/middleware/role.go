@@ -7,7 +7,7 @@ import (
 type Role struct {
 	gorm.Model
 	Name         string
-	HeadRoleID   uint
+	HeadRoleID   int
 	ProjectRoles []ProjectRole `gorm:"foreignKey:RoleID" json:"project_roles,omitempty"`
 	Timespents   []Timespent   `gorm:"foreignKey:RoleID" json:"timespents,omitempty"`
 }

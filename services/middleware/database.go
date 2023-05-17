@@ -146,7 +146,7 @@ func insertRoles() {
 			"Менеджер",
 			"Дизайнер",
 		}
-		dataHeadRole := []uint{
+		dataHeadRole := []int{
 			1,
 			1,
 			1,
