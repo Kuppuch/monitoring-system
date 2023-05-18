@@ -1,8 +1,12 @@
 package middleware
 
 import (
+	"bytes"
+	"encoding/json"
 	"gorm.io/gorm"
+	"monitoring-system/config"
 	"monitoring-system/services/logging"
+	"net/http"
 )
 
 type Notification struct {
@@ -37,4 +41,19 @@ func SetReadNotification(id int) (int, error) {
 		return 0, tx.Error
 	}
 	return int(tx.RowsAffected), nil
+}
+
+func (n *Notification) SendSmtpNotify(recipient User) error {
+	values := map[string]string{"recipient": recipient.Email, "content": n.Content}
+	jsonData, err := json.Marshal(values)
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.Post("http://"+config.SmtpAddress+"/email/notify", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	return nil
 }

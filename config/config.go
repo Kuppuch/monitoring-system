@@ -16,7 +16,8 @@ var (
 	DbUser     string
 	DbPassword string
 
-	GitToken string
+	GitToken    string
+	SmtpAddress string
 )
 
 func init() {
@@ -41,6 +42,7 @@ func init() {
 	DbSslMode = viper.GetString("db.sslmode")
 	DbPassword = viper.GetString("db.password")
 	GitToken = viper.GetString("git_token")
+	SmtpAddress = viper.GetString("smtp_address")
 
 	createLibRep()
 }

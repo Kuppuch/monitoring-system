@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 	"monitoring-system/config"
 	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
@@ -194,12 +195,25 @@ func insertIssue(c *gin.Context) {
 			AssignedToID: issue.AssignedToID,
 			Content:      "На вас назначена новая задача",
 			View:         false,
-			Source:       "issue/" + strconv.Itoa(int(issue.ID)),
+			Source:       "issues/" + strconv.Itoa(int(issue.ID)),
 		}
 		notification.Insert()
 		// Отправляем уведомление в канал уведомлений
 		nByte, _ := json.Marshal(&notification)
 		socket.BigChannel <- nByte
+		assignedUser := middleware.User{
+			Model: gorm.Model{ID: issue.AssignedToID},
+		}
+		if err = assignedUser.GetUser(); err != nil {
+			logging.Print.Error("failed get assigned user for notify issue create by email ", err)
+			return
+		}
+		if assignedUser.EmailNotify && len(config.SmtpAddress) > 0 {
+			if err = notification.SendSmtpNotify(assignedUser); err != nil {
+				logging.Print.Error("failed send email to assigned for create issue ", err)
+				return
+			}
+		}
 	}
 }
 
