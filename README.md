@@ -17,8 +17,7 @@
 "sslmode" : "disable",
 "port"    : "55000"
 }
-"git_token": "toket_with_repo_credentials",
-"smtp_address": "localhost:1234"
+"git_token": "toket_with_repo_credentials"
 }
 ````
 ---

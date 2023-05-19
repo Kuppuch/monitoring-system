@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	"bytes"
+	"crypto/tls"
 	"encoding/json"
+	"fmt"
+	"gopkg.in/gomail.v2"
 	"gorm.io/gorm"
-	"monitoring-system/config"
 	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
-	"net/http"
 )
 
 type Notification struct {
@@ -57,7 +57,7 @@ func (n *Notification) Prepare(issue IssueWeb) {
 		logging.Print.Error("failed get assigned user for notify issue create by email ", err)
 		return
 	}
-	if assignedUser.EmailNotify && len(config.SmtpAddress) > 0 {
+	if assignedUser.EmailNotify {
 		if err := n.SendSmtpNotify(assignedUser); err != nil {
 			logging.Print.Error("failed send email to assigned for create issue ", err)
 			return
@@ -66,16 +66,30 @@ func (n *Notification) Prepare(issue IssueWeb) {
 }
 
 func (n *Notification) SendSmtpNotify(recipient User) error {
-	values := map[string]string{"recipient": recipient.Email, "content": n.Content}
-	jsonData, err := json.Marshal(values)
-	if err != nil {
-		return err
-	}
 
-	resp, err := http.Post("http://"+config.SmtpAddress+"/email/notify", "application/json", bytes.NewBuffer(jsonData))
+	err := sender(recipient.Email, "", n.Content)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	return nil
+}
+
+func sender(recipient string, code string, content string) error {
+	mail := gomail.NewMessage()
+	mail.SetHeader("From", "vehicleaggregator@gmail.com")
+	mail.SetHeader("To", recipient)
+
+	if len(code) > 0 {
+		mail.SetHeader("Subject", "Confirm action")
+		mail.SetBody("text/html", fmt.Sprintf("Your verification code: %s", code))
+	} else {
+		mail.SetHeader("Subject", "Уведомление системы мониторинга")
+		mail.SetBody("text/html", content)
+	}
+	d := gomail.NewDialer("smtp.gmail.com", 587, "vehicleaggregator@gmail.com", "hcbwxhrlwxgovdtu")
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	if err := d.DialAndSend(mail); err != nil {
+		return err
+	}
 	return nil
 }
