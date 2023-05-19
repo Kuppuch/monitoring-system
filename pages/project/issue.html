@@ -167,7 +167,7 @@
         }
         const estimated = {{ .issue.EstimatedHours }}
         document.querySelector('#timespent').innerHTML = timeResult
-        if (Math.floor(timespent) + minute > estimated) {
+        if (timespent > estimated) {
             document.querySelector('#timespent').classList.add("danger")
         }
     });
