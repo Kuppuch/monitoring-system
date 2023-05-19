@@ -69,39 +69,57 @@ function getUnreadNotifications() {
 }
 
 function socketFunc() {
+    const profile = document.querySelector(".profile")
+    const params = profile.children[1].children[0].getAttribute("src").split("/")
     let socket = new WebSocket('ws://' + window.location.host + '/notification/socket')
-    // socket.onopen = function (e) {
-    //     alert("[open] Соединение установлено")
-    //     alert("Отправляем данные на сервер")
-    //     //socket.send("Меня зовут Джон")
-    // };
+    const url = window.location.pathname
 
     socket.onmessage = function (event) {
         let notificationsCount = document.querySelector('#notifications-count')
-        console.log(event)
-        if (notificationsCount) {
-            let cnt = parseInt(notificationsCount.innerHTML, 10)
-            cnt++
-            notificationsCount.innerHTML = cnt.toString()
-        } else {
-            let span = document.createElement('span')
-            span.setAttribute("id", "notifications-count")
-            span.classList.add('notifications-count')
-            span.innerHTML = '1'
-            let notificationBlock = document.querySelector('#notification-block')
-            notificationBlock.append(span)
+        const message = JSON.parse(event.data)
+        debugger
+
+
+        if (params[2] === message.AssignedToID.toString()) {
+            if (notificationsCount) {
+                let cnt = parseInt(notificationsCount.innerHTML, 10)
+                cnt++
+                notificationsCount.innerHTML = cnt.toString()
+            } else {
+                let span = document.createElement('span')
+                span.setAttribute("id", "notifications-count")
+                span.classList.add('notifications-count')
+                span.innerHTML = '1'
+                let notificationBlock = document.querySelector('#notification-block')
+                notificationBlock.append(span)
+            }
+            debugger
+            if (url.includes('notification')) {
+                let tbody = document.querySelector('tbody')
+                let tdID = document.createElement('td')
+                tdID.innerHTML = message.ID
+                tdID.hidden = true
+
+                let tdMessage = document.createElement('td')
+                tdMessage.innerHTML = message.Content.bold()
+                tdMessage.classList.add('left-align')
+
+                let tdSource = document.createElement('td')
+                tdSource.id = 'source'
+                let a = document.createElement('a')
+                a.innerHTML = 'ссылка'
+                a.href = '../'+message.Source
+                tdSource.append(a)
+
+
+                let newTr = document.createElement('tr')
+                newTr.append(tdID)
+                newTr.append(tdMessage)
+                newTr.append(tdSource)
+                tbody.prepend(newTr)
+            }
         }
     };
-
-    // socket.onclose = function (event) {
-    //     if (event.wasClean) {
-    //         alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`)
-    //     } else {
-    //         // например, сервер убил процесс или сеть недоступна
-    //         // обычно в этом случае event.code 1006
-    //         alert('[close] Соединение прервано')
-    //     }
-    // };
 
     socket.onerror = function (error) {
         alert(`[error]`);

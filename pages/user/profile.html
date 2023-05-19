@@ -18,7 +18,11 @@
             </div>
         </form>
         <div>
-            <input type="checkbox" class="custom-checkbox" id="mail_notify" name="mail_notify" checked>
+            <input type="checkbox" class="custom-checkbox" id="mail_notify" name="mail_notify"
+                   {{ if .user.EmailNotify}}
+                   checked
+                   {{ end }}
+            >
             <label for="mail_notify">Уведомления по E-mail</label>
         </div>
         <button type="button" onclick="save()" id="save">Сохранить</button>

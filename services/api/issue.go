@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"gorm.io/gorm"
 	"monitoring-system/config"
-	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
 	"monitoring-system/services/middleware"
 	"net/http"
@@ -190,6 +188,7 @@ func insertIssue(c *gin.Context) {
 		return
 	}
 	if issue.CreatorID != issue.AssignedToID {
+		issueWeb := middleware.IssueWeb{Issue: issue}
 		notification := middleware.Notification{
 			CreatorID:    issue.CreatorID,
 			AssignedToID: issue.AssignedToID,
@@ -197,23 +196,7 @@ func insertIssue(c *gin.Context) {
 			View:         false,
 			Source:       "issues/" + strconv.Itoa(int(issue.ID)),
 		}
-		notification.Insert()
-		// Отправляем уведомление в канал уведомлений
-		nByte, _ := json.Marshal(&notification)
-		socket.BigChannel <- nByte
-		assignedUser := middleware.User{
-			Model: gorm.Model{ID: issue.AssignedToID},
-		}
-		if err = assignedUser.GetUser(); err != nil {
-			logging.Print.Error("failed get assigned user for notify issue create by email ", err)
-			return
-		}
-		if assignedUser.EmailNotify && len(config.SmtpAddress) > 0 {
-			if err = notification.SendSmtpNotify(assignedUser); err != nil {
-				logging.Print.Error("failed send email to assigned for create issue ", err)
-				return
-			}
-		}
+		notification.Prepare(issueWeb)
 	}
 }
 
@@ -323,7 +306,25 @@ func saveIssue(c *gin.Context) {
 	for _, v := range timespent {
 		timespentMap["timespent"] += v.Spent
 	}
+	go checkOverSpentAndNotify(issueID, timespentMap["timespent"], t.Spent)
 	c.JSON(http.StatusOK, timespentMap)
+}
+
+func checkOverSpentAndNotify(issueID int, spent float32, deltaSpent float32) {
+	issue := middleware.GetIssue(uint(issueID))
+	if spent > issue.EstimatedHours && spent-deltaSpent < issue.EstimatedHours {
+		subsibers := middleware.GetSubscribers(issue.ID)
+		for _, subsiber := range subsibers {
+			notification := middleware.Notification{
+				CreatorID:    issue.CreatorID,
+				AssignedToID: subsiber.ID,
+				Content:      "В задаче превышено время трудосписаний",
+				View:         false,
+				Source:       "issues/" + strconv.Itoa(int(issue.ID)),
+			}
+			notification.Prepare(issue)
+		}
+	}
 }
 
 func parseTimespent(m map[string]string, user middleware.User, issueID int) (middleware.Timespent, int, error) {
@@ -469,4 +470,31 @@ func myIssuesPage(c *gin.Context) {
 	user, _ := GetUserByToken(c)
 	issues := middleware.GetUserIssues(user.ID)
 	c.HTML(http.StatusOK, "myIssues.html", gin.H{"user": user, "issues": issues})
+}
+
+func setObserve(c *gin.Context) {
+	user, _ := GetUserByToken(c)
+	issueID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "issue id is not number",
+		})
+		return
+	}
+	observe := middleware.Observe{
+		IssueID: issueID,
+		UserID:  int(user.ID),
+	}
+	err = observe.Insert()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.Error{
+			Err:  err,
+			Type: 0,
+			Meta: "Не удалось закрепить наблюдение",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, middleware.GetSuccess())
 }

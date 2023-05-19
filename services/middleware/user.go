@@ -21,6 +21,7 @@ type User struct {
 	Timespent           []Timespent    `gorm:"foreignKey:UserID" json:"timespent,omitempty"`
 	NotificationsCreate []Notification `gorm:"foreignKey:CreatorID" json:"notifications_create,omitempty"`
 	MyNotifications     []Notification `gorm:"foreignKey:AssignedToID" json:"my_notifications,omitempty"`
+	Observes            []Observe      `gorm:"foreignKey:UserID" json:"observes,omitempty"`
 }
 
 func GetAllUsers() []User {

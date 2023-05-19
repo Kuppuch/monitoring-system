@@ -18,6 +18,7 @@ type Issue struct {
 	BudgetID       uint        `json:"budget_id"`
 	EstimatedHours float32     `json:"estimated_hours"`
 	Timespent      []Timespent `gorm:"foreignKey:IssueID" json:"timespent,omitempty"`
+	Observes       []Observe   `gorm:"foreignKey:IssueID" json:"observes,omitempty"`
 }
 
 type IssueWeb struct {

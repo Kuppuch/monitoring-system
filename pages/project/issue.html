@@ -141,6 +141,7 @@
         <div class="recent-updates">
             <h2>Трудозатраты</h2>
             <div id="timespent_div" class="updates">
+                <a id="observe" href="#">Наблюдать</a>
             </div>
         </div>
     </div>
@@ -152,7 +153,7 @@
 <script type="module">
     import {
         Octokit
-    } from 'https://cdn.skypack.dev/octokit'
+    } from 'https://cdn.skypack.dev/@octokit/rest@18.5.4'
     import {
         Base64
     } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
@@ -171,47 +172,21 @@
         }
     });
 
-    function save() {
-        const timespent = document.querySelector('#timespentInput').value
-        const status = document.querySelector('#status').value
-        const projectRole = document.querySelector('#projectRoles').value
-        let data = {
-            spent_str: timespent,
-            status: status,
-            role_id: projectRole,
-        }
+    let observe = document.querySelector('#observe')
+    observe.addEventListener('click', function () {
         const path = window.location.pathname.split('/')[2]
+        debugger
         $.ajax({
             type: "POST",
-            url: 'http://' + window.location.host + '/issues/save/' + path,
-            data: JSON.stringify(data),
-            success: function (dataresp) {
-                let minute = (dataresp.timespent - Math.floor(dataresp.timespent)) * 60
-                let timeResult = Math.floor(dataresp.timespent) + 'ч. '
-                if (minute > 0) {
-                    timeResult += minute + 'мин.'
-                }
-                document.querySelector('#timespent').innerHTML = timeResult
-
-                const htmlStr = '<span id="success" class="material-icons-sharp success">done</span>'
-                document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
-                setTimeout(hideSuccess, 2000);
-            },
+            url: 'http://' + window.location.host + '/issues/' + path + '/observe',
+            success: function () {},
             error: function (dataJSON) {
                 const data = JSON.parse(dataJSON.responseText)
                 alert(data.Meta);
                 console.log(data.Meta)
             },
-            complete: function () {
-                const timespentInput = document.querySelector('#timespentInput')
-                timespentInput.value = ''
-            }
         })
-    }
-
-    function hideSuccess() {
-        document.querySelector('#success').remove()
-    }
+    })
 
     const tbody = document.querySelector('tbody')
     for (let i = 0; i < tbody.children.length; i++) {
@@ -281,7 +256,7 @@
         ctx.id = 'myChart1'
         budgetTimespentDetails.style.height = '200%'
         budgetTimespentDetails.style.width = '100%'
-        budgetTimespentDetails.append(ctx)
+        budgetTimespentDetails.prepend(ctx)
 
         const timespent = {{ .timespent }}
         const estimatedHours = {{ .issue.EstimatedHours }}
@@ -405,6 +380,49 @@
         })
     }
 
+</script>
+<script>
+    function save() {
+        const timespent = document.querySelector('#timespentInput').value
+        const status = document.querySelector('#status').value
+        const projectRole = document.querySelector('#projectRoles').value
+        let data = {
+            spent_str: timespent,
+            status: status,
+            role_id: projectRole,
+        }
+        const path = window.location.pathname.split('/')[2]
+        $.ajax({
+            type: "POST",
+            url: 'http://' + window.location.host + '/issues/save/' + path,
+            data: JSON.stringify(data),
+            success: function (dataresp) {
+                let minute = (dataresp.timespent - Math.floor(dataresp.timespent)) * 60
+                let timeResult = Math.floor(dataresp.timespent) + 'ч. '
+                if (minute > 0) {
+                    timeResult += minute + 'мин.'
+                }
+                document.querySelector('#timespent').innerHTML = timeResult
+
+                const htmlStr = '<span id="success" class="material-icons-sharp success">done</span>'
+                document.querySelector('#button-success').insertAdjacentHTML('beforeend', htmlStr);
+                setTimeout(hideSuccess, 2000);
+            },
+            error: function (dataJSON) {
+                const data = JSON.parse(dataJSON.responseText)
+                alert(data.Meta);
+                console.log(data.Meta)
+            },
+            complete: function () {
+                const timespentInput = document.querySelector('#timespentInput')
+                timespentInput.value = ''
+            }
+        })
+    }
+
+    function hideSuccess() {
+        document.querySelector('#success').remove()
+    }
 </script>
 </body>
 </html>

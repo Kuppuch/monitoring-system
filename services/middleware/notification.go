@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"gorm.io/gorm"
 	"monitoring-system/config"
+	"monitoring-system/services/api/socket"
 	"monitoring-system/services/logging"
 	"net/http"
 )
@@ -41,6 +42,27 @@ func SetReadNotification(id int) (int, error) {
 		return 0, tx.Error
 	}
 	return int(tx.RowsAffected), nil
+}
+
+func (n *Notification) Prepare(issue IssueWeb) {
+
+	n.Insert()
+	// Отправляем уведомление в канал уведомлений
+	nByte, _ := json.Marshal(&n)
+	socket.BigChannel <- nByte
+	assignedUser := User{
+		Model: gorm.Model{ID: n.AssignedToID},
+	}
+	if err := assignedUser.GetUser(); err != nil {
+		logging.Print.Error("failed get assigned user for notify issue create by email ", err)
+		return
+	}
+	if assignedUser.EmailNotify && len(config.SmtpAddress) > 0 {
+		if err := n.SendSmtpNotify(assignedUser); err != nil {
+			logging.Print.Error("failed send email to assigned for create issue ", err)
+			return
+		}
+	}
 }
 
 func (n *Notification) SendSmtpNotify(recipient User) error {
