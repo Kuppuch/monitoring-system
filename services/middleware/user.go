@@ -24,6 +24,8 @@ type User struct {
 	Observes            []Observe      `gorm:"foreignKey:UserID" json:"observes,omitempty"`
 }
 
+var ActiveUserMap = make(map[uint]*User)
+
 func GetAllUsers() []User {
 	var users []User
 	tx := DB.Find(&users)
@@ -34,9 +36,15 @@ func GetAllUsers() []User {
 }
 
 func (u *User) GetUser() error {
-	tx := DB.Where("id = ?", u.ID).Find(u)
-	if tx.Error != nil {
-		return tx.Error
+	user, ok := ActiveUserMap[u.ID]
+	if !ok {
+		tx := DB.Where("id = ?", u.ID).Find(u)
+		if tx.Error != nil {
+			return tx.Error
+		}
+		ActiveUserMap[u.ID] = u
+	} else {
+		u = user
 	}
 	return nil
 }

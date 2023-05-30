@@ -31,7 +31,10 @@ func GetAssignedToNotification(assignedToID uint) []Notification {
 
 func GetUnreadNotification(assignedToID uint) []Notification {
 	var notifications []Notification
-	DB.Where("assigned_to_id = ? AND view = false", assignedToID).Find(&notifications)
+	tx := DB.Where("assigned_to_id = ? AND view = false", assignedToID).Find(&notifications)
+	if tx.Error != nil {
+		logging.Print.Warning(tx.Error)
+	}
 	return notifications
 }
 
