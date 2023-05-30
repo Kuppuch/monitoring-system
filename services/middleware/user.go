@@ -44,7 +44,7 @@ func (u *User) GetUser() error {
 		}
 		ActiveUserMap[u.ID] = u
 	} else {
-		u = user
+		*u = *user
 	}
 	return nil
 }
